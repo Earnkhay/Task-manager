@@ -1,30 +1,34 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  
   <router-view/>
+ 
+  
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+// import loginPage from './components/login.vue'
+// import areaComp from './components/area.vue'
+// import navBar from './components/navbar.vue'
+// import myFooter from './components/footer.vue'
+import {Options, Vue} from "vue-class-component"
 
-nav {
-  padding: 30px;
+// export default {
+//   name: 'App',
+//   components: {
+//     // loginPage,
+//     // navBar,
+//     // myFooter
+//   }
+// }
+@Options({
+  components: {}
+})
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+export default class App extends Vue {}
+</script>
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<style>
+  #app{
+    font-family: 'Raleway', sans-serif;
   }
-}
 </style>
