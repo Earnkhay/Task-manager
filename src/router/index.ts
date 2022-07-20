@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import loginPage from '@/components/login.vue'
 import main from '@/views/main.vue'
+import eventbus from '@/views/eventbus.vue'
 import area from '@/components/area.vue'
 import card from '@/components/card.vue'
 import mainbody from '@/components/mainbody.vue'
+import axios from '@/components/axios.vue'
+import landingpage from '@/components/landingpage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/login/:id',
+    path: '/login',
     name: 'login',
     component: loginPage,
     children: [
@@ -34,6 +37,21 @@ const routes: Array<RouteRecordRaw> = [
         component: card
       }
     ]
+  },
+  {
+    path: '/eventbus',
+    name: 'eventbus',
+    component: eventbus
+  },
+  {
+    path: '/axios',
+    name: 'axios',
+    component: axios
+  },
+  {
+    path: '/landingpage',
+    name: 'landingpage',
+    component: landingpage
   },
   {
     path: '/about',

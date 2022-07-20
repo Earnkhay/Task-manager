@@ -8,7 +8,7 @@
             -
             <router-link to="/login/area">Area</router-link>
             -
-            <router-link to="/login">Login</router-link>
+            <router-link to="/login/:id">Login</router-link>
         </nav>
     </div>
 </template>

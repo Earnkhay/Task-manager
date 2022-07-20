@@ -7,26 +7,34 @@
                 <div class="col-md-6 bg-light form">
                     <div class="text-center mb-3">
                         <h1 id="header" class="mb-4">{{pageType == "signUp" ? 'Create Account' : 'Log In'}}</h1>
-                        <div>User {{ $route.params.id }}</div>
+                        <!-- <div>User {{ $route.params.id }}</div> -->
                     </div>
                     <div class="row justify-content-center ">
                         
-                            <form action="" id="login-form" class=" col-md-10 text-xs-center">                                
-                                 <div class="mb-3 text-xs-center">
+                            <form action="" id="login-form" class=" col-md-10 text-xs-center" @submit="checkForm" method="post" novalidate="true">                                
+                                <!-- <p v-if="errors.length">
+                                    <b>Please correct the following error(s):</b>
+                                    <ul>
+                                    <li v-for="error in errors">{{ error }}</li>
+                                    </ul>
+                                </p> -->
+                                <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                                    <input type="email" class="form-control" id="email" placeholder="Enter your email" v-model="email" required>
                                   </div>
                     
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" >
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" required>
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
                             
                                 <div class="text-center">
-                                <button type="submit" class="mb-3" id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                <!-- <button type="submit" class="mb-3" id="signup" @click="$router.push('landingpage')">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button> -->
+                                <router-link :to="{name: 'landingpage'}" tag="button" type="submit" class="mb-3 " id="signup" @submit="checkForm">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link>
+                                <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
                                 </div>
                     
                             <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} <a href="" id="link" @click.prevent="setLoginPage">{{pageType == "signUp" ? "Log in here" : "Sign up here"}}</a></p>
@@ -78,6 +86,9 @@
     export default class mainbody extends Vue{
         passwordType = 'password'
         pageType ="signUp"
+        errors= []
+        email = ""
+        password = ""
         setLoginPage(){     
             if(this.pageType == "signUp"){
                 this.pageType = "login"
@@ -92,6 +103,25 @@
             }
             get showEye() {
                 return this.passwordType == "password";
+            }
+        
+        checkForm(){
+             if (this.email && this.password) {
+                    return true;
+                }
+
+                this.errors = [];
+
+                // if (!this.email) {
+                //     this.errors.push('Email required.');
+                // }else if (!this.validEmail(this.email)) {
+                //     this.errors.push('Valid email required.');
+                // }
+                if (!this.password) {
+                    this.errors.push();
+                }
+
+                // e.preventDefault();
             }
        }   
 
@@ -126,11 +156,21 @@ form button{
     border-color:  #0096FF;
 }
 
+#signup{
+    text-decoration: none;
+    color: white;
+    width: 100%;
+    background-color: #0096FF;
+    padding: 10px;
+    border-radius: 10px;
+    border-color:  #0096FF;
+}
+
 button{
     color: white;
 }
 
-button:hover{
+#signup:hover{
     color: red;
 }
 
