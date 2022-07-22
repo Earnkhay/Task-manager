@@ -8,10 +8,11 @@
                     <div class="text-center mb-3">
                         <h1 id="header" class="mb-4">{{pageType == "signUp" ? 'Create Account' : 'Log In'}}</h1>
                         <!-- <div>User {{ $route.params.id }}</div> -->
+                        <!-- <p class="alert">{{alert}}</p> -->
                     </div>
                     <div class="row justify-content-center ">
                         
-                            <form action="" id="login-form" class=" col-md-10 text-xs-center" @submit="checkForm" method="post" novalidate="true">                                
+                            <form action="" id="login-form" class=" col-md-10 text-xs-center">                                
                                 <!-- <p v-if="errors.length">
                                     <b>Please correct the following error(s):</b>
                                     <ul>
@@ -32,8 +33,8 @@
                                     </div>
                             
                                 <div class="text-center">
-                                <!-- <button type="submit" class="mb-3" id="signup" @click="$router.push('landingpage')">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button> -->
-                                <router-link :to="{name: 'landingpage'}" tag="button" type="submit" class="mb-3 " id="signup" @submit="checkForm">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link>
+                                <button type="submit" class="mb-3" id="signup" @click="submitAction(pageType)">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                <!-- <router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link> -->
                                 <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
                                 </div>
                     
@@ -83,10 +84,13 @@
     // }
 
     import {Options, Vue} from "vue-class-component"
+    @Options({
+
+    })
     export default class mainbody extends Vue{
         passwordType = 'password'
         pageType ="signUp"
-        errors= []
+        // alert = "Please input email/password"
         email = ""
         password = ""
         setLoginPage(){     
@@ -104,25 +108,22 @@
             get showEye() {
                 return this.passwordType == "password";
             }
-        
-        checkForm(){
-             if (this.email && this.password) {
-                    return true;
+            submitAction(pageType: string){
+                const formData = {
+                    email: this.email,
+                    password: this.password
                 }
-
-                this.errors = [];
-
-                // if (!this.email) {
-                //     this.errors.push('Email required.');
-                // }else if (!this.validEmail(this.email)) {
-                //     this.errors.push('Valid email required.');
-                // }
-                if (!this.password) {
-                    this.errors.push();
+                console.log(pageType, "PAGE TYPE", formData);
+                if(this.email != "" && this.password != ""){
+                    this.$router.push('landingpage')
+                }else{
+                    // return swal("Oops!", "Something went wrong!", "error");
                 }
-
-                // e.preventDefault();
             }
+            // iziToast.show({
+            //     title: 'Hey',
+            //     message: 'What would you like to add?'
+            // });
        }   
 
 </script>
@@ -133,6 +134,10 @@ body{
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
+}
+
+.alert{
+    background-color: rgb(231, 75, 75);
 }
 
 img{
