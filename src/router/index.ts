@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import loginPage from '@/components/login.vue'
+import login from '@/components/login.vue'
 import main from '@/views/main.vue'
-import eventbus from '@/views/eventbus.vue'
 import area from '@/components/area.vue'
 import card from '@/components/card.vue'
 import mainbody from '@/components/mainbody.vue'
-import axios from '@/components/axios.vue'
 import landingpage from '@/components/landingpage.vue'
+import dashboard from '@/components/dashboard.vue'
+import example from '@/components/example.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'login',
-    component: loginPage,
+    component: login,
     children: [
       {
         path: '/login/area',
@@ -39,14 +39,9 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/eventbus',
-    name: 'eventbus',
-    component: eventbus
-  },
-  {
-    path: '/axios',
-    name: 'axios',
-    component: axios
+    path: '/dashboard',
+    name: 'dashboard',
+    component: dashboard
   },
   {
     path: '/landingpage',
@@ -61,11 +56,11 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () => import( '../views/AboutView.vue')
   },
-  // {
-  //   path: '/area',
-  //   name: 'area',
-  //   component: () => import('../components/area.vue')
-  // }
+  {
+    path: '/example',
+    name: 'example',
+    component: example
+  }
 ]
 
 const router = createRouter({

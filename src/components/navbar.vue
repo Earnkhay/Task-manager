@@ -8,12 +8,12 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <router-link class="nav-link" aria-current="page" active-class="active" :to="{name: 'landingpage'}">Home</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <router-link class="nav-link" active-class="active" :to="{name: 'dashboard'}">{{navlink1}}</router-link>
         </li>
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Dropdown
           </a>
@@ -23,15 +23,15 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li>
+        </li> -->
         <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
+          <router-link class="nav-link" active-class="active" :to="{name: 'login'}">{{navlink2}}</router-link>
         </li>
       </ul>
-      <form class="d-flex" role="search">
+      <!-- <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      </form> -->
     </div>
   </div>
 </nav>
@@ -42,7 +42,9 @@ import {Options, Vue} from "vue-class-component"
 
   @Options({
     props: {
-      navTitle: String
+      navTitle: String,
+      navlink1: String,
+      navlink2: String
     }
   })
     // export default {

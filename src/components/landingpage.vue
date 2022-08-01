@@ -1,21 +1,19 @@
 <template>
-    <div class="m-4">
-        <h5>Global Administrator</h5>
-    </div>
-    <div class="container">
+    <div class="container mt-5">
     <div class="row gx-5">
     <div class="col-md-6">
-      <h2>Good Evening, </h2>
+      <!-- <h2>Good {{hour >= 0 && hour <= 11 ? "morning" :  hour >= 12 && hour <= 17 ? "afternoon" :  "evening"}}, </h2> -->
+      <h2>Good {{greet()}},</h2>
       <h1 class="mb-4">{{name}}</h1>
-      <div class="row mb-5 gx-0">
-      <div class="col-lg-3 mb-3 mx-0">
-      <router-link :to="{name: 'mainbody'}" id="new">Create New</router-link>
-      
+      <!-- <p>{{hour}}</p> -->
+      <div class="row mb-4 g-0">
+      <div class="col-lg-4 mx-0 mb-4">
+      <router-link :to="{name: 'mainbody'}" id="new"><span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span> Create New</router-link>      
       <!-- <button><router-link :to="{name: 'mainbody'}">Create New</router-link></button>
       <button><router-link :to="{name: 'mainbody'}">Go to Dashboard</router-link></button> -->
       </div>
-      <div class="col-lg-4 mx-0">
-      <router-link :to="{name: 'mainbody'}" id="dashboard">Go to Dashboard</router-link>
+      <div class="col-lg-6 mx-0">
+      <router-link :to="{name: 'dashboard'}" id="dashboard"><span class="ps-3 pe-2"><i class="fa-solid fa-rocket"></i></span> Go to Dashboard</router-link>
       </div>
       </div>
       <h6>Recent Tasks</h6>
@@ -44,26 +42,26 @@
           </div>
           <div class="col-lg-6">
               <ul>
-              <li><b> New Testing due soon/today</b> 
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>New Testing due soon/today</b> 
                   EMAIL
               </li>
-              <li><b> Testing due soon/today</b>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>Testing due soon/today</b>
                   PHONE CALL
               </li>
-              <li><b> New Testing due soon</b>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>New Testing due soon</b>
                   APPOINTMENT
               </li>
-              <li><b>New Testing Matter</b> <br>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>New Testing Matter</b> <br>
                   GENERAL
               </li>
-              <li>First Milestone</li> <br>
-              <li>Merge Testing</li>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>First Milestone</b></li> <br>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>Merge Testing</b></li>
               </ul>
           </div>
       </div>
     </div>
     <div class="col-md-6 mt-3">
-      <img src="../assets/istockphoto-1179158215-612x612.jpg" alt="">
+      <img :src="'assets/'+greetImage()+'.png'" alt="">
     </div>
     </div>
     </div>
@@ -80,6 +78,28 @@ import {Options, Vue} from "vue-class-component"
 
 export default class landingpage extends Vue {
     name = "Sam"
+    greeting = ""
+    d = new Date()
+    hour = this.d.getHours()
+    // greetImage = "../assets/morningsvg.png"
+    greetImage(){
+        if (this.hour >= 0 && this.hour <= 11) {
+            return 'morningsvg'          
+        } else if(this.hour >= 12 && this.hour <= 17) {
+            return 'afternoonsvg'    
+        }else{
+            return 'eveningsvg'
+        }
+    }
+    greet(){
+        if (this.hour >= 0 && this.hour <= 11) {
+            return "morning"            
+        } else if(this.hour >= 12 && this.hour <= 17) {
+            return "afternoon"
+        }else{
+            return "evening"
+        }
+    }
 }
 </script>
 
@@ -92,9 +112,10 @@ export default class landingpage extends Vue {
         padding: 10px;
         border-radius: 5px;
         border-color:  rgb(68, 68, 170);
+        font-weight: bold;
     }
     #new:hover{
-        color: darkblue;
+        color: black;
     }
 
     #dashboard{
@@ -103,6 +124,7 @@ export default class landingpage extends Vue {
         padding: 10px;
         border-radius: 5px;
         color: black;
+        font-weight: bold;
     }
     #dashboard:hover{
         background-color: rgb(68, 68, 170);
@@ -125,10 +147,11 @@ export default class landingpage extends Vue {
 
     li{
         padding-bottom: 15px;
+        list-style: none;
     }
 
     img{
     max-width: 100%;
-    height: 80%;
+    height: auto;
     }
 </style>

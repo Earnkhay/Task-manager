@@ -5,20 +5,15 @@
         <div class="container ">
             <div class="row gx-0">
                 <div class="col-md-6 bg-light form">
-                    <div class="text-center mb-3">
-                        <h1 id="header" class="mb-4">{{pageType == "signUp" ? 'Create Account' : 'Log In'}}</h1>
+                    <div class="text-center ">
+                        <h1 id="header" class="mb-3">{{pageType == "signUp" ? 'Create Account' : 'Log In'}}</h1>
                         <!-- <div>User {{ $route.params.id }}</div> -->
-                        <!-- <p class="alert">{{alert}}</p> -->
+                        <alert v-if="alertShow" :alertText="alertTitle" :alertType="alertType"></alert><br>
+
                     </div>
                     <div class="row justify-content-center ">
                         
                             <form action="" id="login-form" class=" col-md-10 text-xs-center">                                
-                                <!-- <p v-if="errors.length">
-                                    <b>Please correct the following error(s):</b>
-                                    <ul>
-                                    <li v-for="error in errors">{{ error }}</li>
-                                    </ul>
-                                </p> -->
                                 <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
                                     <input type="email" class="form-control" id="email" placeholder="Enter your email" v-model="email" required>
@@ -33,7 +28,7 @@
                                     </div>
                             
                                 <div class="text-center">
-                                <button type="submit" class="mb-3" id="signup" @click="submitAction(pageType)">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                <button type="submit" class="mb-3" id="signup" @click.prevent="submitAction(pageType)">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
                                 <!-- <router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link> -->
                                 <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
                                 </div>
@@ -44,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 d-none d-sm-block login-image">
-                    <img src="../assets/Kingdom_sign_in_by_Icons8.gif" alt=""  >
+                    <img src="../assets/loginimage.png" alt=""  >
                 </div>
             </div>
         </div>
@@ -83,16 +78,22 @@
         
     // }
 
+    
     import {Options, Vue} from "vue-class-component"
+    import alert from './alert.vue'
     @Options({
-
+        components: {
+            alert
+        }
     })
-    export default class mainbody extends Vue{
+    export default class login extends Vue{
         passwordType = 'password'
         pageType ="signUp"
-        // alert = "Please input email/password"
         email = ""
         password = ""
+        alertTitle = ""
+        alertType = ""
+        alertShow = false
         setLoginPage(){     
             if(this.pageType == "signUp"){
                 this.pageType = "login"
@@ -102,6 +103,7 @@
                 
             }
             toggleVisibility() {
+               
                 if (this.showEye) this.passwordType = "text";
                 else this.passwordType = "password";
             }
@@ -115,29 +117,38 @@
                 }
                 console.log(pageType, "PAGE TYPE", formData);
                 if(this.email != "" && this.password != ""){
-                    this.$router.push('landingpage')
+                    this.alertTitle = "Success !, You're Welcome"
+                    this.alertType = "Success"
+                    this.alertShow = true
+                    setTimeout(() => {         
+                            console.log('why are you not working')
+                            this.$router.push('landingpage')
+                    },3000)
+                    
                 }else{
                     // return swal("Oops!", "Something went wrong!", "error");
+                    this.alertTitle = "Error !, Please input Email and Password"
+                    this.alertType = "Danger"
+                    this.alertShow = true
+                    setTimeout(
+                        () => {
+                            this.alertShow = false
+                        },5000)
+                    return 
                 }
+                
             }
-            // iziToast.show({
-            //     title: 'Hey',
-            //     message: 'What would you like to add?'
-            // });
+            
        }   
 
 </script>
 
 <style scoped>
-body{
+#login-page{
     background-image: url(../assets/sharon-mccutcheon-NkQD-RHhbvY-unsplash.jpg);
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
-}
-
-.alert{
-    background-color: rgb(231, 75, 75);
 }
 
 img{
@@ -145,6 +156,7 @@ img{
     height: 100%;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
+    background-color: rgb(240, 235, 235);
 }
 
 .form{
