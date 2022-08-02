@@ -10,19 +10,19 @@ import example from '@/components/example.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path: '/main',
     name: 'main',
     component: main,
     children: [
       {
-        path: '/',
+        path: '/main',
         name: 'mainbody',
         component: mainbody
       }
     ]
   },
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: login,
     children: [
