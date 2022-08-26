@@ -96,9 +96,9 @@
         alertTitle = ""
         alertType = ""
         alertShow = false
-        mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        // mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         //To check a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
-        regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
+        // regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
         error = null
         
         setLoginPage(){     
@@ -117,9 +117,9 @@
                 return this.passwordType == "password";
             }
             validateEmail() {
-                console.log('work................', this.mailformat, 'hello', this.email);
+                // console.log('work................', this.mailformat, 'hello', this.email);
                 
-                    if (this.mailformat.test(this.email)) {
+                    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
                         console.log('valid email address');   
                         
                     } else{
@@ -136,7 +136,7 @@
                 }
             validatePassword() {
                 
-                    if (this.regPassword.test(this.password)) {
+                    if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(this.password)) {
                         console.log('valid password');   
                         
                     }else if(this.password == ""){
@@ -165,7 +165,7 @@
                     password: this.password
                 }
                 console.log(pageType, "PAGE TYPE", formData);
-                if(this.email != "" && this.password != "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                if(this.email != "" && this.password != "" && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email) && /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(this.password)){
                     
                     await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                         formData: formData
