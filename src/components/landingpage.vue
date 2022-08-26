@@ -8,7 +8,7 @@
       <!-- <p>{{hour}}</p> -->
       <div class="row mb-4 g-0">
       <div class="col-lg-4 mx-0 mb-4">
-      <router-link :to="{name: 'mainbody'}" id="new"><span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span> Create New</router-link>      
+      <router-link :to="{name: ''}" id="new"><span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span> Create New</router-link>      
       <!-- <button><router-link :to="{name: 'mainbody'}">Create New</router-link></button>
       <button><router-link :to="{name: 'mainbody'}">Go to Dashboard</router-link></button> -->
       </div>
@@ -42,20 +42,20 @@
           </div>
           <div class="col-lg-6">
               <ul>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>New Testing due soon/today</b> 
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing due soon/today</b> 
                   EMAIL
               </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>Testing due soon/today</b>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">Testing due soon/today</b>
                   PHONE CALL
               </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>New Testing due soon</b>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing due soon</b>
                   APPOINTMENT
               </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>New Testing Matter</b> <br>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing Matter</b> <br>
                   GENERAL
               </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>First Milestone</b></li> <br>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b>Merge Testing</b></li>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">First Milestone</b></li> <br>
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">Merge Testing</b></li>
               </ul>
           </div>
       </div>
@@ -78,7 +78,6 @@ import {Options, Vue} from "vue-class-component"
 
 export default class landingpage extends Vue {
     name = "Sam"
-    greeting = ""
     d = new Date()
     hour = this.d.getHours()
     // greetImage = "../assets/morningsvg.png"

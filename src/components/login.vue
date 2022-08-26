@@ -1,5 +1,6 @@
 <template>
     <div id="login-page">
+        <!-- <nav-bar :navTitle="pageName" :navlink1="pageLink" :navlink2="pageLink1"/> -->
         <router-view/>
          <div class="p-5">
         <div class="container ">
@@ -16,13 +17,13 @@
                             <form action="" id="login-form" class=" col-md-10 text-xs-center">                                
                                 <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter your email" v-model="email" required>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter your email" v-model="email" @blur="validateEmail"  required>
                                   </div>
                     
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" required>
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" @blur="validatePassword"  required>
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
@@ -81,6 +82,7 @@
     
     import {Options, Vue} from "vue-class-component"
     import alert from './alert.vue'
+    import axios from 'axios';
     @Options({
         components: {
             alert
@@ -94,6 +96,11 @@
         alertTitle = ""
         alertType = ""
         alertShow = false
+        mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        //To check a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
+        regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
+        error = null
+        
         setLoginPage(){     
             if(this.pageType == "signUp"){
                 this.pageType = "login"
@@ -103,42 +110,100 @@
                 
             }
             toggleVisibility() {
-               
                 if (this.showEye) this.passwordType = "text";
                 else this.passwordType = "password";
             }
             get showEye() {
                 return this.passwordType == "password";
             }
-            submitAction(pageType: string){
+            validateEmail() {
+                console.log('work................', this.mailformat, 'hello', this.email);
+                
+                    if (this.mailformat.test(this.email)) {
+                        console.log('valid email address');   
+                        
+                    } else{
+                        this.alertTitle = "Please input valid Email address"
+                        this.alertType = "Danger"
+                        this.alertShow = true
+                        setTimeout(
+                            () => {
+                                this.alertShow = false
+                                this.email = ""
+                        },3000)
+                        console.log('email validation');
+                    }
+                }
+            validatePassword() {
+                
+                    if (this.regPassword.test(this.password)) {
+                        console.log('valid password');   
+                        
+                    }else if(this.password == ""){
+                        this.alertTitle = "Please input Password"
+                        this.alertType = "Danger"
+                        this.alertShow = true
+                        setTimeout(
+                            () => {
+                                this.alertShow = false
+                        },3000)
+                    }else{
+                        this.alertTitle = "Password should be at least 6 characters long & contain at least one uppercase & one digit"
+                        this.alertType = "Danger"
+                        this.alertShow = true
+                        setTimeout(
+                            () => {
+                                this.alertShow = false
+                                this.password = ""
+                        },3000)
+
+                    }
+                }
+            async submitAction(pageType: string){
                 const formData = {
                     email: this.email,
                     password: this.password
                 }
                 console.log(pageType, "PAGE TYPE", formData);
-                if(this.email != "" && this.password != ""){
-                    this.alertTitle = "Success !, You're Welcome"
-                    this.alertType = "Success"
-                    this.alertShow = true
-                    setTimeout(() => {         
-                            console.log('why are you not working')
-                            this.$router.push('landingpage')
-                    },3000)
+                if(this.email != "" && this.password != "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
                     
+                    await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
+                        formData: formData
+                    })
+                    .then((res) => {
+                        console.log(res)
+                        this.alertTitle = "Success !, You're Welcome"
+                        this.alertType = "Success"
+                        this.alertShow = true
+                        setTimeout(() => {         
+                                this.$router.push('landingpage')
+                        },3000) 
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                        this.alertTitle = 'Failed to save data - please try again later'
+                        this.alertType = "danger"
+                        this.alertShow = true
+                        setTimeout(() => {         
+                                this.alertShow = false
+                                this.email = ''
+                                this.password = ''
+                        },3000) 
+                    });
                 }else{
                     // return swal("Oops!", "Something went wrong!", "error");
-                    this.alertTitle = "Error !, Please input Email and Password"
+                    this.alertTitle = "Error !, Please input valid Email and Password"
                     this.alertType = "Danger"
                     this.alertShow = true
                     setTimeout(
                         () => {
                             this.alertShow = false
-                        },5000)
+                            this.email = ''
+                            this.password = ''
+                        },3000)
                     return 
                 }
-                
             }
-            
        }   
 
 </script>
