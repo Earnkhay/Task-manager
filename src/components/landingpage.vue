@@ -18,7 +18,7 @@
       </div>
       <h6>Recent Tasks</h6>
       <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-4" style="font-size: 1rem; font-weight: 700;">
               <ul>
               <li> Tue 01, Feb
                    09:23am
@@ -42,7 +42,7 @@
           </div>
           <div class="col-lg-6">
               <ul>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing due soon/today</b> 
+              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing due soon/ today</b><br>
                   EMAIL
               </li>
               <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">Testing due soon/today</b>
@@ -74,10 +74,11 @@ import {Options, Vue} from "vue-class-component"
 @Options({
   components: {
   }
+  
 })
 
 export default class landingpage extends Vue {
-    name = "Sam"
+    name = "Julia"
     d = new Date()
     hour = this.d.getHours()
     // greetImage = "../assets/morningsvg.png"
@@ -99,6 +100,11 @@ export default class landingpage extends Vue {
             return "evening"
         }
     }
+    // mounted (){
+    // this.emitter.on('changeName', (evt) => {
+    //   this.name = evt.eventContent;
+    // })
+    // }
 }
 </script>
 

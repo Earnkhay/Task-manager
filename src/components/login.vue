@@ -14,7 +14,12 @@
                     </div>
                     <div class="row justify-content-center ">
                         
-                            <form action="" id="login-form" class=" col-md-10 text-xs-center">                                
+                            <form action="" id="login-form" class=" col-md-10 text-xs-center">   
+                                <div class="mb-3 text-xs-center" v-if="pageType == 'signUp'">
+                                    <label for="exampleFormControlInput1" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter username" v-model="username"  required>
+                                  </div>
+                                
                                 <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
                                     <input type="email" class="form-control" id="email" placeholder="Enter your email" v-model="email" @blur="validateEmail"  required>
@@ -82,7 +87,7 @@
     
     import {Options, Vue} from "vue-class-component"
     import alert from './alert.vue'
-    import axios from 'axios';
+    import axios from 'axios'
     @Options({
         components: {
             alert
@@ -91,6 +96,8 @@
     export default class login extends Vue{
         passwordType = 'password'
         pageType ="signUp"
+        username = ""
+        newUser = ""
         email = ""
         password = ""
         alertTitle = ""
@@ -99,7 +106,6 @@
         mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
         //To check a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
         regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
-        error = null
         
         setLoginPage(){     
             if(this.pageType == "signUp"){
@@ -117,12 +123,20 @@
                 return this.passwordType == "password";
             }
             validateEmail() {
-                console.log('work................', this.mailformat, 'hello', this.email);
-                
+                // console.log('work................', this.mailformat, 'hello', this.email);
                     if (this.mailformat.test(this.email)) {
-                        console.log('valid email address');   
+                        // console.log('valid email address');
                         
-                    } else{
+                    } else if(this.email == ""){
+                         
+                        this.alertTitle = "Please input Email"
+                        this.alertType = "Danger"
+                        this.alertShow = true
+                        setTimeout(
+                            () => {
+                                this.alertShow = false
+                        },3000)
+                    }else{
                         this.alertTitle = "Please input valid Email address"
                         this.alertType = "Danger"
                         this.alertShow = true
@@ -131,11 +145,10 @@
                                 this.alertShow = false
                                 this.email = ""
                         },3000)
-                        console.log('email validation');
                     }
                 }
             validatePassword() {
-                
+
                     if (this.regPassword.test(this.password)) {
                         console.log('valid password');   
                         
@@ -148,7 +161,7 @@
                                 this.alertShow = false
                         },3000)
                     }else{
-                        this.alertTitle = "Password should be at least 6 characters long & contain at least one uppercase & one digit"
+                        this.alertTitle = "Password should be at least 6 characters long, contain at least one uppercase & one digit"
                         this.alertType = "Danger"
                         this.alertShow = true
                         setTimeout(
@@ -162,10 +175,11 @@
             async submitAction(pageType: string){
                 const formData = {
                     email: this.email,
-                    password: this.password
+                    password: this.password,
+                    username: this.username
                 }
-                console.log(pageType, "PAGE TYPE", formData);
-                if(this.email != "" && this.password != "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                // console.log(pageType, "PAGE TYPE", formData);
+                if(this.email != "" && this.password != "" && this.username != "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
                     
                     await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                         formData: formData
@@ -178,6 +192,7 @@
                         setTimeout(() => {         
                                 this.$router.push('landingpage')
                         },3000) 
+                        // this.emitter.emit("changeName", this.username);
                     })
                     .catch((err) => {
                         console.error(err)
@@ -190,9 +205,17 @@
                                 this.password = ''
                         },3000) 
                     });
+                }else if(this.username == "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                    this.alertTitle = "Error !, Please input Username"
+                    this.alertType = "Danger"
+                    this.alertShow = true
+                    setTimeout(
+                        () => {
+                            this.alertShow = false
+                            this.username = ''
+                        },3000)
                 }else{
-                    // return swal("Oops!", "Something went wrong!", "error");
-                    this.alertTitle = "Error !, Please input valid Email and Password"
+                    this.alertTitle = "Error !, Please input valid Email & Password"
                     this.alertType = "Danger"
                     this.alertShow = true
                     setTimeout(

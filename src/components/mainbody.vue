@@ -98,7 +98,7 @@
     //         },
     //     }
     // }
-    import {Options, Vue} from "vue-class-component"
+    import { Vue} from "vue-class-component"
     export default class mainbody extends Vue {
         cardTitle = "New List"
                 cardDesc = `
