@@ -28,7 +28,7 @@
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" @blur="validatePassword"  required>
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" @blur="checkPageType"  required>
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
@@ -129,7 +129,7 @@
                         
                     } else if(this.email == ""){
                          
-                        this.alertTitle = "Please input Email"
+                        this.alertTitle = "Please input Email address"
                         this.alertType = "Danger"
                         this.alertShow = true
                         setTimeout(
@@ -172,6 +172,15 @@
 
                     }
                 }
+
+            checkPageType(){
+                if (this.pageType == 'signUp') {
+                    this.validatePassword
+                } else {
+                    return null
+                }
+            }
+            // eslint-disable-next-line
             async submitAction(pageType: string){
                 const formData = {
                     email: this.email,
@@ -179,7 +188,7 @@
                     username: this.username
                 }
                 // console.log(pageType, "PAGE TYPE", formData);
-                if(this.email != "" && this.password != "" && this.username != "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                if(this.email != "" && this.password != "" && this.username != "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
                     
                     await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                         formData: formData
@@ -203,10 +212,11 @@
                                 this.alertShow = false
                                 this.email = ''
                                 this.password = ''
+                                this.username = ''
                         },3000) 
                     });
-                }else if(this.username == "" && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
-                    this.alertTitle = "Error !, Please input Username"
+                }else if(this.username == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                    this.alertTitle = "Please input Username"
                     this.alertType = "Danger"
                     this.alertShow = true
                     setTimeout(
@@ -214,8 +224,18 @@
                             this.alertShow = false
                             this.username = ''
                         },3000)
+                }else if(this.email != "" && this.password != "" && this.pageType == 'login' && this.mailformat.test(this.email)){
+                    this.alertTitle = "Error !, You do not have an Account"
+                    this.alertType = "Danger"
+                    this.alertShow = true
+                    setTimeout(
+                        () => {
+                            this.alertShow = false
+                            this.email = ''
+                            this.password = ''
+                        },3000)
                 }else{
-                    this.alertTitle = "Error !, Please input valid Email & Password"
+                    this.alertTitle = "Error !, Please input Required details"
                     this.alertType = "Danger"
                     this.alertShow = true
                     setTimeout(
