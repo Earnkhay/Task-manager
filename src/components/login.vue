@@ -160,6 +160,8 @@
                             () => {
                                 this.alertShow = false
                         },3000)
+                        console.log('blur event for no password entered');
+                        
                     }else{
                         this.alertTitle = "Password should be at least 6 characters long, contain at least one uppercase & one digit"
                         this.alertType = "Danger"
@@ -169,13 +171,15 @@
                                 this.alertShow = false
                                 this.password = ""
                         },3000)
-
+                        console.log('blur event for wrong password format');
                     }
                 }
 
             checkPageType(){
                 if (this.pageType == 'signUp') {
-                    this.validatePassword
+                    this.validatePassword()
+                    console.log(this.checkPageType, 'why are you not working');
+                    
                 } else {
                     return null
                 }
@@ -242,6 +246,7 @@
                         () => {
                             this.alertShow = false
                             this.email = ''
+                            this.username = ''
                             this.password = ''
                         },3000)
                     return 
