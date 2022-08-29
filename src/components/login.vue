@@ -110,8 +110,12 @@
         setLoginPage(){     
             if(this.pageType == "signUp"){
                 this.pageType = "login"
+                this.email = ""
+                this.password = ""
             }else if(this.pageType == "login"){
                 this.pageType = "signUp"
+                this.email = ""
+                this.password = ""
             }
                 
             }
@@ -174,12 +178,9 @@
                         console.log('blur event for wrong password format');
                     }
                 }
-
             checkPageType(){
                 if (this.pageType == 'signUp') {
                     this.validatePassword()
-                    console.log(this.checkPageType, 'why are you not working');
-                    
                 } else {
                     return null
                 }
