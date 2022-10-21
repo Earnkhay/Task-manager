@@ -1,5 +1,5 @@
 <template>
-    <div id="login-page" class="m-0 p-0">
+    <div id="login-page" class="py-5">
         <!-- <nav-bar :navTitle="pageName" :navlink1="pageLink" :navlink2="pageLink1"/> -->
         <router-view/>
          <div class="p-5 bg">
@@ -37,7 +37,7 @@
                                 <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
                                 </div>
                     
-                            <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} <a href="" id="link" @click.prevent="setLoginPage">{{pageType == "signUp" ? "Log in here" : "Sign up here"}}</a></p>
+                            <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} <a href="" id="link" @click.prevent="setLoginPage"> {{ pageType == "signUp" ? "Log in here" : "Sign up here" }}</a></p>
                         </form>    
                     </div>
                 </div>
@@ -326,6 +326,8 @@
     height: 100%;
 }
 
+
+
 img{
     max-width: 100%;
     height: 100%;
@@ -402,11 +404,7 @@ form a:hover{
     }
 }
 
-@media (min-width: 400px) and (max-width: 487px){
-    .login-image img{
-        display: none;
-    }
-    
+@media (min-width: 400px) and (max-width: 487px){  
     .form{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
@@ -420,10 +418,6 @@ form a:hover{
 }
 
 @media (min-width: 353px) and (max-width: 399px){
-    .login-image img{
-        display: none;
-    }
-    
     .form{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
@@ -447,10 +441,7 @@ form a:hover{
 }
 
 @media screen and (max-width: 352px){
-    .login-image img{
-        display: none;
-    }
-    
+ 
     .form{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
