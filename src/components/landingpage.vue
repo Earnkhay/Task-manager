@@ -78,7 +78,7 @@ import {Options, Vue} from "vue-class-component"
 })
 
 export default class landingpage extends Vue {
-    name = "Julia"
+    name = "User"
     d = new Date()
     hour = this.d.getHours()
     // greetImage = "../assets/morningsvg.png"

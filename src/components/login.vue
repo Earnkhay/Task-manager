@@ -28,13 +28,13 @@
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" @blur="checkPageType"  required>
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" @blur="checkPageTypePassword"  required>
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
                             
                                 <div class="text-center">
-                                <button type="submit" class="mb-3" id="signup" @click.prevent="submitAction(pageType)">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                <button type="submit" class="mb-3" id="signup" @click.prevent="submitAction(pageType), checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
                                 <!-- <router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link> -->
                                 <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
                                 </div>
@@ -152,7 +152,6 @@
                     }
                 }
             validatePassword() {
-
                     if (this.regPassword.test(this.password)) {
                         console.log('valid password');   
                         
@@ -178,13 +177,80 @@
                         console.log('blur event for wrong password format');
                     }
                 }
-            checkPageType(){
+            checkPageTypePassword() {
                 if (this.pageType == 'signUp') {
                     this.validatePassword()
-                } else {
+                }else {
                     return null
                 }
             }
+
+            async checkPageTypeAuth(pageType: string){
+                if (this.pageType == 'signUp') {
+                    await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
+                        email: this.email,
+                        password: this.password,
+                        username: this.username,
+                        returnSecureToken: true
+                    })
+                    .then((res) => {
+                        console.log(res, 'successful authentication')
+                        setTimeout(() => {         
+                                this.email = ''
+                                this.password = ''
+                                this.username = ''
+                        },3000) 
+                    })
+                    .catch((err) => {
+                        console.error(err.message, "what's the error msg")
+                        this.alertTitle = 'Error !, Account already exists... '
+                        this.alertType = "danger"
+                        this.alertShow = true
+                        setTimeout(() => {         
+                                this.alertShow = false
+                                this.email = ''
+                                this.password = ''
+                                this.username = ''
+                        },3000) 
+                        
+                    });
+                }else{
+                    await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
+                        email: this.email,
+                        password: this.password,
+                        username: this.username,
+                        returnSecureToken: true
+                    })
+                    .then((res) => {
+                        console.log(res, 'successful authentication')
+                        this.alertTitle = "Success !, You're Welcome"
+                        this.alertType = "Success"
+                        this.alertShow = true
+                        setTimeout(() => {         
+                                this.alertShow = false
+                                this.email = ''
+                                this.password = ''
+                                this.username = ''
+                                this.$router.push('landingpage') 
+                        },3000) 
+                    })
+                    .catch((err) => {
+                        console.error(err.message, "what's the error msg")
+                        this.alertTitle = 'Error !, wrong email or password. Please try again...'
+                        this.alertType = "danger"
+                        this.alertShow = true
+                        setTimeout(() => {         
+                                this.alertShow = false
+                                this.email = ''
+                                this.password = ''
+                                this.username = ''
+                        },3000) 
+                        
+                    });
+                }
+                return
+            }
+            // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg
             // eslint-disable-next-line
             async submitAction(pageType: string){
                 const formData = {
@@ -193,7 +259,7 @@
                     username: this.username
                 }
                 // console.log(pageType, "PAGE TYPE", formData);
-                if(this.email != "" && this.password != "" && this.username != "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                if(this.username != "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
                     
                     await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                         formData: formData
@@ -203,10 +269,10 @@
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
-                        setTimeout(() => {         
-                                this.$router.push('landingpage')
+                        setTimeout(() => {  
+                                this.alertShow = false      
+                                // this.$router.push('landingpage') 
                         },3000) 
-                        // this.emitter.emit("changeName", this.username);
                     })
                     .catch((err) => {
                         console.error(err)
@@ -229,17 +295,7 @@
                             this.alertShow = false
                             this.username = ''
                         },3000)
-                }else if(this.email != "" && this.password != "" && this.pageType == 'login' && this.mailformat.test(this.email)){
-                    this.alertTitle = "Error !, You do not have an Account"
-                    this.alertType = "Danger"
-                    this.alertShow = true
-                    setTimeout(
-                        () => {
-                            this.alertShow = false
-                            this.email = ''
-                            this.password = ''
-                        },3000)
-                }else{
+                }else if(pageType == 'signUp') {
                     this.alertTitle = "Error !, Please input Required details"
                     this.alertType = "Danger"
                     this.alertShow = true
