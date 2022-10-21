@@ -11,14 +11,11 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import VueApexCharts from "vue3-apexcharts"
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import mitt from "mitt"
-const emitter = mitt()
 
 const app = createApp(App);
 app.use(VueApexCharts);
 app.use(VueAxios, axios)
 app.provide('axios', app.config.globalProperties.axios)
-app.config.globalProperties.emitter = emitter;
 
 
 

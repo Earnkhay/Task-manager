@@ -1,19 +1,17 @@
 <template>
-    <div id="login-page">
+    <div id="login-page" class="m-0 p-0">
         <!-- <nav-bar :navTitle="pageName" :navlink1="pageLink" :navlink2="pageLink1"/> -->
         <router-view/>
-         <div class="p-5">
+         <div class="p-5 bg">
         <div class="container ">
             <div class="row gx-0">
                 <div class="col-md-6 bg-light form">
-                    <div class="text-center ">
+                    <div class="text-center">
                         <h1 id="header" class="mb-3">{{pageType == "signUp" ? 'Create Account' : 'Log In'}}</h1>
                         <!-- <div>User {{ $route.params.id }}</div> -->
-                        <alert v-if="alertShow" :alertText="alertTitle" :alertType="alertType"></alert><br>
-
+                        <alert v-if="alertShow" :alertText="alertTitle" :alertType="alertType"></alert>
                     </div>
-                    <div class="row justify-content-center ">
-                        
+                    <div class="row justify-content-center mt-2">
                             <form action="" id="login-form" class=" col-md-10 text-xs-center">   
                                 <div class="mb-3 text-xs-center" v-if="pageType == 'signUp'">
                                     <label for="exampleFormControlInput1" class="form-label">Username</label>
@@ -22,13 +20,13 @@
                                 
                                 <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter your email" v-model="email" @blur="validateEmail"  required>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter email" v-model="email" @blur="validateEmail"  required>
                                   </div>
                     
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter your password" v-model="password" @blur="checkPageTypePassword"  required>
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter password" v-model="password" @blur="checkPageTypePassword"  required>
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
@@ -40,8 +38,7 @@
                                 </div>
                     
                             <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} <a href="" id="link" @click.prevent="setLoginPage">{{pageType == "signUp" ? "Log in here" : "Sign up here"}}</a></p>
-                        </form>
-                       
+                        </form>    
                     </div>
                 </div>
                 <div class="col-md-6 d-none d-sm-block login-image">
@@ -185,8 +182,9 @@
                 }
             }
 
+            // eslint-disable-next-line
             async checkPageTypeAuth(pageType: string){
-                if (this.pageType == 'signUp') {
+                if (pageType == 'signUp') {
                     await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
                         email: this.email,
                         password: this.password,
@@ -314,11 +312,18 @@
 </script>
 
 <style scoped>
+/* body, html{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} */
 #login-page{
     background-image: url(../assets/sharon-mccutcheon-NkQD-RHhbvY-unsplash.jpg);
     background-position: center;
     background-attachment: fixed;
+    background-repeat: no-repeat;
     background-size: cover;
+    height: 100%;
 }
 
 img{
@@ -332,7 +337,7 @@ img{
 .form{
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
-    padding: 90px;
+    padding: 63px;
 }
 
 form button{
@@ -384,7 +389,7 @@ form a:hover{
     margin-top: 10px;
 }
 
-@media screen and (max-width: 767px) {
+@media (min-width: 488px) and (max-width: 767px) {
     .login-image img{
         display: none;
     }
@@ -393,39 +398,79 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 80px; 
+        padding: 68px; 
     }
+}
 
-    .form input{
-        width: 70%;
-        margin: auto;
+@media (min-width: 400px) and (max-width: 487px){
+    .login-image img{
+        display: none;
+    }
+    
+    .form{
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding: 59px; 
     }
 
     #header{
-        padding-bottom: 13px;
+        font-size: 1.6rem;
     }
+}
 
-    .form label{
-        margin-left: 15%;
+@media (min-width: 353px) and (max-width: 399px){
+    .login-image img{
+        display: none;
     }
     
-    form button{
-        width: 80%;
+    .form{
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding: 62px; 
     }
 
-    /* .password-icon input{
-        margin-right: 2px;
-        margin-left: 40px;
-    } */
+    #login-form p{
+        font-size: 0.9rem;
+    }
+
+    label{
+        font-size: 0.9rem;
+    }
+
+    #header{
+        font-size: 1.1rem;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: 352px){
+    .login-image img{
+        display: none;
+    }
     
-    .icon{
-        margin-right: 20px; 
-        margin-top: 10px;
+    .form{
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding: 20px; 
     }
 
-    /* .password{
-        margin-right: 20px;
-    } */
+    #header{
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #login-form p{
+        font-size: 0.7rem;
+    }
+
+    label{
+        font-size: 0.8rem;
+    }
 }
 
 
