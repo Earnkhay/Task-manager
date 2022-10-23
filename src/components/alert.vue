@@ -21,10 +21,6 @@
 
 <style scoped>
     .alertComp{
-        /* background-color: rgb(245, 68, 68); */
-        /* position: absolute; */
-        /* top: 30px;
-        left: 10px; */
         padding: 5px;
         border-radius: 10px;
         color: white;
