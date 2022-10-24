@@ -1,37 +1,25 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-light" >
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#" >{{navTitle}}</a>
+    <nav class="navbar navbar-expand-lg bg-light">
+  <div class="container">
+    <router-link class="navbar-brand fw-bold" :to="{name: 'landingpage'}">{{navTitle}}</router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <router-link class="nav-link" aria-current="page" active-class="active" :to="{name: 'landingpage'}">Home</router-link>
+          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'landingpage'}">Home</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" active-class="active" :to="{name: 'dashboard'}">{{navlink1}}</router-link>
+          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'dashboard'}">{{navlink1}}</router-link>
         </li>
-        <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li> -->
         <li class="nav-item">
-          <router-link class="nav-link" active-class="active" :to="{name: 'login'}">{{navlink2}}</router-link>
+          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'landingpage'}">{{navlink2}}</router-link>
+        </li>
+        <li class="nav-item logout">
+          <a class="nav-link link-dark fw-bold" @click="logOutAction" v-if="isLoggedIn">logout</a>
         </li>
       </ul>
-      <!-- <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form> -->
     </div>
   </div>
 </nav>
@@ -39,6 +27,9 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component"
+import { getAuth, onAuthStateChanged, signOut  } from '@firebase/auth';
+
+let auth;
 
   @Options({
     props: {
@@ -52,15 +43,41 @@ import {Options, Vue} from "vue-class-component"
     // }
     export default class navBar extends Vue {
       navText = "emitted parameter"
-      mounted(){
-        setTimeout(
-          () => {
-          this.$emit('actionText', this.navText);
-        },5000)
-      }
+      // mounted(){
+      //   setTimeout(
+      //     () => {
+      //     this.$emit('actionText', this.navText);
+      //   },5000)
+      // }
+
+      isLoggedIn = false
+    
+    mounted(){
+      auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.isLoggedIn = true;
+        } else {
+          this.isLoggedIn = false;
+        }
+      })
+    }
+    
+    logOutAction(){
+      auth = getAuth();
+      signOut(auth).then(() => {
+        this.$router.push("/")
+      })
+    }
     }
 </script>
 
-<style>
+<style scoped>
+.nav-link:hover{
+  color: red !important;
+}
 
+.logout{
+  cursor: pointer;
+}
 </style>
