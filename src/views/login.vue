@@ -32,7 +32,7 @@
                                     </div>
                             
                                 <div class="text-center">
-                                <button type="submit" class="mb-3" id="signup" @click.prevent="submitAction(pageType), checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                <button type="submit" class="mb-3" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
                                 <!-- <router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link> -->
                                 <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
                                 </div>
@@ -83,13 +83,17 @@
 
     
     import {Options, Vue} from "vue-class-component"
-    import alert from './alert.vue'
+    import alert from '@/components/alert.vue'
     import axios from 'axios'
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, } from "firebase/auth";
+
     @Options({
         components: {
             alert
         }
     })
+
+
     export default class login extends Vue{
         passwordType = 'password'
         pageType ="signUp"
@@ -180,106 +184,96 @@
                 }
             }
 
-            // eslint-disable-next-line
             async checkPageTypeAuth(pageType: string){
-                if (pageType == 'signUp') {
-                    await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
-                        email: this.email,
-                        password: this.password,
-                        username: this.username,
-                        returnSecureToken: true
-                    })
-                    .then((res) => {
-                        console.log(res, 'successful authentication')
-                        setTimeout(() => {         
-                                this.email = ''
-                                this.password = ''
-                                this.username = ''
-                        },3000) 
-                    })
-                    .catch((err) => {
-                        console.error(err.message, "what's the error msg")
-                        this.alertTitle = 'Error !, Account already exists... '
-                        this.alertType = "danger"
-                        this.alertShow = true
-                        setTimeout(() => {         
-                                this.alertShow = false
-                                this.email = ''
-                                this.password = ''
-                                this.username = ''
-                        },3000) 
-                        
-                    });
-                }else{
-                    await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
-                        email: this.email,
-                        password: this.password,
-                        username: this.username,
-                        returnSecureToken: true
-                    })
-                    .then((res) => {
-                        console.log(res, 'successful authentication')
-                        this.alertTitle = "Success !, You're Welcome"
-                        this.alertType = "Success"
-                        this.alertShow = true
-                        setTimeout(() => {         
-                                this.alertShow = false
-                                this.email = ''
-                                this.password = ''
-                                this.username = ''
-                                this.$router.push('landingpage') 
-                        },3000) 
-                    })
-                    .catch((err) => {
-                        console.error(err.message, "what's the error msg")
-                        this.alertTitle = 'Error !, wrong email or password. Please try again...'
-                        this.alertType = "danger"
-                        this.alertShow = true
-                        setTimeout(() => {         
-                                this.alertShow = false
-                                this.email = ''
-                                this.password = ''
-                                this.username = ''
-                        },3000) 
-                        
-                    });
-                }
-                return
-            }
-            // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg
-            // eslint-disable-next-line
-            async submitAction(pageType: string){
                 const formData = {
                     email: this.email,
                     password: this.password,
                     username: this.username
                 }
-                // console.log(pageType, "PAGE TYPE", formData);
-                if(this.username != "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
-                    
+                const auth = getAuth()
+                
+                if (pageType == 'signUp' && this.username != "" && this.email != "" && this.password != '' && this.mailformat.test(this.email) && this.regPassword.test(this.password)) {
+                    createUserWithEmailAndPassword(getAuth(), this.email, this.password)
                     await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                         formData: formData
                     })
                     .then((res) => {
-                        console.log(res)
+                        console.log(res, "Successfully registered");
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
                         setTimeout(() => {  
-                                this.alertShow = false      
-                                // this.$router.push('landingpage') 
+                                this.alertShow = false  
+                                // this.$router.push('/landingPage')
+                                this.pageType = 'login'   
+                                this.email = ''
+                                this.password = '' 
+                                this.username = '' 
                         },3000) 
                     })
                     .catch((err) => {
                         console.error(err)
-                        this.alertTitle = 'Failed to save data - please try again later'
+                        console.log(err.code);
+                        this.alertTitle = err.code
                         this.alertType = "danger"
                         this.alertShow = true
+                        // switch (err.code) {
+                        //     case "auth/invalid-email":
+                        //         this.alertTitle = "Invalid email";
+                        //         break;
+                        //     case "auth/user-not-found":
+                        //         this.alertTitle = "No Account with that email was found";
+                        //         break;
+                        //     case "auth/wrong-password":
+                        //         this.alertTitle = "Incorrect password";
+                        //         break;
+                        //     default:
+                        //         this.alertTitle = "Email or password was incorrect";
+                        //         break;
+                        // }
                         setTimeout(() => {         
                                 this.alertShow = false
                                 this.email = ''
                                 this.password = ''
                                 this.username = ''
+                        },3000) 
+                    });
+                }else if(pageType == 'login'){
+                    signInWithEmailAndPassword(auth, this.email, this.password)
+                    .then((res) => {
+                        console.log(res, "Successfully logged in");
+                        console.log(auth.currentUser);
+                        this.alertTitle = "Success !, You're Welcome"
+                        this.alertType = "Success"
+                        this.alertShow = true
+                        setTimeout(() => {  
+                                this.alertShow = false  
+                                this.$router.push('/landingpage')    
+                        },3000) 
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                        console.log(err.code);
+                        this.alertType = "danger"
+                        this.alertShow = true
+                        switch (err.code) {
+                            case "auth/invalid-email":
+                                this.alertTitle = "Invalid email";
+                                break;
+                            case "auth/user-not-found":
+                                this.alertTitle = "No Account with that email was found";
+                                break;
+                            case "auth/wrong-password":
+                                this.alertTitle = "Incorrect password";
+                                break;
+                            default:
+                                this.alertTitle = "Email or password was incorrect";
+                                break;
+                        }
+                        setTimeout(() => {         
+                                this.alertShow = false
+                                this.email = ''
+                                this.password = ''
                         },3000) 
                     });
                 }else if(this.username == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
@@ -291,7 +285,9 @@
                             this.alertShow = false
                             this.username = ''
                         },3000)
-                }else if(pageType == 'signUp') {
+                }else{
+                    console.log('why');
+                    
                     this.alertTitle = "Error !, Please input Required details"
                     this.alertType = "Danger"
                     this.alertShow = true
@@ -305,16 +301,139 @@
                     return 
                 }
             }
+
+            //register a new user using the cdn
+            // eslint-disable-next-line
+            // async checkPageTypeAuth(pageType: string){
+            //     if (pageType == 'signUp') {
+            //         await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
+            //             email: this.email,
+            //             password: this.password,
+            //             username: this.username,
+            //             returnSecureToken: true
+            //         })
+            //         .then((res) => {
+            //             console.log(res, 'successful authentication')
+            //             setTimeout(() => {         
+            //                     this.email = ''
+            //                     this.password = ''
+            //                     this.username = ''
+            //             },3000) 
+            //         })
+            //         .catch((err) => {
+            //             console.error(err.message, "what's the error msg")
+            //             this.alertTitle = 'Error !, Account already exists... '
+            //             this.alertType = "danger"
+            //             this.alertShow = true
+            //             setTimeout(() => {         
+            //                     this.alertShow = false
+            //                     this.email = ''
+            //                     this.password = ''
+            //                     this.username = ''
+            //             },3000) 
+                        
+            //         });
+            //     }else{
+            //         await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
+            //             email: this.email,
+            //             password: this.password,
+            //             username: this.username,
+            //             returnSecureToken: true
+            //         })
+            //         .then((res) => {
+            //             console.log(res, 'successful authentication')
+            //             this.alertTitle = "Success !, You're Welcome"
+            //             this.alertType = "Success"
+            //             this.alertShow = true
+            //             setTimeout(() => {         
+            //                     this.alertShow = false
+            //                     this.email = ''
+            //                     this.password = ''
+            //                     this.username = ''
+            //                     this.$router.push('landingpage') 
+            //             },3000) 
+            //         })
+            //         .catch((err) => {
+            //             console.error(err.message, "what's the error msg")
+            //             this.alertTitle = 'Error !, wrong email or password. Please try again...'
+            //             this.alertType = "danger"
+            //             this.alertShow = true
+            //             setTimeout(() => {         
+            //                     this.alertShow = false
+            //                     this.email = ''
+            //                     this.password = ''
+            //                     this.username = ''
+            //             },3000) 
+                        
+            //         });
+            //     }
+            //     return
+            // }
+            // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg
+            // eslint-disable-next-line
+            // async submitAction(pageType: string){
+            //     const formData = {
+            //         email: this.email,
+            //         password: this.password,
+            //         username: this.username
+            //     }
+            //     // console.log(pageType, "PAGE TYPE", formData);
+            //     if(this.username != "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                    
+            //         await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
+            //             formData: formData
+            //         })
+            //         .then((res) => {
+            //             console.log(res)
+            //             this.alertTitle = "Success !, You're Welcome"
+            //             this.alertType = "Success"
+            //             this.alertShow = true
+            //             setTimeout(() => {  
+            //                     this.alertShow = false      
+            //                     // this.$router.push('landingpage') 
+            //             },3000) 
+            //         })
+            //         .catch((err) => {
+            //             console.error(err)
+            //             this.alertTitle = 'Failed to save data - please try again later'
+            //             this.alertType = "danger"
+            //             this.alertShow = true
+            //             setTimeout(() => {         
+            //                     this.alertShow = false
+            //                     this.email = ''
+            //                     this.password = ''
+            //                     this.username = ''
+            //             },3000) 
+            //         });
+            //     }else if(this.username == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+            //         this.alertTitle = "Please input Username"
+            //         this.alertType = "Danger"
+            //         this.alertShow = true
+            //         setTimeout(
+            //             () => {
+            //                 this.alertShow = false
+            //                 this.username = ''
+            //             },3000)
+            //     }else if(pageType == 'signUp') {
+            //         this.alertTitle = "Error !, Please input Required details"
+            //         this.alertType = "Danger"
+            //         this.alertShow = true
+            //         setTimeout(
+            //             () => {
+            //                 this.alertShow = false
+            //                 this.email = ''
+            //                 this.username = ''
+            //                 this.password = ''
+            //             },3000)
+            //         return 
+            //     }
+            // }
        }   
 
 </script>
 
 <style scoped>
-/* body, html{
-    height: 100%;
-    margin: 0;
-    padding: 0;
-} */
+
 #login-page{
     background-image: url(../assets/sharon-mccutcheon-NkQD-RHhbvY-unsplash.jpg);
     background-position: center;

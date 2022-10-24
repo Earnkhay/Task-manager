@@ -39,10 +39,10 @@
 
 <script lang="ts">
     import {Options, Vue} from "vue-class-component"
-    import navBar from "./navbar.vue"
-    import myFooter from "./footer.vue"
+    import navBar from "@/components/navbar.vue"
+    import myFooter from "@/components/footer.vue"
     import VueApexCharts from "vue3-apexcharts"
-    import maintable from "./table.vue"
+    import maintable from "@/components/table.vue"
  
     @Options({
         components: {
@@ -56,7 +56,7 @@
     export default class dashboard extends Vue {
         navText = "Task Manager"
         navText1 = "Dashboard"
-        navText2 = "Sign out"
+        navText2 = "to-do list"
         options = {
         chart: {
           id: 'vuechart-example'

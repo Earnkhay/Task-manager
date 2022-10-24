@@ -1,4 +1,5 @@
 <template>
+    <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
     <div class="container mt-5">
     <div class="row gx-5">
     <div class="col-md-6">
@@ -70,14 +71,19 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component"
+import navBar from "@/components/navbar.vue"
 
 @Options({
   components: {
+    navBar
   }
   
 })
 
 export default class landingpage extends Vue {
+    navText = "Task Manager"
+    navText1 = "Dashboard"
+    navText2 = "to-do list"
     name = "User"
     d = new Date()
     hour = this.d.getHours()

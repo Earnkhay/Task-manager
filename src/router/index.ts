@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import login from '@/components/login.vue'
+import login from '@/views/login.vue'
 import main from '@/views/main.vue'
 import area from '@/components/area.vue'
-import card from '@/components/card.vue'
 import mainbody from '@/components/mainbody.vue'
-import landingpage from '@/components/landingpage.vue'
-import dashboard from '@/components/dashboard.vue'
+import landingpage from '@/views/landingpage.vue'
+import dashboard from '@/views/dashboard.vue'
 import example from '@/components/example.vue'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -31,22 +31,23 @@ const routes: Array<RouteRecordRaw> = [
         name: 'area',
         component: area
       },
-      {
-        path: '/login/card',
-        name: 'card',
-        component: card
-      }
     ]
   },
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: dashboard
+    component: dashboard,
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: '/landingpage',
     name: 'landingpage',
-    component: landingpage
+    component: landingpage,
+    meta: {
+      requiresAuth: true,
+    }
   },
   // {
   //   path: '/about',
@@ -66,6 +67,34 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+//to keep user logged in on reload
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+        (user) => {
+          removeListener();
+          resolve(user);
+        },
+      reject
+    )
+  })
+}
+
+//navigation guard
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (await getCurrentUser()) {
+      next();
+    }else{
+      alert("You do not have access!")
+      next("/")
+    }
+  } else {
+    next();
+  }
 })
 
 export default router
