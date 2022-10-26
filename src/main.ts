@@ -6,9 +6,6 @@ import store from './store'
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import '../node_modules/bootstrap/dist/js/bootstrap.js'
 import '@fortawesome/fontawesome-free/css/all.css'
-// import swal from 'sweetalert';
-// import "../node_modules/izitoast/dist/css/iziToast.css";
-// import Emitter from 'tiny-emitter'
 import VueApexCharts from "vue3-apexcharts"
 import axios from 'axios'
 import VueAxios from 'vue-axios'

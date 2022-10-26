@@ -1,5 +1,9 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth'
+// import { initializeApp } from "firebase/app";
+// import { getAuth } from 'firebase/auth'
+import firebase from 'firebase'
+import 'firebase/firestore'
+import 'firebase/firebase-auth'
+import 'firebase/storage'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,8 +17,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig)
+const fb = firebase.initializeApp(firebaseConfig)
 
-const auth = getAuth(app)
+const db = firebase.firestore()
+// const usersCollection = db.collection('users')
 
-export { auth }
+
+
+export { fb, db }
