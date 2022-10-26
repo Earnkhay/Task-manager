@@ -1,6 +1,7 @@
 <template>
     <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
 
+    <!-- <div>User {{ $route.params.id }}</div> -->
     <div class="container text-center mb-5 mt-5">
     <div class="row">
         <div class="col">

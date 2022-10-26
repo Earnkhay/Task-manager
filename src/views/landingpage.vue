@@ -1,24 +1,66 @@
 <template>
     <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
+    
     <div class="container mt-5">
     <div class="row gx-5">
     <div class="col-md-6">
       <!-- <h2>Good {{hour >= 0 && hour <= 11 ? "morning" :  hour >= 12 && hour <= 17 ? "afternoon" :  "evening"}}, </h2> -->
       <h2>Good {{greet()}},</h2>
       <h1 class="mb-4">{{name}}</h1>
+      <!-- <div>User {{ $route.params.id }}</div> -->
       <!-- <p>{{hour}}</p> -->
-      <div class="row mb-4 g-0">
-      <div class="col-lg-4 mx-0 mb-4">
-      <router-link :to="{name: ''}" id="new"><span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span> Create New</router-link>      
-      <!-- <button><router-link :to="{name: 'mainbody'}">Create New</router-link></button>
-      <button><router-link :to="{name: 'mainbody'}">Go to Dashboard</router-link></button> -->
+      <div class="d-flex flex-wrap mb-5">
+
+      <!-- Button trigger modal -->
+        <button type="button" class="btn fw-bold" id="new" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span>Create New
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Create New Task</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" >
+                    <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">New Task</label>
+                    <input @keyup.enter="addTask" class="form-control" type="text" placeholder="Input new Task" v-model="title">
+                    </div>
+                    <!-- <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="comments"></textarea>
+                    </div> -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" @click.prevent="addTask">Add</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+      <div class="">
+      <router-link :to="{name: 'dashboard'}" class="btn fw-bold" id="dashboard"><span class="ps-3 pe-2"><i class="fa-solid fa-rocket"></i></span> Go to Dashboard</router-link>
       </div>
-      <div class="col-lg-6 mx-0">
-      <router-link :to="{name: 'dashboard'}" id="dashboard"><span class="ps-3 pe-2"><i class="fa-solid fa-rocket"></i></span> Go to Dashboard</router-link>
       </div>
-      </div>
+
       <h6>Recent Tasks</h6>
-      <div class="row">
+      <!-- <p>
+        {{ tasks }} 
+      </p> -->
+      <ul>
+        <li v-for="(task, index) in tasks" :key="index">{{ task }}
+            <span class="p-2"><i class="fa-solid fa-pen-to-square p-2 mx-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2"></i>
+                    <i class="fa-solid fa-trash p-2 mx-1 btn btn-danger" @click="removeTask(index)"></i>
+                    <i class="fa-solid fa-eye p-2 mx-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop3"></i></span>
+        </li>
+    </ul>
+      <!-- <div class="row">
           <div class="col-lg-4" style="font-size: 1rem; font-weight: 700;">
               <ul>
               <li> Tue 01, Feb
@@ -59,32 +101,36 @@
               <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">Merge Testing</b></li>
               </ul>
           </div>
-      </div>
+      </div> -->
     </div>
     <div class="col-md-6 mt-3">
-      <img :src="'assets/'+greetImage()+'.png'" alt="">
+      <img :src="'../assets/'+greetImage()+'.png'" alt="">
     </div>
     </div>
     </div>
     <router-view/>
 </template>
 
-<script lang="ts">
+<script>
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
+// import firebase from 'firebase/app'
+import { getAuth } from "firebase/auth";
 
 @Options({
   components: {
     navBar
   }
-  
 })
 
 export default class landingpage extends Vue {
     navText = "Task Manager"
     navText1 = "Dashboard"
     navText2 = "to-do list"
-    name = "User"
+    tasks = ['Finish task']
+    title = ''
+    // comments = ''
+    name = ""
     d = new Date()
     hour = this.d.getHours()
     // greetImage = "../assets/morningsvg.png"
@@ -106,36 +152,45 @@ export default class landingpage extends Vue {
             return "evening"
         }
     }
-    // mounted (){
-    // this.emitter.on('changeName', (evt) => {
-    //   this.name = evt.eventContent;
-    // })
-    // }
+    mounted (){
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user !== null) {
+            // The user object has basic properties such as display name, email, etc.
+            // this.name = user.displayName;
+            this.name = user.email;
+            // const photoURL = user.photoURL;
+            // const emailVerified = user.emailVerified;
+
+            // const uid = user.uid;
+        }
+    }
+    addTask(){
+        if(this.title != '') {
+             //add new tasks from the top
+            this.tasks.unshift(this.title);
+            // this.tasks.push(this.title);
+            this.title = ''
+        }
+    }
+    removeTask(id){
+        console.log(id);
+        this.tasks.splice(id, 1)
+
+        // this.$delete(this.tasks, id);
+    }
 }
 </script>
 
 <style scoped>
     #new{
-        text-decoration: none;
-        color: white;
-        width: 100%;
+        /* width: 100%; */
         background-color: rgb(68, 68, 170);
-        padding: 10px;
-        border-radius: 5px;
         border-color:  rgb(68, 68, 170);
-        font-weight: bold;
+        color: white;
     }
     #new:hover{
         color: black;
-    }
-
-    #dashboard{
-        text-decoration: none;
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        color: black;
-        font-weight: bold;
     }
     #dashboard:hover{
         background-color: rgb(68, 68, 170);

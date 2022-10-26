@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/dashboard',
+    path: '/dashboard/:id',
     name: 'dashboard',
     component: dashboard,
     meta: {
@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/landingpage',
+    path: '/landingpage/:id',
     name: 'landingpage',
     component: landingpage,
     meta: {

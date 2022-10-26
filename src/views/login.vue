@@ -248,7 +248,7 @@
                         this.alertShow = true
                         setTimeout(() => {  
                                 this.alertShow = false  
-                                this.$router.push('/landingpage')    
+                                this.$router.push('/landingpage/:id')    
                         },3000) 
                     })
                     .catch((err) => {
