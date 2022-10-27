@@ -213,7 +213,7 @@
                     })
                     .catch((err) => {
                         console.error(err)
-                        console.log(err.code);
+                        console.log(err.code, err.message);
                         this.alertTitle = err.code
                         this.alertType = "danger"
                         this.alertShow = true

@@ -24,22 +24,22 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Create New Task</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form action="" >
             <div class="modal-body">
-                <form action="" >
                     <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">New Task</label>
-                    <input @keyup.enter="addTask" class="form-control" type="text" placeholder="Input new Task" v-model="title">
+                    <input @keydown.prevent.enter="addTask" class="form-control" type="text" placeholder="Input new Task" v-model="title">
                     </div>
-                    <!-- <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Comment</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="comments"></textarea>
-                    </div> -->
-                </form>
+                    <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+                    <textarea class="form-control" @keyup.prevent.enter="addTask" id="exampleFormControlTextarea1" rows="3" v-model="comments"></textarea>
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" @click.prevent="addTask">Add</button>
             </div>
+            </form>
             </div>
         </div>
         </div>
@@ -49,60 +49,55 @@
       </div>
       </div>
 
-      <h6>Recent Tasks</h6>
-      <!-- <p>
-        {{ tasks }} 
-      </p> -->
-      <ul>
-        <li v-for="(task, index) in tasks" :key="index">{{ task }}
-            <span class="p-2"><i class="fa-solid fa-pen-to-square p-2 mx-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2"></i>
-                    <i class="fa-solid fa-trash p-2 mx-1 btn btn-danger" @click="removeTask(index)"></i>
-                    <i class="fa-solid fa-eye p-2 mx-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop3"></i></span>
-        </li>
-    </ul>
-      <!-- <div class="row">
-          <div class="col-lg-4" style="font-size: 1rem; font-weight: 700;">
-              <ul>
-              <li> Tue 01, Feb
-                   09:23am
-              </li>
-              <li>Mon 21, Mar
-                  10:20am
-              </li>
-              <li>Wed 29, Jun
-                  05:32am
-              </li>
-              <li>Thu 23, Jun
-                  09:12am
-              </li>
-              <li>Tue 19, Apr
-                  00:00am
-              </li>
-              <li>Wed 06, Apr
-                  00:00am
-              </li>
-              </ul>
-          </div>
-          <div class="col-lg-6">
-              <ul>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing due soon/ today</b><br>
-                  EMAIL
-              </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">Testing due soon/today</b>
-                  PHONE CALL
-              </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing due soon</b>
-                  APPOINTMENT
-              </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">New Testing Matter</b> <br>
-                  GENERAL
-              </li>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">First Milestone</b></li> <br>
-              <li><span style="margin-left: -30px;" class="p-2"><i class="fa-solid fa-list-check"></i></span><b class="text-primary">Merge Testing</b></li>
-              </ul>
-          </div>
-      </div> -->
+      <h6>Recent Tasks</h6>                   
+           <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Task Title</th>
+                    <th scope="col">Task Description</th>
+                    <th scope="col" colspan="3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="p-4" v-for="(task, index) in tasks" :key="index">
+                <td>{{ index + 1 }}</td>
+                <td> {{ task.title }} </td>
+                <td> {{ task.comments}} </td>
+                <td><i class="fa-solid fa-pen-to-square mx-1 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click.prevent="editTask(task)"></i></td>
+                <td><i class="fa-solid fa-trash mx-1 text-danger" @click="removeTask(task)"></i></td>
+                <td><i class="fa-solid fa-eye mx-1 text-success" data-bs-toggle="modal" data-bs-target="#exampleModal2"></i></td>
+            </tbody>
+           </table> 
     </div>
+    
+      <!-- Edit Modal -->
+      <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit current Task</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" >
+            <div class="modal-body">
+                    <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Edit Task</label>
+                    <input @keydown.prevent.enter="updateTask" class="form-control" type="text" placeholder="Input new Task" v-model="editTitle">
+                    </div>
+                    <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Edit Description</label>
+                    <textarea class="form-control" @keyup.prevent.enter="updateTask" id="exampleFormControlTextarea1" rows="3" v-model="editComments"></textarea>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" @click.prevent="updateTask(task)">Save Changes</button>
+            </div>
+            </form>
+            </div>
+        </div>
+        </div>
+
     <div class="col-md-6 mt-3">
       <img :src="'../assets/'+greetImage()+'.png'" alt="">
     </div>
@@ -114,8 +109,8 @@
 <script>
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
-// import firebase from 'firebase/app'
 import { getAuth } from "firebase/auth";
+// import {fb, db } from "../firebase.js"
 
 @Options({
   components: {
@@ -127,12 +122,19 @@ export default class landingpage extends Vue {
     navText = "Task Manager"
     navText1 = "Dashboard"
     navText2 = "to-do list"
-    tasks = ['Finish task']
+    tasks = []
+    // task = {
+    //     title = '',
+    //     comments = ''
+    // }
     title = ''
-    // comments = ''
+    comments = ''
     name = ""
+    editTitle = ''
+    editComments = ''
     d = new Date()
     hour = this.d.getHours()
+    time = this.d.getTime()
     // greetImage = "../assets/morningsvg.png"
     greetImage(){
         if (this.hour >= 0 && this.hour <= 11) {
@@ -161,24 +163,60 @@ export default class landingpage extends Vue {
             this.name = user.email;
             // const photoURL = user.photoURL;
             // const emailVerified = user.emailVerified;
-
             // const uid = user.uid;
+            this.tasks = JSON.parse(localStorage.getItem("tasks"));
         }
     }
     addTask(){
         if(this.title != '') {
              //add new tasks from the top
-            this.tasks.unshift(this.title);
-            // this.tasks.push(this.title);
+            // this.tasks.unshift(this.title);
+            this.tasks = this.tasks || []
+            const formObject = {
+                title: this.title,
+                comments: this.comments,
+                id: this.time,
+            }
+            this.tasks.unshift(
+                formObject
+            );
+            localStorage.setItem("tasks", JSON.stringify(this.tasks));
             this.title = ''
+            this.comments = ''
+            // $('#exampleModal').modal('hide')
         }
     }
-    removeTask(id){
-        console.log(id);
-        this.tasks.splice(id, 1)
-
-        // this.$delete(this.tasks, id);
+    removeTask(task){
+        // this.tasks.splice(id, 1)
+        // this.tasks = this.tasks.filter((t) => t !== task)
+        this.tasks = this.tasks.filter((id) => {
+          if (id != task) {
+            return task
+          }
+        })
+        localStorage.setItem("tasks", JSON.stringify(this.tasks));
+        console.log( this.tasks);
     }
+    editTask(task){
+        const itemToBeEdited = this.tasks.find((id) => id === task);
+        this.editTitle = itemToBeEdited.title
+        this.editComments = itemToBeEdited.comments
+        console.log(itemToBeEdited);
+    }
+    // updateTask(task){
+    //     console.log(this.tasks, 'tasks view');
+    //     const result = this.tasks.filter((id) => {
+    //         if (id === task) {
+    //             return task
+    //         }
+    //     })
+
+    //     result.unshift(this.tasks)
+    //     console.log(this.tasks, 'result view', result);
+
+    //     localStorage.setItem('tasks', JSON.stringify(result));
+    // }    
+    
 }
 </script>
 
