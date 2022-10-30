@@ -2,7 +2,7 @@
 // import { getAuth } from 'firebase/auth'
 import firebase from 'firebase'
 import 'firebase/firestore'
-import 'firebase/firebase-auth'
+// import 'firebase/firebase-auth'
 import 'firebase/storage'
 
 // Your web app's Firebase configuration
