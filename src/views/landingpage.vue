@@ -60,7 +60,7 @@
                 </tr>
             </thead>
             <tbody class="p-4" v-for="(task, index) in tasks" :key="index">
-                <td>{{ index + 1 }}</td>
+                <td>{{ index + 1 }} </td>
                 <td> {{ task.title }} </td>
                 <td> {{ task.comments}} </td>
                 <td><i class="fa-solid fa-pen-to-square mx-1 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click.prevent="editTask(task)"></i></td>
@@ -91,7 +91,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click.prevent="updateTask(task)">Save Changes</button>
+                <button type="button" class="btn btn-primary" @click.prevent="updateTask(currentTask)"> Save Changes</button>
             </div>
             </form>
             </div>
@@ -111,6 +111,7 @@ import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { getAuth } from "firebase/auth";
 // import {fb, db } from "../firebase.js"
+import * as $ from 'jquery'
 
 @Options({
   components: {
@@ -123,13 +124,11 @@ export default class landingpage extends Vue {
     navText1 = "Dashboard"
     navText2 = "to-do list"
     tasks = []
-    // task = {
-    //     title = '',
-    //     comments = ''
-    // }
+    currentTask = '' 
     title = ''
     comments = ''
     name = ""
+    done = false
     editTitle = ''
     editComments = ''
     d = new Date()
@@ -176,6 +175,7 @@ export default class landingpage extends Vue {
                 title: this.title,
                 comments: this.comments,
                 id: this.time,
+                done: false
             }
             this.tasks.unshift(
                 formObject
@@ -183,14 +183,15 @@ export default class landingpage extends Vue {
             localStorage.setItem("tasks", JSON.stringify(this.tasks));
             this.title = ''
             this.comments = ''
-            // $('#exampleModal').modal('hide')
+            // const taskModal = $('#exampleModal')
+            // taskModal.modal('hide');
         }
     }
     removeTask(task){
         // this.tasks.splice(id, 1)
         // this.tasks = this.tasks.filter((t) => t !== task)
-        this.tasks = this.tasks.filter((id) => {
-          if (id != task) {
+        this.tasks = this.tasks.filter((t) => {
+          if (t != task) {
             return task
           }
         })
@@ -198,24 +199,27 @@ export default class landingpage extends Vue {
         console.log( this.tasks);
     }
     editTask(task){
-        const itemToBeEdited = this.tasks.find((id) => id === task);
+        const itemToBeEdited = this.tasks.find((t) => t === task);
         this.editTitle = itemToBeEdited.title
         this.editComments = itemToBeEdited.comments
-        console.log(itemToBeEdited);
+        this.currentTask = task
+        console.log(itemToBeEdited, 'items to be edited', task);
     }
-    // updateTask(task){
-    //     console.log(this.tasks, 'tasks view');
-    //     const result = this.tasks.filter((id) => {
-    //         if (id === task) {
-    //             return task
-    //         }
-    //     })
+    updateTask(currentTask){
+        currentTask.title = this.editTitle
+        currentTask.comments = this.editComments
+        console.log(this.tasks, 'tasks view', currentTask, 'current tasks');
+        const result = this.tasks.filter((data) => {
+            if (data.id !== currentTask.id) {
+                return data
+            }
+        })
 
-    //     result.unshift(this.tasks)
-    //     console.log(this.tasks, 'result view', result);
+        result.unshift(currentTask)
+        console.log(this.tasks, 'result view', result);
 
-    //     localStorage.setItem('tasks', JSON.stringify(result));
-    // }    
+        localStorage.setItem('tasks', JSON.stringify(result));
+    }    
     
 }
 </script>
