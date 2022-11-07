@@ -1,1 +1,1 @@
-This is a fully validated and authenticated login and sign up page.
+This is a to-do list with a fully validated and authenticated login and sign up page. Using firebase as the backend.
