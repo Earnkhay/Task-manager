@@ -3,10 +3,10 @@
     
     <div class="container mt-5">
     <div class="row gx-5">
-    <div class="col-md-6">
+    <div class="col-md-6 weird">
       <!-- <h2>Good {{hour >= 0 && hour <= 11 ? "morning" :  hour >= 12 && hour <= 17 ? "afternoon" :  "evening"}}, </h2> -->
-      <h2>Good {{greet()}},</h2>
-      <h1 class="mb-4">{{name}}</h1>
+      <h2 class="fw-bold">Good {{ greet() }}, </h2>
+      <h5 class="mb-4 fs-4 fw-bold">{{ name }}</h5>
       <!-- <div>User {{ $route.params.id }}</div> -->
       <!-- <p>{{hour}}</p> -->
       <div class="d-flex flex-wrap mb-5">
@@ -56,7 +56,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Task Title</th>
                     <th scope="col">Task Description</th>
-                    <th scope="col" colspan="3">Actions</th>
+                    <th scope="col" colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody class="p-4" v-for="(task, index) in tasks" :key="index">
@@ -72,7 +72,7 @@
                 <td> {{ task.comments}} </td>
                 <td><i class="fa-solid fa-pen-to-square mx-1 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click.prevent="editTask(task)"></i></td>
                 <td><i class="fa-solid fa-trash mx-1 text-danger" @click="removeTask(task)"></i></td>
-                <td><i class="fa-solid fa-eye mx-1 text-success" data-bs-toggle="modal" data-bs-target="#exampleModal2"></i></td>
+                <!-- <td><i class="fa-solid fa-eye mx-1 text-success" data-bs-toggle="modal" data-bs-target="#exampleModal2"></i></td> -->
             </tbody>
            </table> 
     </div>
@@ -263,21 +263,25 @@ export default class landingpage extends Vue {
         font-weight: bold;
     }
 
-    h1{
-        font-weight: bold;
-    }
-
-    h2{
-        font-weight: bold;
-    }
-
     li{
         padding-bottom: 15px;
         list-style: none;
     }
 
     img{
-    max-width: 100%;
-    height: auto;
+        max-width: 100%;
+        height: auto;
+    }
+
+    @media screen and (max-width: 767px) {
+        img{
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 399px){
+       h5{
+        font-size: 10px;
+       }
     }
 </style>
