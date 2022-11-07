@@ -38,5 +38,8 @@
 , "src/axios.js"  ],
   "exclude": [
     "node_modules"
+  ],
+  "files": [
+    "typings.d.ts"
   ]
 }
