@@ -34,6 +34,8 @@
     </div>
     </div>
     
+    <nkselector/>
+    
     <router-view/>
     <my-footer/>
 </template>
@@ -44,13 +46,15 @@
     import myFooter from "@/components/footer.vue"
     import VueApexCharts from "vue3-apexcharts"
     import maintable from "@/components/table.vue"
+    import nkselector from "@/components/nkselector.vue"
  
     @Options({
         components: {
             navBar,
             myFooter,
             VueApexCharts,
-            maintable
+            maintable,
+            nkselector
         }
     })
 

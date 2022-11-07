@@ -60,7 +60,14 @@
                 </tr>
             </thead>
             <tbody class="p-4" v-for="(task, index) in tasks" :key="index">
-                <td>{{ index + 1 }} </td>
+                <!-- <td><div class="form-check pt-0 ps-4">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" v-model="checked" >
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        {{checked}}
+                    </label>
+                    </div>
+                </td> -->
+                <td> {{ index + 1}} </td>
                 <td> {{ task.title }} </td>
                 <td> {{ task.comments}} </td>
                 <td><i class="fa-solid fa-pen-to-square mx-1 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click.prevent="editTask(task)"></i></td>
@@ -111,7 +118,7 @@ import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { getAuth } from "firebase/auth";
 // import {fb, db } from "../firebase.js"
-import * as $ from 'jquery'
+// import * as $ from 'jquery'
 
 @Options({
   components: {
@@ -129,6 +136,7 @@ export default class landingpage extends Vue {
     comments = ''
     name = ""
     done = false
+    checked = null
     editTitle = ''
     editComments = ''
     d = new Date()
@@ -166,6 +174,16 @@ export default class landingpage extends Vue {
             this.tasks = JSON.parse(localStorage.getItem("tasks"));
         }
     }
+    // setStatus(){
+    //     console.log(this.done);
+    //     if (this.done == false) {
+    //         this.done = true
+    //         this.checked = true
+    //     }else if( this.done == true){
+    //         this.done = false
+    //         this.checked = false
+    //     }
+    // }
     addTask(){
         if(this.title != '') {
              //add new tasks from the top
@@ -175,7 +193,7 @@ export default class landingpage extends Vue {
                 title: this.title,
                 comments: this.comments,
                 id: this.time,
-                done: false
+                done: this.done,
             }
             this.tasks.unshift(
                 formObject
