@@ -6,6 +6,7 @@ import mainbody from '@/components/mainbody.vue'
 import landingpage from '@/views/landingpage.vue'
 import dashboard from '@/views/dashboard.vue'
 import example from '@/components/example.vue'
+import todo from '@/views/todo.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
@@ -45,6 +46,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/landingpage/:id',
     name: 'landingpage',
     component: landingpage,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: '/todo/:id',
+    name: 'todo',
+    component: todo,
     meta: {
       requiresAuth: true,
     }

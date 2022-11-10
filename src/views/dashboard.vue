@@ -61,7 +61,7 @@
     export default class dashboard extends Vue {
         navText = "Task Manager"
         navText1 = "Dashboard"
-        navText2 = "to-do list"
+        navText2 = "To-do list"
         options = {
         chart: {
           id: 'vuechart-example'
