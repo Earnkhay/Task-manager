@@ -59,18 +59,15 @@
                     <th scope="col" colspan="2">Actions</th>
                 </tr>
             </thead>
-            <tbody class="p-4" v-for="(task, index) in tasks" :key="index">
-                <!-- <td><div class="form-check pt-0 ps-4">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" v-model="checked" >
-                    <label class="form-check-label" for="flexRadioDefault1">
-                        {{checked}}
-                    </label>
+            <tbody class="p-4" v-for="(task, index) in tasks" :key="index" >
+                <td><div class="form-check pt-0 ps-4">
+                    <input class="form-check-input" type="checkbox" value="" :checked="task.done" @click="check(task)" id="flexCheckDefault">
                     </div>
-                </td> -->
-                <td> {{ index + 1}} </td>
-                <td> {{ task.title }} </td>
-                <td> {{ task.comments}} </td>
-                <td><i class="fa-solid fa-pen-to-square mx-1 text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click.prevent="editTask(task)"></i></td>
+                </td>
+                <!-- <td> {{ index + 1}} </td> -->
+                <td :class="[task.done ?  'text-decoration-line-through' : 'text-dark']"> {{ task.title }} </td>
+                <td :class="[task.done ?  'text-decoration-line-through' : 'text-dark']"> {{ task.comments}} </td>
+                <td><i class="fa-solid fa-pen-to-square mx-1 text-primary" v-if="task.done == false"  data-bs-toggle="modal" data-bs-target="#exampleModal1" @click.prevent="editTask(task)"></i></td>
                 <td><i class="fa-solid fa-trash mx-1 text-danger" @click="removeTask(task)"></i></td>
                 <!-- <td><i class="fa-solid fa-eye mx-1 text-success" data-bs-toggle="modal" data-bs-target="#exampleModal2"></i></td> -->
             </tbody>
@@ -106,7 +103,7 @@
         </div>
 
     <div class="col-md-6 mt-3">
-      <img :src="'../assets/'+greetImage()+'.png'" alt="">
+      <img :src="'../assets/'+greetImage()+'.png'" alt="" >
     </div>
     </div>
     </div>
@@ -117,8 +114,6 @@
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { getAuth } from "firebase/auth";
-// import {fb, db } from "../firebase.js"
-// import * as $ from 'jquery'
 
 @Options({
   components: {
@@ -129,14 +124,13 @@ import { getAuth } from "firebase/auth";
 export default class landingpage extends Vue {
     navText = "Task Manager"
     navText1 = "Dashboard"
-    navText2 = "to-do list"
+    navText2 = "To-do list"
     tasks = []
     currentTask = '' 
     title = ''
     comments = ''
     name = ""
     done = false
-    checked = null
     editTitle = ''
     editComments = ''
     d = new Date()
@@ -174,16 +168,7 @@ export default class landingpage extends Vue {
             this.tasks = JSON.parse(localStorage.getItem("tasks"));
         }
     }
-    // setStatus(){
-    //     console.log(this.done);
-    //     if (this.done == false) {
-    //         this.done = true
-    //         this.checked = true
-    //     }else if( this.done == true){
-    //         this.done = false
-    //         this.checked = false
-    //     }
-    // }
+    
     addTask(){
         if(this.title != '') {
              //add new tasks from the top
@@ -201,9 +186,12 @@ export default class landingpage extends Vue {
             localStorage.setItem("tasks", JSON.stringify(this.tasks));
             this.title = ''
             this.comments = ''
-            // const taskModal = $('#exampleModal')
-            // taskModal.modal('hide');
         }
+    }
+    check(task){
+        const taskToUpdate = this.tasks.find((t) => t === task)
+        taskToUpdate.done = !taskToUpdate.done
+        console.log(this.done, taskToUpdate.done);
     }
     removeTask(task){
         // this.tasks.splice(id, 1)
@@ -273,6 +261,9 @@ export default class landingpage extends Vue {
         height: auto;
     }
 
+    .through{
+        text-decoration: line-through;
+    }
     @media screen and (max-width: 767px) {
         img{
             display: none;
