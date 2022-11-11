@@ -124,30 +124,30 @@
                 feedback = ""
                 img = false
                 age = ""
-                beforeCreate(){
-                    console.log("before create");
-                }
-                created(){
-                    console.log("component has been created");
-                }
-                beforeMount(){
-                    console.log("before mounting");
-                }
-                mounted() {
-                    console.log(`the component is now mounted.`) 
-                }
-                beforeUpdate(){
-                    console.log("before update");
-                }
-                updated(){
-                    console.log("component has been updated");      
-                }
-                beforeUnmount(){
-                    console.log("before unmount");
-                }
-                unmounted(){
-                    console.log("component has been unmounted"); 
-                }
+                // beforeCreate(){
+                //     console.log("before create");
+                // }
+                // created(){
+                //     console.log("component has been created");
+                // }
+                // beforeMount(){
+                //     console.log("before mounting");
+                // }
+                // mounted() {
+                //     console.log(`the component is now mounted.`) 
+                // }
+                // beforeUpdate(){
+                //     console.log("before update");
+                // }
+                // updated(){
+                //     console.log("component has been updated");      
+                // }
+                // beforeUnmount(){
+                //     console.log("before unmount");
+                // }
+                // unmounted(){
+                //     console.log("component has been unmounted"); 
+                // }
     }
 </script>
 

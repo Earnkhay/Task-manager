@@ -166,7 +166,7 @@
                             () => {
                                 this.alertShow = false
                         },3000)
-                        console.log('blur event for no password entered');
+                        // console.log('blur event for no password entered');
                     }else{
                         this.alertTitle = "Password should be at least 6 characters long, contain at least one uppercase & one digit"
                         this.alertType = "Danger"
@@ -175,7 +175,7 @@
                             () => {
                                 this.password = ""
                         },3000)
-                        console.log('blur event for wrong password format');
+                        // console.log('blur event for wrong password format');
                     }
                 }
             checkPageTypePassword() {
@@ -193,7 +193,7 @@
                     name: this.name
                 }
                 const auth = getAuth()
-                
+                // const user = auth.currentUser
                 if (pageType == 'signUp' && this.name != "" && this.email != "" && this.password != '' && this.mailformat.test(this.email) && this.regPassword.test(this.password)) {
                     await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
                     .then((user) => {
@@ -203,13 +203,13 @@
                         axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                             formData: formData
                         })
-                        console.log(user.user.uid, "Successfully registered");
+                        // console.log(user.user.uid, "Successfully registered");
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
                         setTimeout(() => {  
                                 this.alertShow = false  
-                                this.$router.push('/landingPage/:id')
+                                this.$router.push(`/landingPage`)
                                 // this.pageType = 'login'   
                                 this.email = ''
                                 this.password = '' 
@@ -218,7 +218,7 @@
                     })
                     .catch((err) => {
                         console.error(err)
-                        console.log(err.code, err.message);
+                        // console.log(err.code, err.message);
                         // this.alertTitle = err.code
                         this.alertType = "danger"
                         this.alertShow = true
@@ -246,19 +246,19 @@
                 }else if(pageType == 'login'){
                     signInWithEmailAndPassword(auth, this.email, this.password)
                     .then((res) => {
-                        console.log(res, "Successfully logged in");
-                        console.log(auth.currentUser);
+                        // console.log(res, "Successfully logged in");
+                        // console.log(auth.currentUser);
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
                         setTimeout(() => {  
                                 this.alertShow = false  
-                                this.$router.push('/landingpage/:id')    
+                                this.$router.push('/landingpage')    
                         },3000) 
                     })
                     .catch((err) => {
                         console.error(err)
-                        console.log(err.code);
+                        // console.log(err.code);
                         this.alertType = "danger"
                         this.alertShow = true
                         switch (err.code) {
@@ -291,7 +291,7 @@
                             this.name = ''
                         },3000)
                 }else{
-                    console.log('why');
+                    // console.log('why');
                     
                     this.alertTitle = "Error !, Please input Required details"
                     this.alertType = "Danger"
@@ -318,7 +318,7 @@
             //             returnSecureToken: true
             //         })
             //         .then((res) => {
-            //             console.log(res, 'successful authentication')
+                        // console.log(res, 'successful authentication')
             //             setTimeout(() => {         
             //                     this.email = ''
             //                     this.password = ''
