@@ -115,7 +115,7 @@ import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { getAuth } from "firebase/auth";
 import { db } from "@/firebase.js"
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
 @Options({
   components: {
@@ -189,7 +189,7 @@ export default class landingpage extends Vue {
             localStorage.setItem("tasks", JSON.stringify(this.tasks));
             this.title = ''
             this.comments = ''
-            $('exampleModal').modal('hide')
+            // $('exampleModal').modal('hide')
         }
     }
     check(task){

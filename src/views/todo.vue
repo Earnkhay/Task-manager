@@ -34,7 +34,7 @@ import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { db } from "@/firebase.js"
 import { getAuth } from "firebase/auth";
-import { collection, addDoc, setDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
