@@ -54,7 +54,7 @@ export default class todo extends Vue {
     user = this.auth.currentUser;
     id = this.user.uid
     todosCollectionRef = collection(db, `users/${this.id}/todos`)
-    todosDocRef = doc(db, `users/${this.id}/todos`, id)
+    // todosDocRef = doc(db, `users/${this.id}/todos`, id)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"));
     
     mounted(){
@@ -113,14 +113,14 @@ export default class todo extends Vue {
         // this.done = !this.done
         const todoToUpdate = this.todos.find((todo) => todo.id === id)
         // todoToUpdate.done = !todoToUpdate.done
-        updateDoc(this.todosDocRef, {
+        updateDoc(doc(db, `users/${this.id}/todos`, id), {
             done: !todoToUpdate.done
         })
         console.log(id, todoToUpdate.done);
     }
 
     deleteTodo(id){
-        deleteDoc(this.todosDocRef);
+        deleteDoc(doc(db, `users/${this.id}/todos`, id));
         console.log('successfully deleted', id, this.user.uid);
     }
 
