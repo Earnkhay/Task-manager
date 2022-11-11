@@ -29,7 +29,6 @@ const app = createApp(App);
 // // Initialize Firebase
 initializeApp(firebaseConfig);
 
-
 app.use(VueApexCharts);
 app.use(VueAxios, axios)
 app.provide('axios', app.config.globalProperties.axios)

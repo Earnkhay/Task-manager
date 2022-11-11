@@ -1,9 +1,11 @@
 <template>
     <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
-   <h1 class="text-center p-3 fw-bold">To-do List</h1>
+   <h1 class="text-center p-3 fw-bold text-success">To-do List</h1>
 
-   <div class="container p-5 ">
-    <div class="row justify-content-center">
+   <h5 class="mb-3 fs-4 fw-bold container text-center">Hello {{ name }}, kindly add new todo below</h5>
+
+   <div class="container me-5 p-3">
+    <div class="row justify-content-center g-0">
     <div class="col-md-4">
         <input class="form-control" v-model="newTodo" type="text" @keyup.prevent.enter="addTodo" placeholder="New to-do" aria-label="default input example">
     </div>
@@ -31,6 +33,7 @@
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { db } from "@/firebase.js"
+import { getAuth } from "firebase/auth";
 import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 
 @Options({
@@ -46,9 +49,14 @@ export default class todo extends Vue {
     newTodo = ""
     todos = []
     done = false
-    // todosCollectionRef = collection(db, 'todos')
-    todosCollectionQuery = query(collection(db, "todos"), orderBy("date", "desc"));
-
+    name = ""
+    auth = getAuth();
+    user = this.auth.currentUser;
+    id = this.user.uid
+    todosCollectionRef = collection(db, `users/${this.id}/todos`)
+    // todosDocRef = doc(db, `users/${this.id}/todos`, id)
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"));
+    
     mounted(){
         // const querySnapshot = await getDocs(collection(db, "todos"))
         // querySnapshot.forEach((doc) => {
@@ -56,7 +64,9 @@ export default class todo extends Vue {
         //     this.todos.push(
         //         doc.data())
         // })
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+        
+        if (this.user !== null) {
+            onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTodos = []
             querySnapshot.forEach((doc) => {
                 const todo = {
@@ -66,40 +76,52 @@ export default class todo extends Vue {
                 }
                 fbTodos.push(todo)
             })
-            this.todos = fbTodos
-        })
+                this.todos = fbTodos
+            })
+
+            // console.log(this.todosCollectionQuery);
+            onSnapshot(doc(db, "users", this.id), (doc) => {
+                console.log("Current data: ", doc.data());
+                this.name = doc.data().name
+            });
+        }
+        
     }
 
     addTodo(){
         console.log(this.newTodo);
         if(this.newTodo) {
-            addDoc(collection(db, "todos"), { 
+            addDoc(this.todosCollectionRef, { 
                 name: this.newTodo,
                 done: this.done,
                 date: Date.now()
             })
          this.newTodo = "" 
         }
+        // if (this.newTodo) {
+        //     setDoc(doc(db, "todos", this.user.uid), {
+        //         name: this.newTodo,
+        //         done: this.done,
+        //         date: Date.now()
+        //     })
+        //     this.newTodo = ''
+        // }
+        // console.log(this.user.uid, 'successfully added');
     }
 
     toggleDone(id){
         // this.done = !this.done
         const todoToUpdate = this.todos.find((todo) => todo.id === id)
         // todoToUpdate.done = !todoToUpdate.done
-        updateDoc(doc(db, "todos", id), {
+        updateDoc(doc(db, `users/${this.id}/todos`, id), {
             done: !todoToUpdate.done
         })
         console.log(id, todoToUpdate.done);
     }
 
-    // updateTodo(id){
-    //     console.log(id, this.done);
-    //     
-    // }
-
     deleteTodo(id){
-        deleteDoc(doc(db, "todos", id));
-        console.log('successfully deleted', id);
+        deleteDoc(doc(db, `users/${this.id}/todos`, id));
+        console.log('successfully deleted', id, this.user.uid);
     }
 
     

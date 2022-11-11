@@ -114,6 +114,8 @@
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { getAuth } from "firebase/auth";
+import { db } from "@/firebase.js"
+import { doc, onSnapshot } from "firebase/firestore";
 
 @Options({
   components: {
@@ -159,12 +161,13 @@ export default class landingpage extends Vue {
         const auth = getAuth();
         const user = auth.currentUser;
         if (user !== null) {
-            // The user object has basic properties such as display name, email, etc.
-            // this.name = user.displayName;
-            this.name = user.email;
-            // const photoURL = user.photoURL;
-            // const emailVerified = user.emailVerified;
-            // const uid = user.uid;
+            // this.name = user.email;
+
+            onSnapshot(doc(db, "users", user.uid), (doc) => {
+                console.log("Current data: ", doc.data());
+                this.name = doc.data().name
+            });
+                
             this.tasks = JSON.parse(localStorage.getItem("tasks"));
         }
     }
@@ -186,6 +189,7 @@ export default class landingpage extends Vue {
             localStorage.setItem("tasks", JSON.stringify(this.tasks));
             this.title = ''
             this.comments = ''
+            // $('exampleModal').modal('hide')
         }
     }
     check(task){
