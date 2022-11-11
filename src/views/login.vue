@@ -14,8 +14,8 @@
                     <div class="row justify-content-center mt-2">
                             <form action="" id="login-form" class=" col-md-10 text-xs-center">   
                                 <div class="mb-3 text-xs-center" v-if="pageType == 'signUp'">
-                                    <label for="exampleFormControlInput1" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Enter username" v-model="username"  required>
+                                    <label for="exampleFormControlInput1" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter username" v-model="name"  required>
                                   </div>
                                 
                                 <div class="mb-3 text-xs-center">
@@ -50,7 +50,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
     // export default {
     //     name: 'loginPage',
     //     data(){
@@ -86,6 +86,8 @@
     import alert from '@/components/alert.vue'
     import axios from 'axios'
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, } from "firebase/auth";
+    import { db } from "@/firebase.js"
+    import { doc, setDoc } from "firebase/firestore";
 
     @Options({
         components: {
@@ -97,7 +99,7 @@
     export default class login extends Vue{
         passwordType = 'password'
         pageType ="signUp"
-        username = ""
+        name = ""
         newUser = ""
         email = ""
         password = ""
@@ -184,58 +186,61 @@
                 }
             }
 
-            async checkPageTypeAuth(pageType: string){
+            async checkPageTypeAuth(pageType){
                 const formData = {
                     email: this.email,
                     password: this.password,
-                    username: this.username
+                    name: this.name
                 }
                 const auth = getAuth()
                 
-                if (pageType == 'signUp' && this.username != "" && this.email != "" && this.password != '' && this.mailformat.test(this.email) && this.regPassword.test(this.password)) {
-                    createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-                    await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
-                        formData: formData
-                    })
-                    .then((res) => {
-                        console.log(res, "Successfully registered");
+                if (pageType == 'signUp' && this.name != "" && this.email != "" && this.password != '' && this.mailformat.test(this.email) && this.regPassword.test(this.password)) {
+                    await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
+                    .then((user) => {
+                        setDoc(doc(db, "users", user.user.uid), {
+                            name: this.name
+                        });
+                        axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
+                            formData: formData
+                        })
+                        console.log(user.user.uid, "Successfully registered");
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
                         setTimeout(() => {  
                                 this.alertShow = false  
-                                // this.$router.push('/landingPage')
-                                this.pageType = 'login'   
+                                this.$router.push('/landingPage/:id')
+                                // this.pageType = 'login'   
                                 this.email = ''
                                 this.password = '' 
-                                this.username = '' 
+                                this.name = '' 
                         },3000) 
                     })
                     .catch((err) => {
                         console.error(err)
                         console.log(err.code, err.message);
-                        this.alertTitle = err.code
+                        // this.alertTitle = err.code
                         this.alertType = "danger"
                         this.alertShow = true
-                        // switch (err.code) {
-                        //     case "auth/invalid-email":
-                        //         this.alertTitle = "Invalid email";
-                        //         break;
-                        //     case "auth/user-not-found":
-                        //         this.alertTitle = "No Account with that email was found";
-                        //         break;
-                        //     case "auth/wrong-password":
-                        //         this.alertTitle = "Incorrect password";
-                        //         break;
-                        //     default:
-                        //         this.alertTitle = "Email or password was incorrect";
-                        //         break;
-                        // }
+                        switch (err.code) {
+                            case "auth/email-already-in-use":
+                                this.alertTitle = "Email is already in use";
+                                break;
+                            case "auth/invalid-email":
+                                this.alertTitle = "The email address is Invalid";
+                                break;
+                            case "auth/operation-not-allowed":
+                                this.alertTitle = "Operation not allowed";
+                                break;
+                            default:
+                                this.alertTitle = "Email or password was incorrect";
+                                break;
+                        }
                         setTimeout(() => {         
                                 this.alertShow = false
                                 this.email = ''
                                 this.password = ''
-                                this.username = ''
+                                this.name = ''
                         },3000) 
                     });
                 }else if(pageType == 'login'){
@@ -276,14 +281,14 @@
                                 this.password = ''
                         },3000) 
                     });
-                }else if(this.username == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
-                    this.alertTitle = "Please input Username"
+                }else if(this.name == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
+                    this.alertTitle = "Please input your Name"
                     this.alertType = "Danger"
                     this.alertShow = true
                     setTimeout(
                         () => {
                             this.alertShow = false
-                            this.username = ''
+                            this.name = ''
                         },3000)
                 }else{
                     console.log('why');
@@ -295,7 +300,7 @@
                         () => {
                             this.alertShow = false
                             this.email = ''
-                            this.username = ''
+                            this.name = ''
                             this.password = ''
                         },3000)
                     return 

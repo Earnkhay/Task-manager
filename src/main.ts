@@ -11,7 +11,7 @@ import VueAxios from 'vue-axios'
 import { initializeApp } from "firebase/app";
 // import firebase from 'firebase/app'
 // import 'firebase/firestore'
-// import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -28,7 +28,6 @@ const app = createApp(App);
 
 // // Initialize Firebase
 initializeApp(firebaseConfig);
-
 
 app.use(VueApexCharts);
 app.use(VueAxios, axios)
