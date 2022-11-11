@@ -57,14 +57,7 @@ export default class todo extends Vue {
     // todosDocRef = doc(db, `users/${this.id}/todos`, id)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"));
     
-    mounted(){
-        // const querySnapshot = await getDocs(collection(db, "todos"))
-        // querySnapshot.forEach((doc) => {
-        //     console.log(`${doc.id} => ${doc.data().name}`);
-        //     this.todos.push(
-        //         doc.data())
-        // })
-        
+    mounted(){ 
         if (this.user !== null) {
             onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTodos = []
@@ -81,7 +74,7 @@ export default class todo extends Vue {
 
             // console.log(this.todosCollectionQuery);
             onSnapshot(doc(db, "users", this.id), (doc) => {
-                console.log("Current data: ", doc.data());
+                // console.log("Current data: ", doc.data());
                 this.name = doc.data().name
             });
         }
@@ -89,7 +82,7 @@ export default class todo extends Vue {
     }
 
     addTodo(){
-        console.log(this.newTodo);
+        // console.log(this.newTodo);
         if(this.newTodo) {
             addDoc(this.todosCollectionRef, { 
                 name: this.newTodo,
@@ -116,12 +109,12 @@ export default class todo extends Vue {
         updateDoc(doc(db, `users/${this.id}/todos`, id), {
             done: !todoToUpdate.done
         })
-        console.log(id, todoToUpdate.done);
+        // console.log(id, todoToUpdate.done);
     }
 
     deleteTodo(id){
         deleteDoc(doc(db, `users/${this.id}/todos`, id));
-        console.log('successfully deleted', id, this.user.uid);
+        // console.log('successfully deleted', id, this.user.uid);
     }
 
     

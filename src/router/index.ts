@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import login from '@/views/login.vue'
 import main from '@/views/main.vue'
-import area from '@/components/area.vue'
-import mainbody from '@/components/mainbody.vue'
+import exlandingpage from '@/components/exlandingpage.vue'
+// import mainbody from '@/components/mainbody.vue'
 import landingpage from '@/views/landingpage.vue'
 import dashboard from '@/views/dashboard.vue'
 import example from '@/components/example.vue'
@@ -17,8 +17,8 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '/main',
-        name: 'mainbody',
-        component: mainbody
+        name: 'exlandingpage',
+        component: exlandingpage
       }
     ]
   },
@@ -26,16 +26,9 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'login',
     component: login,
-    children: [
-      {
-        path: '/login/area',
-        name: 'area',
-        component: area
-      },
-    ]
   },
   {
-    path: '/dashboard/:id',
+    path: '/dashboard',
     name: 'dashboard',
     component: dashboard,
     meta: {
@@ -43,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/landingpage/:id',
+    path: '/landingpage',
     name: 'landingpage',
     component: landingpage,
     meta: {
@@ -51,7 +44,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/todo/:id',
+    path: '/todo',
     name: 'todo',
     component: todo,
     meta: {

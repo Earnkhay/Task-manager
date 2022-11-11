@@ -1,7 +1,7 @@
 <template>
-  <nav-bar :navTitle="navText" @actionText="setTitleEmit"/>
+  <!-- <nav-bar :navTitle="navText" @actionText="setTitleEmit"/> -->
   <div class="mt-2 mb-2 container">
-  <button @click.prevent="setTitle" >Change Title</button>
+  <!-- <button @click.prevent="setTitle" >Change Title</button> -->
   </div>
   <router-view/>
   <my-footer/>
@@ -28,13 +28,13 @@ import {Options, Vue} from "vue-class-component"
 //   }
 // }
 export default class main extends Vue {
-  navText = "horizon"
-  setTitle(){
-    this.navText = "Amazon"
-  }
-  setTitleEmit(emittedParam : string){
-    this.navText = emittedParam
-  }
+  // navText = "horizon"
+  // setTitle(){
+  //   this.navText = "Amazon"
+  // }
+  // setTitleEmit(emittedParam : string){
+  //   this.navText = emittedParam
+  // }
 }
 </script>
 
