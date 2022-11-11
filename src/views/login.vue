@@ -15,26 +15,27 @@
                             <form action="" id="login-form" class=" col-md-10 text-xs-center">   
                                 <div class="mb-3 text-xs-center" v-if="pageType == 'signUp'">
                                     <label for="exampleFormControlInput1" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Enter username" v-model="name"  required>
+                                    <input type="text" class="form-control" id="username" placeholder="Username" v-model="name"  required>
                                   </div>
                                 
                                 <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter email" v-model="email" @blur="validateEmail"  required>
+                                    <input type="email" class="form-control" id="email" placeholder="Email" v-model="email" @blur="validateEmail"  required>
                                   </div>
                     
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Enter password" v-model="password" @blur="checkPageTypePassword"  required>
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Password" v-model="password" @blur="checkPageTypePassword"  required>
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
                             
                                 <div class="text-center">
-                                <button type="submit" class="mb-3" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
-                                <!-- <router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link> -->
-                                <!-- <button><router-link :to="{name: 'landingpage'}" type="submit" class="mb-3 " id="signup">{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</router-link></button> -->
+                                    <button type="submit" class="mb-2 btn bg-primary mainBtn" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                    <div class="d-grid gap-2 mb-2">
+                                        <button class="btn bg-transparent text-dark border-transparent googleBtn" @click.prevent="signUpWithGoogle">{{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}</button>
+                                    </div>
                                 </div>
                     
                             <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} <a href="" id="link" @click.prevent="setLoginPage"> {{ pageType == "signUp" ? "Log in here" : "Sign up here" }}</a></p>
@@ -85,7 +86,7 @@
     import {Options, Vue} from "vue-class-component"
     import alert from '@/components/alert.vue'
     import axios from 'axios'
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, } from "firebase/auth";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
     import { db } from "@/firebase.js"
     import { doc, setDoc } from "firebase/firestore";
 
@@ -156,7 +157,7 @@
                 }
             validatePassword() {
                     if (this.regPassword.test(this.password)) {
-                        console.log('valid password');   
+                        // console.log('valid password');   
                         this.alertShow = false
                     }else if(this.password == ""){
                         this.alertTitle = "Please input Password"
@@ -217,7 +218,7 @@
                         },3000) 
                     })
                     .catch((err) => {
-                        console.error(err)
+                        // console.error(err)
                         // console.log(err.code, err.message);
                         // this.alertTitle = err.code
                         this.alertType = "danger"
@@ -245,7 +246,7 @@
                     });
                 }else if(pageType == 'login'){
                     signInWithEmailAndPassword(auth, this.email, this.password)
-                    .then((res) => {
+                    .then(() => {
                         // console.log(res, "Successfully logged in");
                         // console.log(auth.currentUser);
                         this.alertTitle = "Success !, You're Welcome"
@@ -257,7 +258,7 @@
                         },3000) 
                     })
                     .catch((err) => {
-                        console.error(err)
+                        // console.error(err)
                         // console.log(err.code);
                         this.alertType = "danger"
                         this.alertShow = true
@@ -292,7 +293,6 @@
                         },3000)
                 }else{
                     // console.log('why');
-                    
                     this.alertTitle = "Error !, Please input Required details"
                     this.alertType = "Danger"
                     this.alertShow = true
@@ -305,6 +305,44 @@
                         },3000)
                     return 
                 }
+            }
+
+            signUpWithGoogle(){
+                // let auth = getAuth();
+                const provider = new GoogleAuthProvider();
+                signInWithPopup(getAuth(), provider)
+                    .then((res) => {
+                        console.log(res.user);
+                        this.alertTitle = "Success !, You're Welcome"
+                        this.alertType = "Success"
+                        this.alertShow = true
+                        setTimeout(() => {  
+                                this.alertShow = false  
+                                this.$router.push('/landingpage')    
+                        },3000) 
+                    })
+                    .catch((err) => {
+                        console.log(err.code, "what's the err", err);
+                        this.alertType = "danger"
+                        this.alertShow = true
+                        switch (err.code) {
+                            case "auth/email-already-in-use":
+                                this.alertTitle = "Email is already in use";
+                                break;
+                            case "auth/cancelled-popup-request":
+                                this.alertTitle = "You cancelled the popup request";
+                                break;
+                            case "auth/operation-not-allowed":
+                                this.alertTitle = "Operation not allowed";
+                                break;
+                            default:
+                                this.alertTitle = "Email or password was incorrect";
+                                break;
+                        }
+                        setTimeout(() => {         
+                                this.alertShow = false
+                        },3000)
+                    })
             }
 
             //register a new user using the cdn
@@ -448,7 +486,10 @@
     height: 100%;
 }
 
-
+.googleBtn:hover{
+    background-color: rgb(2, 117, 216) !important;
+    color: white !important;
+}
 
 img{
     max-width: 100%;
@@ -513,6 +554,22 @@ form a:hover{
     margin-top: 10px;
 }
 
+@media (min-width: 768px) and (max-width: 991px) {
+    .form{
+        padding: 50px; 
+    }
+    .googleBtn{
+        font-size: 14.5px;
+        padding: 7px;
+    }
+
+    #header{
+        font-size: 1.8rem;
+    }
+
+    
+}
+
 @media (min-width: 488px) and (max-width: 767px) {
     .login-image img{
         display: none;
@@ -537,6 +594,11 @@ form a:hover{
     #header{
         font-size: 1.6rem;
     }
+
+    .googleBtn{
+        font-size: 13.5px;
+        padding: 7px;
+    }
 }
 
 @media (min-width: 353px) and (max-width: 399px){
@@ -544,7 +606,7 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 62px; 
+        padding: 42px 40px; 
     }
 
     #login-form p{
@@ -560,10 +622,19 @@ form a:hover{
         padding: 0;
         margin: 0;
     }
+    .googleBtn{
+        font-size: 12px;
+        padding: 7px;
+    }
+
+    .mainBtn{
+        font-size: 15px;
+        padding: 6px !important;
+    }
+
 }
 
 @media screen and (max-width: 352px){
- 
     .form{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
@@ -583,6 +654,16 @@ form a:hover{
 
     label{
         font-size: 0.8rem;
+    }
+
+    .googleBtn{
+        font-size: 11px;
+        padding: 7px;
+    }
+
+    .mainBtn{
+        font-size: 15px;
+        padding: 4px !important;
     }
 }
 
