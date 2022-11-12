@@ -311,8 +311,7 @@
                 // let auth = getAuth();
                 const provider = new GoogleAuthProvider();
                 signInWithPopup(getAuth(), provider)
-                    .then((res) => {
-                        console.log(res.user);
+                    .then(() => {
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
@@ -322,7 +321,6 @@
                         },3000) 
                     })
                     .catch((err) => {
-                        console.log(err.code, "what's the err", err);
                         this.alertType = "danger"
                         this.alertShow = true
                         switch (err.code) {

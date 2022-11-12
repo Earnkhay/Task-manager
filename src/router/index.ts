@@ -1,24 +1,23 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import login from '@/views/login.vue'
-import main from '@/views/main.vue'
-import exlandingpage from '@/components/exlandingpage.vue'
-// import mainbody from '@/components/mainbody.vue'
-import landingpage from '@/views/landingpage.vue'
-import dashboard from '@/views/dashboard.vue'
-import example from '@/components/example.vue'
-import todo from '@/views/todo.vue'
+// import main from '@/views/main.vue'
+// import exlandingpage from '@/components/exlandingpage.vue'
+// import landingpage from '@/views/landingpage.vue'
+// import dashboard from '@/views/dashboard.vue'
+// import example from '@/components/example.vue'
+// import todo from '@/views/todo.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/main',
     name: 'main',
-    component: main,
+    component: () => import( '@/views/main.vue'),
     children: [
       {
         path: '/main',
         name: 'exlandingpage',
-        component: exlandingpage
+        component: () => import( '@/components/exlandingpage.vue'),
       }
     ]
   },
@@ -30,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: dashboard,
+    component: () => import( '@/views/dashboard.vue'),
     meta: {
       requiresAuth: true,
     }
@@ -38,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/landingpage',
     name: 'landingpage',
-    component: landingpage,
+    component: () => import( '@/views/landingpage.vue'),
     meta: {
       requiresAuth: true,
     }
@@ -46,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/todo',
     name: 'todo',
-    component: todo,
+    component: () => import( '@/views/todo.vue'),
     meta: {
       requiresAuth: true,
     }
@@ -62,7 +61,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/example',
     name: 'example',
-    component: example
+    component: () => import( '@/components/example.vue')
   }
 ]
 
