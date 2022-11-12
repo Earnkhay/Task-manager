@@ -638,7 +638,7 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 20px; 
+        padding: 45px 20px; 
     }
 
     #header{
@@ -648,9 +648,9 @@ form a:hover{
     }
 
     
-    #login-page{
+    /* #login-page{
         padding: 80px 0px !important;
-    }
+    } */
 
     #login-form p{
         font-size: 0.7rem;
