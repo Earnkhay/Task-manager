@@ -6,6 +6,7 @@ import login from '@/views/login.vue'
 // import dashboard from '@/views/dashboard.vue'
 // import example from '@/components/example.vue'
 // import todo from '@/views/todo.vue'
+import notFoundPage from '@/views/notFoundPage.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
@@ -49,6 +50,15 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     }
+  },
+  {
+    path: "/404",
+    name: "notFound",
+    component: notFoundPage
+  },
+  {
+    path: "/:catchAll(.*)",
+    redirect: "404"
   },
   // {
   //   path: '/about',
