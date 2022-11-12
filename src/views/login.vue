@@ -34,7 +34,7 @@
                                 <div class="text-center">
                                     <button type="submit" class="mb-2 btn bg-primary mainBtn" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
                                     <div class="d-grid gap-2 mb-2">
-                                        <button class="btn bg-transparent text-dark border-transparent googleBtn" @click.prevent="signUpWithGoogle">{{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}</button>
+                                        <button class="btn bg-transparent text-dark googleBtn" @click.prevent="signUpWithGoogle">{{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}</button>
                                     </div>
                                 </div>
                     
