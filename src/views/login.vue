@@ -556,6 +556,7 @@ form a:hover{
     .form{
         padding: 50px; 
     }
+
     .googleBtn{
         font-size: 14.5px;
         padding: 7px;
@@ -644,6 +645,11 @@ form a:hover{
         font-size: 0.9rem;
         margin-bottom: 0;
         padding-bottom: 0;
+    }
+
+    
+    #login-page{
+        padding: 80px 0px !important;
     }
 
     #login-form p{
