@@ -1,7 +1,7 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-transparent p-3">
+    <nav class="navbar navbar-expand-lg bg-transparent p-3 border-bottom shadow">
   <div class="container">
-    <router-link class="navbar-brand fw-bold" :to="{name: 'landingpage'}">{{navTitle}}</router-link>
+    <router-link class="navbar-brand fw-bold" :to="{name: 'landingpage'}">Task Manager</router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -14,7 +14,7 @@
           <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'dashboard'}">{{navlink1}}</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'todo'}">{{navlink2}}</router-link>
+          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'todo'}">Todos</router-link>
         </li>
         <li class="nav-item logout">
           <a class="nav-link link-dark fw-bold" @click="logOutAction" v-if="isLoggedIn">Logout</a>
@@ -33,9 +33,7 @@ let auth;
 
   @Options({
     props: {
-      navTitle: String,
       navlink1: String,
-      navlink2: String
     }
   })
     // export default {

@@ -32,9 +32,19 @@
                                     </div>
                             
                                 <div class="text-center">
-                                    <button type="submit" class="mb-2 btn bg-primary mainBtn" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >{{pageType == "signUp" ? "Sign Up" : "Sign In"}}</button>
+                                    <button type="submit" class="mb-2 btn bg-primary mainBtn" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >
+                                        <spinner v-if="spinnerShow"/>
+                                        <div v-else>
+                                            {{ pageType == "signUp" ? "Sign Up" : "Sign In"}}
+                                        </div>
+                                    </button>
                                     <div class="d-grid gap-2 mb-2">
-                                        <button class="btn bg-transparent text-dark googleBtn" @click.prevent="signUpWithGoogle">{{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}</button>
+                                        <button class="btn bg-transparent text-dark googleBtn" @click.prevent="signUpWithGoogle">
+                                            <spinner v-if="spinnerShows"/>
+                                            <div v-else>
+                                                {{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}
+                                            </div>
+                                        </button>
                                     </div>
                                 </div>
                     
@@ -86,13 +96,15 @@
     import {Options, Vue} from "vue-class-component"
     import alert from '@/components/alert.vue'
     import axios from 'axios'
+    import spinner from '@/components/spinner.vue'
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
     import { db } from "@/firebase.js"
     import { doc, setDoc } from "firebase/firestore";
 
     @Options({
         components: {
-            alert
+            alert,
+            spinner
         }
     })
 
@@ -100,6 +112,8 @@
     export default class login extends Vue{
         passwordType = 'password'
         pageType ="signUp"
+        spinnerShow = false
+        spinnerShows = false
         name = ""
         newUser = ""
         email = ""
@@ -208,8 +222,10 @@
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
+                        this.spinnerShow = true
                         setTimeout(() => {  
-                                this.alertShow = false  
+                                this.alertShow = false 
+                                this.spinnerShow = false 
                                 this.$router.push(`/landingPage`)
                                 // this.pageType = 'login'   
                                 this.email = ''
@@ -218,11 +234,10 @@
                         },3000) 
                     })
                     .catch((err) => {
-                        // console.error(err)
-                        // console.log(err.code, err.message);
                         // this.alertTitle = err.code
                         this.alertType = "danger"
                         this.alertShow = true
+                        this.spinnerShow = true
                         switch (err.code) {
                             case "auth/email-already-in-use":
                                 this.alertTitle = "Email is already in use";
@@ -239,6 +254,7 @@
                         }
                         setTimeout(() => {         
                                 this.alertShow = false
+                                this.spinnerShow = false
                                 this.email = ''
                                 this.password = ''
                                 this.name = ''
@@ -252,8 +268,10 @@
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
+                        this.spinnerShow = true
                         setTimeout(() => {  
                                 this.alertShow = false  
+                                this.spinnerShow = false
                                 this.$router.push('/landingpage')    
                         },3000) 
                     })
@@ -262,6 +280,7 @@
                         // console.log(err.code);
                         this.alertType = "danger"
                         this.alertShow = true
+                        this.spinnerShow = true
                         switch (err.code) {
                             case "auth/invalid-email":
                                 this.alertTitle = "Invalid email";
@@ -278,6 +297,7 @@
                         }
                         setTimeout(() => {         
                                 this.alertShow = false
+                                this.spinnerShow = false
                                 this.email = ''
                                 this.password = ''
                         },3000) 
@@ -286,9 +306,11 @@
                     this.alertTitle = "Please input your Name"
                     this.alertType = "Danger"
                     this.alertShow = true
+                    this.spinnerShow = true
                     setTimeout(
                         () => {
                             this.alertShow = false
+                            this.spinnerShow = false
                             this.name = ''
                         },3000)
                 }else{
@@ -296,9 +318,11 @@
                     this.alertTitle = "Error !, Please input Required details"
                     this.alertType = "Danger"
                     this.alertShow = true
+                    this.spinnerShow = true
                     setTimeout(
                         () => {
                             this.alertShow = false
+                            this.spinnerShow = false
                             this.email = ''
                             this.name = ''
                             this.password = ''
@@ -315,14 +339,17 @@
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true
+                        this.spinnerShows = true
                         setTimeout(() => {  
                                 this.alertShow = false  
+                                this.spinnerShows = false
                                 this.$router.push('/landingpage')    
                         },3000) 
                     })
                     .catch((err) => {
                         this.alertType = "danger"
                         this.alertShow = true
+                        this.spinnerShows = true
                         switch (err.code) {
                             case "auth/email-already-in-use":
                                 this.alertTitle = "Email is already in use";
@@ -339,6 +366,7 @@
                         }
                         setTimeout(() => {         
                                 this.alertShow = false
+                                this.spinnerShows = false
                         },3000)
                     })
             }

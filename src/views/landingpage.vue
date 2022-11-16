@@ -1,5 +1,5 @@
 <template>
-    <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
+    <nav-bar :navlink1="navText1"/>
     
     <div class="container mt-5">
     <div class="row gx-5">
@@ -12,14 +12,17 @@
         <router-link :to="{name: 'dashboard'}" class="btn fw-bold" id="dashboard"><span class="ps-3 pe-2"><i class="fa-solid fa-rocket"></i></span> Go to Dashboard</router-link>
       </div>
 
-      <h6>Recent Todos</h6>                   
+      <h6>Recent Todos</h6>         
            <table class="table mt-3">
             <thead>
                 <tr>
                     <th scope="col" class="fw-bold fs-5">Todo List</th>
                 </tr>
             </thead>
-            <tbody class="p-5" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
+            <div class=" d-flex justify-content-center " v-if="spinnerShow">
+                <spinner class="mt-5 spinner-border"/>
+            </div>
+            <tbody v-else class="p-5" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
                 <td class="fw-bold p-3 border-bottom" :class="[todo.done ?  'text-decoration-line-through' : 'text-dark']">
                     {{ todo.name }}
                 </td>
@@ -41,20 +44,21 @@
 <script>
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
+import spinner from '@/components/spinner.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from "@/firebase.js"
 import { collection, doc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
 
 @Options({
   components: {
-    navBar
+    navBar, 
+    spinner
   }
 })
 
 export default class landingpage extends Vue {
-    navText = "Task Manager"
     navText1 = "Dashboard"
-    navText2 = "To-do list"
+    spinnerShow = false
     todos = []
     name = ""
     done = false
@@ -88,6 +92,10 @@ export default class landingpage extends Vue {
     }
     mounted(){
         // const auth = getAuth()
+        this.spinnerShow = true
+        setTimeout(() => {  
+            this.spinnerShow = false
+        }, 1000) 
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {

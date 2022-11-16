@@ -1,7 +1,7 @@
 <template>
-    <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
+    <nav-bar :navlink1="navText1"/>
 
-    <h5 class="mb-3 fs-4 fw-bold container">Welcome {{ name }}, view your data</h5>
+    <h5 class="my-4 fs-4 fw-bold container">Welcome {{ name }}, view your data</h5>
 
     <!-- <div>User {{ $route.params.id }}</div> -->
     <!-- <div class="container text-center mb-5 mt-5">
@@ -64,9 +64,7 @@
     })
 
 export default class dashboard extends Vue {
-        navText = "Task Manager"
         navText1 = "Dashboard"
-        navText2 = "To-do list"
         name = ""
         todos = ""
         auth = getAuth()

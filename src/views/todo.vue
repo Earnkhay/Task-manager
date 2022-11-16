@@ -1,10 +1,10 @@
 <template>
-    <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
-   <h1 class="text-center p-3 fw-bold text-success">To-do List</h1>
+    <nav-bar :navlink1="navText1"/>
+   <h1 class="text-center p-3 fw-bold text-success mt-2">To-do List</h1>
 
    <h5 class="mb-3 fs-4 fw-bold container text-center">Hello {{ name }}, kindly add new todo below</h5>
 
-    <div class="d-flex justify-content-center mb-2">
+    <div class="d-flex justify-content-center mb-3">
         <div class="">
             <input class="form-control" v-model="newTodo" type="text" @keyup.prevent.enter="addTodo" placeholder="New to-do" aria-label="default input example">
         </div>
@@ -15,7 +15,10 @@
 
     <div class="container">
       <div class="row justify-content-center">
-        <div class="card row m-2 col-md-6 todocard" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
+        <div class=" d-flex justify-content-center " v-if="spinnerShow">
+                <spinner class="mt-5 spinner-border"/>
+        </div>
+        <div v-else class="card row m-2 col-md-6 todocard" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
             <div class="card-body d-flex justify-content-between">
                 <div class="fw-bold" :class="[todo.done ?  'text-decoration-line-through' : 'text-dark']">{{ todo.name }}</div>
                 <div><button class=" border-secondary" @click.prevent="toggleDone(todo.id)" :class="[todo.done ? 'success' : 'bg-light' ]"><i class="fa-solid fa-check text-dark"></i></button>
@@ -31,19 +34,20 @@
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
 import { db } from "@/firebase.js"
+import spinner from '@/components/spinner.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
-        navBar
+        navBar,
+        spinner
     }
 })
 
 export default class todo extends Vue {
-    navText = "Task Manager"
     navText1 = "Dashboard"
-    navText2 = "To-do list"
+    spinnerShow = false
     newTodo = ""
     todos = []
     done = false
@@ -61,6 +65,10 @@ export default class todo extends Vue {
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"));
     
     mounted(){ 
+        this.spinnerShow = true
+        setTimeout(() => {  
+            this.spinnerShow = false
+        }, 1000) 
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
