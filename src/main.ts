@@ -9,9 +9,6 @@ import VueApexCharts from "vue3-apexcharts"
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { initializeApp } from "firebase/app";
-// import firebase from 'firebase/app'
-// import 'firebase/firestore'
-// import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {

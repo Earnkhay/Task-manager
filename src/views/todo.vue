@@ -2,18 +2,7 @@
     <nav-bar :navTitle="navText" :navlink1="navText1" :navlink2="navText2"/>
    <h1 class="text-center p-3 fw-bold text-success">To-do List</h1>
 
-   <h5 class="mb-3 fs-4 fw-bold container text-center greetText">Hello {{ name }}, kindly add new todo below</h5>
-
-   <!-- <div class="container me-5 p-3">
-    <div class="row justify-content-center g-0">
-    <div class="col-md-4">
-        <input class="form-control" v-model="newTodo" type="text" @keyup.prevent.enter="addTodo" placeholder="New to-do" aria-label="default input example">
-    </div>
-    <div class="col-md-2">
-        <button type="button" class="btn btn-primary" @click.prevent="addTodo">Add</button>
-    </div>
-    </div>
-   </div> -->
+   <h5 class="mb-3 fs-4 fw-bold container text-center">Hello {{ name }}, kindly add new todo below</h5>
 
     <div class="d-flex justify-content-center mb-2">
         <div class="">
@@ -59,7 +48,12 @@ export default class todo extends Vue {
     todos = []
     done = false
     name = ""
-    auth = getAuth();
+    months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    d = new Date()
+    month = this.months[this.d.getMonth()]
+    day = this.weekday[this.d.getDay()]
+    auth = getAuth()
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `users/${this.id}/todos`)
@@ -67,8 +61,7 @@ export default class todo extends Vue {
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"));
     
     mounted(){ 
-        const auth = getAuth()
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTodos = []
@@ -122,7 +115,9 @@ export default class todo extends Vue {
             addDoc(this.todosCollectionRef, { 
                 name: this.newTodo,
                 done: this.done,
-                date: Date.now()
+                date: Date.now(),
+                day: this.day,
+                month: this.month
             })
          this.newTodo = "" 
         }

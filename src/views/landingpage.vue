@@ -3,7 +3,7 @@
     
     <div class="container mt-5">
     <div class="row gx-5">
-    <div class="col-md-6 weird">
+    <div class="col-md-6">
       <h2 class="fw-bold">Good {{ greet() }}, </h2>
       <h5 class="mb-4 fs-4 fw-bold">{{ name }}</h5>
 
@@ -41,9 +41,9 @@
 <script>
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from "@/firebase.js"
-import { collection, doc, onSnapshot, query, orderBy, limit} from "firebase/firestore";
+import { collection, doc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
 
 @Options({
   components: {
@@ -64,7 +64,7 @@ export default class landingpage extends Vue {
     id = this.user.uid
     d = new Date()
     hour = this.d.getHours()
-    time = this.d.getTime()
+    // time = this.d.getTime()
     // greetImage = "../assets/morningsvg.png"
     todosCollectionRef = collection(db, `users/${this.id}/todos`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(3));
@@ -87,8 +87,8 @@ export default class landingpage extends Vue {
         }
     }
     mounted(){
-        const auth = getAuth()
-        onAuthStateChanged(auth, (user) => {
+        // const auth = getAuth()
+        onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTodos = []
@@ -178,9 +178,6 @@ export default class landingpage extends Vue {
 
     .success{
         background-color: rgb(164, 243, 164);
-    }
-    .through{
-        text-decoration: line-through;
     }
     @media screen and (max-width: 767px) {
         img{
