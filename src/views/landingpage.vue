@@ -92,12 +92,16 @@ export default class landingpage extends Vue {
     }
     mounted(){
         // const auth = getAuth()
-        this.spinnerShow = true
-        setTimeout(() => {  
-            this.spinnerShow = false
-        }, 1000) 
+        // this.spinnerShow = true
+        // setTimeout(() => {  
+        //     this.spinnerShow = false
+        // }, 2000) 
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
+                this.spinnerShow = true
+                setTimeout(() => {  
+                    this.spinnerShow = false
+                }, 2000) 
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTodos = []
                 querySnapshot.forEach((doc) => {

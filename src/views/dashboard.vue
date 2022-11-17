@@ -14,7 +14,7 @@
         </div>    
     </div>
     </div> -->
-
+<!-- 
     <div class="container text-center">
     <div class="row">
         <div class=" col">
@@ -24,12 +24,12 @@
             <vue-apex-charts width="500" type="area" :options="options" :series="series"></vue-apex-charts>
         </div>
     </div>
-    </div>
+    </div> -->
     <div class="container text-center">
     <div class="row">
-        <div class="col-lg-6 mt-5">
+        <!-- <div class="col-lg-6 mt-5">
             <maintable/>
-        </div>
+        </div> -->
         <div class="col-lg-6 dbimg">
             <img src="../assets/dashboard.png" alt="dashboard image">
         </div>
