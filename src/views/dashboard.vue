@@ -77,10 +77,10 @@ export default class dashboard extends Vue {
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                        chart.updateSeries([{
-                            name: 'Sales',
-                            data: response
-                        }])
+                        // chart.updateSeries([{
+                        //     name: 'Sales',
+                        //     data: response
+                        // }])
                     const fbTodos = []
                     querySnapshot.forEach((doc) => {
                         const todo = {
