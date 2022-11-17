@@ -1,7 +1,6 @@
 <template>
     <div id="login-page" class="py-5">
-        <!-- <nav-bar :navTitle="pageName" :navlink1="pageLink" :navlink2="pageLink1"/> -->
-        <router-view/>
+        <!-- <router-view/> -->
          <div class="p-5 bg">
         <div class="container ">
             <div class="row gx-0">
@@ -506,12 +505,15 @@
 #login-page{
     background-image: url(../assets/sharon-mccutcheon-NkQD-RHhbvY-unsplash.jpg);
     background-position: center;
-    background-attachment: fixed;
+    /* background-attachment: fixed; */
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100%;
+    min-height: 100vh;
 }
 
+/* .bg{
+    min-height: 100vh;
+} */
 .googleBtn:hover{
     background-color: rgb(2, 117, 216) !important;
     color: white !important;
@@ -582,7 +584,7 @@ form a:hover{
 
 @media (min-width: 768px) and (max-width: 991px) {
     .form{
-        padding: 50px; 
+        padding: 40px; 
     }
 
     .googleBtn{
@@ -606,7 +608,7 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 68px; 
+        padding: 50px; 
     }
 }
 
@@ -615,7 +617,7 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 59px; 
+        padding: 35px; 
     }
 
     #header{
@@ -633,7 +635,7 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 42px 40px; 
+        padding: 30px; 
     }
 
     #login-form p{
@@ -666,7 +668,7 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding: 55px 20px; 
+        padding:  20px; 
     }
 
     #header{
