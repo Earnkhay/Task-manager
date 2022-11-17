@@ -58,7 +58,7 @@ import { collection, doc, onSnapshot, query, orderBy, limit} from "firebase/fire
 
 export default class landingpage extends Vue {
     navText1 = "Dashboard"
-    spinnerShow = false
+    spinnerShow = false 
     todos = []
     name = ""
     done = false

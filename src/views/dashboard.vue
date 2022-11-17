@@ -1,7 +1,7 @@
 <template>
     <nav-bar :navlink1="navText1"/>
 
-    <h5 class="my-4 fs-4 fw-bold container">Welcome {{ name }}, view your data</h5>
+    <h5 class="my-5 fs-4 fw-bold container">Welcome {{ name }}, view your data</h5>
 
     <!-- <div>User {{ $route.params.id }}</div> -->
     <!-- <div class="container text-center mb-5 mt-5">
@@ -77,6 +77,10 @@ export default class dashboard extends Vue {
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                        // chart.updateSeries([{
+                        //     name: 'Sales',
+                        //     data: response
+                        // }])
                     const fbTodos = []
                     querySnapshot.forEach((doc) => {
                         const todo = {
@@ -105,15 +109,15 @@ export default class dashboard extends Vue {
                 id: 'vuechart-example'
             },
             xaxis: {
-                categories: [this.months]
+                categories: []
             }
        }
        series = [{
             name: 'series-1',
-            data: [30, 40, 45, 50, 49, 60, 70, 91]
+            data: []
        }]
        option = {}
-       serie = [44, 55, 41, 17, 15]
+       serie = []
 }
 </script>
 
