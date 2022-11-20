@@ -36,7 +36,7 @@
     </div>
     </div>
     
-    <nkselector/>
+    <!-- <nkselector/> -->
     
     <router-view/>
     <my-footer/>
