@@ -90,7 +90,7 @@ export default class landingpage extends Vue {
             return "evening"
         }
     }
-    mounted(){
+    async mounted(){
         // const auth = getAuth()
         // this.spinnerShow = true
         // setTimeout(() => {  
