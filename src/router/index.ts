@@ -49,7 +49,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import( '@/views/todo.vue'),
     meta: {
       requiresAuth: true,
-    }
+    },
+    children: [
+      {
+        path: '/todo/all',
+        name: 'alltodos',
+        component: () => import( '@/components/alltodos.vue'),
+      }
+    ]
   },
   {
     path: "/404",
