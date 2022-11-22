@@ -55,7 +55,7 @@
            </table> 
         </div>
            <div class="fw-bold d-flex justify-content-end">
-            <router-link :to="{name: 'todo'}" id="todolink">View All></router-link>
+            <router-link :to="{name: 'alltodos'}" id="todolink">View All></router-link>
            </div>
     </div>
     
