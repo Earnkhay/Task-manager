@@ -5,24 +5,27 @@
    <h5 class="mb-3 fs-4 fw-bold container text-center">Hello {{ name }}, kindly add new todo below</h5>
 
     <div class="d-flex justify-content-center mb-3">
-        <div class="">
+        <div>
             <input class="form-control" v-model="newTodo" type="text" @keyup.prevent.enter="addTodo" placeholder="New to-do" aria-label="default input example">
         </div>
-        <div class="">
+        <div>
             <button type="button" class="btn btn-primary" @click.prevent="addTodo">Add</button>
         </div>
     </div>
 
+    <!-- <buttongroup/> -->
+    
     <div class="container">
       <div class="row justify-content-center">
         <div class=" d-flex justify-content-center " v-if="spinnerShow">
                 <spinner class="mt-5 spinner-border"/>
         </div>
-        <div v-else class="card row m-2 col-md-6 todocard" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
+        <div v-else class="card row m-2 col-md-7 todocard" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
             <div class="card-body d-flex justify-content-between">
                 <div class="fw-bold" :class="[todo.done ?  'text-decoration-line-through' : 'text-dark']">{{ todo.name }}</div>
-                <div><button class=" border-secondary" @click.prevent="toggleDone(todo.id)" :class="[todo.done ? 'success' : 'bg-light' ]"><i class="fa-solid fa-check text-dark"></i></button>
-                    <button class="bg-danger border-danger mx-1" @click.prevent="deleteTodo(todo.id)"><i class="fa-solid fa-trash text-light" ></i></button>
+                <div class="flexbtn">
+                    <button class=" border-secondary successbtn" @click.prevent="toggleDone(todo.id)" :class="[todo.done ? 'success' : 'bg-light' ]"><i class="fa-solid fa-check text-dark"></i></button>
+                    <button class="bg-danger border-danger mx-1 delbtn" @click.prevent="deleteTodo(todo.id)"><i class="fa-solid fa-trash text-light" ></i></button>
                 </div>
             </div>
       </div>
@@ -33,6 +36,7 @@
 <script>
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/navbar.vue"
+// import buttongroup from '@/components/buttongroup.vue'
 import { db } from "@/firebase.js"
 import spinner from '@/components/spinner.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -41,7 +45,8 @@ import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, order
 @Options({
     components: {
         navBar,
-        spinner
+        spinner,
+        // buttongroup
     }
 })
 
@@ -150,6 +155,15 @@ export default class todo extends Vue {
 <style scoped>
     .success{
         background-color: rgb(164, 243, 164);
+    }
+
+    .flexbtn{
+        display: block !important;
+    }
+
+    .successbtn{
+        margin-bottom: 5px;
+        margin-left: 4px !important;
     }
 
 @media (min-width: 295px) and (max-width: 575px) {

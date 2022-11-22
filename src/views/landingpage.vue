@@ -1,4 +1,5 @@
 <template>
+<div id="app">
     <nav-bar :navlink1="navText1"/>
     
     <div class="container mt-5">
@@ -8,11 +9,35 @@
       <h5 class="mb-4 fs-4 fw-bold">{{ name }}</h5>
 
       <div class="d-flex flex-wrap mb-4">
-        <router-link :to="{name: 'todo'}" class="btn fw-bold" id="new"><span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span>Create New</router-link>
+        <!-- Button trigger modal -->
+        <div data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <a class="btn fw-bold" id="new"><span class="ps-3 pe-1"><i class="fa-solid fa-circle-plus"></i></span>Create New</a>
+        </div>
+        
         <router-link :to="{name: 'dashboard'}" class="btn fw-bold" id="dashboard"><span class="ps-3 pe-2"><i class="fa-solid fa-rocket"></i></span> Go to Dashboard</router-link>
       </div>
 
-      <h6>Recent Todos</h6>         
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create New Todo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" v-model="newTodo" type="text" placeholder="New to-do">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click.prevent="addTodo">Add</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+      <h6>Recent Todos</h6> 
+        <div class="table-responsive">        
            <table class="table mt-3">
             <thead>
                 <tr>
@@ -28,6 +53,7 @@
                 </td>
             </tbody>
            </table> 
+        </div>
            <div class="fw-bold d-flex justify-content-end">
             <router-link :to="{name: 'todo'}" id="todolink">View All></router-link>
            </div>
@@ -38,7 +64,7 @@
     </div>
     </div>
     </div>
-    <router-view/>
+</div>
 </template>
 
 <script>
@@ -47,7 +73,7 @@ import navBar from "@/components/navbar.vue"
 import spinner from '@/components/spinner.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from "@/firebase.js"
-import { collection, doc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
+import { collection, doc, addDoc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
 
 @Options({
   components: {
@@ -60,6 +86,7 @@ export default class landingpage extends Vue {
     navText1 = "Dashboard"
     spinnerShow = false 
     todos = []
+    newTodo = ""
     name = ""
     done = false
     name = ""
@@ -68,8 +95,11 @@ export default class landingpage extends Vue {
     id = this.user.uid
     d = new Date()
     hour = this.d.getHours()
-    // time = this.d.getTime()
-    // greetImage = "../assets/morningsvg.png"
+    months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    month = this.months[this.d.getMonth()]
+    day = this.weekday[this.d.getDay()]
+    auth = getAuth()
     todosCollectionRef = collection(db, `users/${this.id}/todos`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(3));
     greetImage(){
@@ -90,7 +120,7 @@ export default class landingpage extends Vue {
             return "evening"
         }
     }
-    async mounted(){
+    mounted(){
         // const auth = getAuth()
         // this.spinnerShow = true
         // setTimeout(() => {  
@@ -146,13 +176,23 @@ export default class landingpage extends Vue {
         //     }
         // }
     }
-    
+    addTodo(){
+        if(this.newTodo) {
+            addDoc(this.todosCollectionRef, { 
+                name: this.newTodo,
+                done: this.done,
+                date: Date.now(),
+                day: this.day,
+                month: this.month
+            })
+         this.newTodo = "" 
+        }
+    }
 }
 </script>
 
 <style scoped>
     #new{
-        /* width: 100%; */
         background-color: rgb(68, 68, 170);
         border-color:  rgb(68, 68, 170);
         color: white;
@@ -168,32 +208,29 @@ export default class landingpage extends Vue {
         color: green;
         text-decoration: none;
     }
-    /* #todolink{
-        text-decoration: none;
-    } */
-
     h6{
         border-bottom: 1px groove;
         padding: 20px;
         font-weight: bold;
     }
-
     li{
         padding-bottom: 15px;
         list-style: none;
     }
-
     img{
         max-width: 100%;
         height: auto;
     }
-
     .success{
         background-color: rgb(164, 243, 164);
     }
     @media screen and (max-width: 767px) {
         img{
             display: none;
+        }
+
+       #app{
+            overflow: hidden;
         }
     }
 
