@@ -2,8 +2,8 @@
     <todo/>
     <div class="container">
       <div class="row justify-content-center">
-        <div class="d-flex mt-5 justify-content-center" v-if="spinnerShow">
-                <spinner class="spinner-border"/>
+        <div class=" d-flex justify-content-center " v-if="spinnerShow">
+                <spinner class="mt-5 spinner-border"/>
         </div>
         <div v-else class="card row m-2 col-md-7 todocard" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
             <div class="card-body d-flex justify-content-between">
@@ -24,7 +24,7 @@ import { db } from "@/firebase.js"
 import spinner from '@/components/spinner.vue'
 import todo from '@/views/todo.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
@@ -33,7 +33,7 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } fro
     }
 })
 
-export default class taskdone extends Vue {
+export default class undone extends Vue {
     spinnerShow = false
     newTodo = ""
     todos = []
@@ -54,7 +54,7 @@ export default class taskdone extends Vue {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTodos = []
                 querySnapshot.forEach((doc) => {
-                    if (doc.data().done == true) {
+                    if (doc.data().done == false) {
                         const todo = {
                             id: doc.id,
                             name: doc.data().name,
@@ -62,6 +62,7 @@ export default class taskdone extends Vue {
                         }
                         fbTodos.push(todo)
                     }
+                    
                 })
                     this.todos = fbTodos
                 })

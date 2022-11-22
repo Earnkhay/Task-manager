@@ -14,7 +14,7 @@
           <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'dashboard'}">{{navlink1}}</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'todo'}">Todos</router-link>
+          <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'alltodos'}">Todos</router-link>
         </li>
         <li class="nav-item logout">
           <a class="nav-link link-dark fw-bold" @click="logOutAction" v-if="isLoggedIn">Logout</a>

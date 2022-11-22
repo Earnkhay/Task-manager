@@ -50,13 +50,48 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    children: [
-      {
+    // children: [
+    //   {
+    //     path: '/todo/all',
+    //     name: 'alltodos',
+    //     component: () => import( '@/components/alltodos.vue'),
+    //     meta: {
+    //       requiresAuth: true,
+    //     },
+    //   },
+    //   {
+    //     path: '/todo/done',
+    //     name: 'taskdone',
+    //     component: () => import( '@/components/taskdone.vue'),
+    //     meta: {
+    //       requiresAuth: true,
+    //     },
+    //   }
+    // ]
+  },
+  {
         path: '/todo/all',
         name: 'alltodos',
         component: () => import( '@/components/alltodos.vue'),
-      }
-    ]
+        meta: {
+          requiresAuth: true,
+        },
+  },
+  {
+        path: '/todo/done',
+        name: 'taskdone',
+        component: () => import( '@/components/taskdone.vue'),
+        meta: {
+          requiresAuth: true,
+        },
+  },
+  {
+        path: '/todo/undone',
+        name: 'undone',
+        component: () => import( '@/components/undone.vue'),
+        meta: {
+          requiresAuth: true,
+        },
   },
   {
     path: "/404",
