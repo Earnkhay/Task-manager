@@ -112,7 +112,7 @@
 
 <script>
 import {Options, Vue} from "vue-class-component"
-import navBar from "@/components/navbar.vue"
+import navBar from "@/components/UI/navbar.vue"
 import { getAuth } from "firebase/auth";
 import { db } from "@/firebase.js"
 import { doc, onSnapshot } from "firebase/firestore";

@@ -19,8 +19,8 @@
 
 <script>
 import {Options, Vue} from "vue-class-component"
-import navBar from "@/components/navbar.vue"
-import buttongroup from '@/components/buttongroup.vue'
+import navBar from "@/components/UI/navbar.vue"
+import buttongroup from '@/components/UI/buttongroup.vue'
 import { db } from "@/firebase.js"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { collection, onSnapshot, doc, addDoc } from "firebase/firestore";

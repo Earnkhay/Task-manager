@@ -69,8 +69,8 @@
 
 <script>
 import {Options, Vue} from "vue-class-component"
-import navBar from "@/components/navbar.vue"
-import spinner from '@/components/spinner.vue'
+import navBar from "@/components/UI/navbar.vue"
+import spinner from '@/components/UI/spinner.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from "@/firebase.js"
 import { collection, doc, addDoc, onSnapshot, query, orderBy, limit} from "firebase/firestore"

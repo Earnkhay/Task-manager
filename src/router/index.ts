@@ -1,27 +1,21 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import login from '@/views/login.vue'
-// import main from '@/views/main.vue'
-// import exlandingpage from '@/components/exlandingpage.vue'
-// import landingpage from '@/views/landingpage.vue'
-// import dashboard from '@/views/dashboard.vue'
-// import example from '@/components/example.vue'
-// import todo from '@/views/todo.vue'
 import notFoundPage from '@/views/notFoundPage.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/main',
-    name: 'main',
-    component: () => import( '@/views/main.vue'),
-    children: [
-      {
-        path: '/main',
-        name: 'exlandingpage',
-        component: () => import( '@/components/exlandingpage.vue'),
-      }
-    ]
-  },
+  // {
+  //   path: '/main',
+  //   name: 'main',
+  //   component: () => import( '@/views/main.vue'),
+  //   children: [
+  //     {
+  //       path: '/main',
+  //       name: 'exlandingpage',
+  //       component: () => import( '@/components/not-in-use/exlandingpage.vue'),
+  //     }
+  //   ]
+  // },
   {
     path: '/',
     name: 'login',
@@ -92,11 +86,11 @@ const routes: Array<RouteRecordRaw> = [
   //   // which is lazy-loaded when the route is visited.
   //   component: () => import( '../views/AboutView.vue')
   // },
-  {
-    path: '/example',
-    name: 'example',
-    component: () => import( '@/components/example.vue')
-  }
+  // {
+  //   path: '/example',
+  //   name: 'example',
+  //   component: () => import( '@/components/not-in-use/example.vue')
+  // }
 ]
 
 const router = createRouter({
