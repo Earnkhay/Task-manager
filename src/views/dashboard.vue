@@ -44,11 +44,11 @@
 
 <script>
     import {Options, Vue} from "vue-class-component"
-    import navBar from "@/components/navbar.vue"
-    import myFooter from "@/components/footer.vue"
+    import navBar from "@/components/UI/navbar.vue"
+    import myFooter from "@/components/UI/footer.vue"
     import VueApexCharts from "vue3-apexcharts"
-    import maintable from "@/components/table.vue"
-    import nkselector from "@/components/nkselector.vue"
+    import maintable from "@/components/UI/table.vue"
+    import nkselector from "@/components/UI/nkselector.vue"
     import { getAuth, onAuthStateChanged } from "firebase/auth"
     import { db } from "@/firebase.js" 
     import { collection, doc, onSnapshot, query, orderBy} from "firebase/firestore"

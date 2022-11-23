@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import navBar from '../components/navbar.vue'
-import myFooter from '../components/footer.vue'
+import navBar from '../components/UI/navbar.vue'
+import myFooter from '../components/UI/footer.vue'
 import {Options, Vue} from "vue-class-component"
 
 @Options({

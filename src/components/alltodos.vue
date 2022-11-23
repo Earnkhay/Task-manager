@@ -24,7 +24,7 @@
 <script>
 import {Options, Vue} from "vue-class-component"
 import { db } from "@/firebase.js"
-import spinner from '@/components/spinner.vue'
+import spinner from '@/components/UI/spinner.vue'
 import todo from '@/views/todo.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";

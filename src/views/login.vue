@@ -93,9 +93,9 @@
 
     
     import {Options, Vue} from "vue-class-component"
-    import alert from '@/components/alert.vue'
+    import alert from '@/components/UI/alert.vue'
     import axios from 'axios'
-    import spinner from '@/components/spinner.vue'
+    import spinner from '@/components/UI/spinner.vue'
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
     import { db } from "@/firebase.js"
     import { doc, setDoc } from "firebase/firestore";
