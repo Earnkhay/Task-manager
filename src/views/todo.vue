@@ -1,6 +1,6 @@
 <template>
     <nav-bar :navlink1="navText1"/>
-   <h1 class="text-center p-3 fw-bold text-success mt-2">To-do List</h1>
+   <h1 class="text-center p-3 fw-bold text-success mt-2">Todo List</h1>
 
    <h5 class="mb-3 fs-4 fw-bold container text-center">Hello {{ name }}, kindly add new todo below</h5>
 
