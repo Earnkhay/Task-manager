@@ -144,6 +144,7 @@ export default class landingpage extends Vue {
                 })
                     this.todos = fbTodos
                 })
+                
                 if(user.displayName != null){
                     this.name = user.displayName
                 }else {
