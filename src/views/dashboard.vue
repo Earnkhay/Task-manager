@@ -14,7 +14,7 @@
         </div>    
     </div>
     </div> -->
-<!-- 
+
     <div class="container text-center">
     <div class="row">
         <div class=" col">
@@ -24,7 +24,7 @@
             <vue-apex-charts width="500" type="area" :options="options" :series="series"></vue-apex-charts>
         </div>
     </div>
-    </div> -->
+    </div>
     <div class="container text-center">
     <div class="row">
         <!-- <div class="col-lg-6 mt-5">
@@ -66,7 +66,7 @@
 export default class dashboard extends Vue {
         navText1 = "Dashboard"
         name = ""
-        todos = ""
+        todos = []
         auth = getAuth()
         user = this.auth.currentUser
         id = this.user.uid
@@ -93,6 +93,8 @@ export default class dashboard extends Vue {
                         fbTodos.push(todo)
                     })
                         this.todos = fbTodos
+                        // if(this.todos.done){
+                        // console.log(this.todos.length)}
                     })
                     if(user.displayName != null){
                         this.name = user.displayName
@@ -103,7 +105,7 @@ export default class dashboard extends Vue {
                     }
                 }
             })
-       }
+        }
        options = {
             chart: {
                 id: 'vuechart-example'
@@ -114,10 +116,10 @@ export default class dashboard extends Vue {
        }
        series = [{
             name: 'series-1',
-            data: []
+            data: [1, 2, 3]
        }]
        option = {}
-       serie = []
+       serie = [1, 2, 3]
 }
 </script>
 

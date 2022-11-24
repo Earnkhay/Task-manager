@@ -1,5 +1,6 @@
 <template>
     <todo/>
+    <!-- <p>{{ todos.length }}</p> -->
     <div class="container">
       <div class="row justify-content-center">
         <div class="d-flex mt-5 justify-content-center" v-if="spinnerShow">
@@ -7,7 +8,7 @@
         </div>
         <div v-else class="card row m-2 col-md-7 todocard" v-for="(todo, id) in todos" :key="id" :class="[todo.done ? 'success' : 'bg-light' ]">
             <div class="card-body d-flex justify-content-between">
-                <div class="fw-bold" :class="[todo.done ?  'text-decoration-line-through' : 'text-dark']">{{ todo.name }}</div>
+                <div class="fw-bold text-wrap text-break" :class="[todo.done ?  'text-decoration-line-through' : 'text-dark']">{{ todo.name }}</div>
                 <div class="flexbtn">
                     <button class=" border-secondary successbtn" @click.prevent="toggleDone(todo.id)" :class="[todo.done ? 'success' : 'bg-light' ]"><i class="fa-solid fa-check text-dark"></i></button>
                     <button class="bg-danger border-danger mx-1 delbtn" @click.prevent="deleteTodo(todo.id)"><i class="fa-solid fa-trash text-light" ></i></button>
