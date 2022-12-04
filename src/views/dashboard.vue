@@ -15,9 +15,9 @@
     </div> -->
     
 
-    <!-- <div class="container mb-5">
+    <div class="container mb-5">
         <div class="row ">
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="card border-primary">
                 <div class="card-body text-center">
                     <h4 class="card-title fw-bold">All Tasks</h4>
@@ -25,7 +25,7 @@
                 </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="card border-warning">
                 <div class="card-body text-center">
                     <h4 class="card-title fw-bold">In Progress</h4>
@@ -33,24 +33,24 @@
                 </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="card border-success">
                 <div class="card-body text-center">
-                    <h4 class="card-title fw-bold">Tasks Completed</h4>
+                    <h4 class="card-title fw-bold">Completed</h4>
                     <h1 class="card-text fw-bold data text-success">{{ completedTasks.length }}</h1>
                 </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 mb-3">
                 <div class="card border-danger">
                 <div class="card-body text-center">
-                    <h4 class="card-title fw-bold">Tasks Overdue</h4>
+                    <h4 class="card-title fw-bold">Overdue</h4>
                     <h1 class="card-text fw-bold data text-danger">{{ overdueTasks.length }}</h1>
                 </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <div class="container text-center">
     <div class="row">
