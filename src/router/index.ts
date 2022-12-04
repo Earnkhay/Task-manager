@@ -46,30 +46,6 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-        path: '/todo/all',
-        name: 'alltodos',
-        component: () => import( '@/components/alltodos.vue'),
-        meta: {
-          requiresAuth: true,
-        },
-  },
-  {
-        path: '/todo/done',
-        name: 'taskdone',
-        component: () => import( '@/components/taskdone.vue'),
-        meta: {
-          requiresAuth: true,
-        },
-  },
-  {
-        path: '/todo/undone',
-        name: 'undone',
-        component: () => import( '@/components/undone.vue'),
-        meta: {
-          requiresAuth: true,
-        },
-  },
-  {
     path: "/404",
     name: "notFound",
     component: notFoundPage
@@ -78,19 +54,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/:catchAll(.*)",
     redirect: "404"
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import( '../views/AboutView.vue')
-  // },
-  // {
-  //   path: '/example',
-  //   name: 'example',
-  //   component: () => import( '@/components/not-in-use/example.vue')
-  // }
 ]
 
 const router = createRouter({

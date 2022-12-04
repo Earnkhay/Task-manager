@@ -9,6 +9,10 @@ import VueApexCharts from "vue3-apexcharts"
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { initializeApp } from "firebase/app";
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,6 +30,7 @@ const app = createApp(App);
 // // Initialize Firebase
 initializeApp(firebaseConfig);
 
+app.component('Datepicker', Datepicker);
 app.use(VueApexCharts);
 app.use(VueAxios, axios)
 app.provide('axios', app.config.globalProperties.axios)
