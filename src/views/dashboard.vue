@@ -52,16 +52,16 @@
         </div>
     </div>
 
-    <div class="container text-center">
+    <!-- <div class="container text-center">
     <div class="row">
         <div class=" col">
             <vue-apex-charts width="380" type="donut" :options="option" :series="serie"></vue-apex-charts>
         </div>
         <div class=" col">
-            <vue-apex-charts width="500" type="area" :options="options" :series="series"></vue-apex-charts>
+            <vue-apex-charts class="img-fluid" width="400" type="area" :options="options" :series="series"></vue-apex-charts>
         </div>
     </div>
-    </div>
+    </div> -->
 
     <div class="container">
         <div class="row justify-content-center">
@@ -192,7 +192,7 @@ export default class dashboard extends Vue {
             data: [1, 2, 3]
        }]
        option = {}
-       serie = [1, 2, 3]
+       serie = [1, 2]
 }
 </script>
 
