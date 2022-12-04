@@ -1,1 +1,1 @@
-This is a to-do list with a fully validated and authenticated login and sign up page. Using firebase as the backend.
+This is a task manager app where users can manage their tasks, add tasks, view, update and delete tasks. It has a fully validated and authenticated login and sign up page. It uses firebase as the backend database. It was built using Vue, Typescript and Bootstrap.
