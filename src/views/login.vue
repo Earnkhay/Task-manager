@@ -225,8 +225,8 @@
                         setTimeout(() => {  
                                 this.alertShow = false 
                                 this.spinnerShow = false 
-                                this.$router.push(`/landingPage`)
-                                // this.pageType = 'login'   
+                                // this.$router.push(`/landingPage`)
+                                this.pageType = 'login'   
                                 this.email = ''
                                 this.password = '' 
                                 this.name = '' 
@@ -511,9 +511,6 @@
     min-height: 100vh;
 }
 
-/* .bg{
-    min-height: 100vh;
-} */
 .googleBtn:hover{
     background-color: rgb(2, 117, 216) !important;
     color: white !important;
@@ -595,8 +592,6 @@ form a:hover{
     #header{
         font-size: 1.8rem;
     }
-
-    
 }
 
 @media (min-width: 488px) and (max-width: 767px) {
@@ -677,11 +672,6 @@ form a:hover{
         padding-bottom: 0;
     }
 
-    
-    /* #login-page{
-        padding: 80px 0px !important;
-    } */
-
     #login-form p{
         font-size: 0.7rem;
     }
@@ -700,6 +690,4 @@ form a:hover{
         padding: 4px !important;
     }
 }
-
-
 </style>

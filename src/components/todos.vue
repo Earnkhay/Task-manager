@@ -4,14 +4,14 @@
         <thead>
             <tr>
             <th scope="col">Recent Task</th>
-            <th scope="col">Due Date</th>
+            <!-- <th scope="col">Due Date</th> -->
             <th scope="col">Priority</th>
             <th scope="col">Status</th>
             <th scope="col"> 
-                <div class="dropdown d-flex justify-content-end">
+                <div class="dropstart d-flex justify-content-end">
                         <i class="fa-solid fa-ellipsis-vertical text-primary fs-5" data-bs-toggle="dropdown"></i>
                     <ul class="dropdown-menu">
-                        <div class="dropdown-center">
+                        <div class="dropdstart">
                             <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Status</a>
                                 <ul class="dropdown-menu tablemenu">
                                     <li><a class="dropdown-item text-primary fw-bold" @click="viewNotStarted" href="#">Not Started</a></li>
@@ -22,7 +22,7 @@
                                 </ul>
                             </li>
                         </div>
-                        <div class="dropdown-center">
+                        <div class="dropstart">
                             <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Priority</a>
                                 <ul class="dropdown-menu tablemenu">
                                     <li><a class="dropdown-item text-danger fw-bold" @click="viewHigh" href="#">High</a></li>
@@ -32,7 +32,14 @@
                                 </ul>
                             </li>
                         </div>
-                        <li><a class="dropdown-item" href="#">Date</a></li>
+                        <div class="dropstart">
+                            <li class="submenu"><a class="dropdown-item dropdown-toggle" href="#">Date</a>
+                                <ul class="dropdown-menu tablemenu">
+                                    <li><Datepicker v-model="date" inline auto-apply /></li>
+                                </ul>
+                            </li>
+                        </div>
+                        
                     </ul>
                 </div>
             </th>
@@ -42,7 +49,7 @@
         <tbody>
             <tr v-for="(task, id) in tasks" :key="id">
                 <th>{{ task.title }}</th>
-                <td> {{ task.duedate }} </td>
+                <!-- <td> {{ task.duedate }} </td> -->
                 <td> {{ task.priority }} </td>
                 <td>
                     <select class="form-select text-light rounded-5 w-75 selectStatus" v-model="task.status" @change="updateStatus(task.id, task.status)" :class="[task.status == 'Not started' ? 'bg-primary' : task.status == 'In progress' ? 'bg-warning' : task.status == 'Completed' ? 'bg-success' : task.status == 'Overdue' ? 'bg-danger' : 'bg-transparent' ]" aria-label="Default select example">
@@ -142,6 +149,8 @@
 import {Options, Vue} from "vue-class-component"
 import { db } from "@/firebase.js"
 // import spinner from '@/components/UI/spinner.vue'
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 import nkselector from '@/components/UI/nkselector.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, query, orderBy } from "firebase/firestore";
@@ -149,7 +158,8 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, query
 @Options({
     components: {
         // spinner,
-        nkselector
+        nkselector,
+        Datepicker
     }
 })
 
@@ -161,6 +171,7 @@ export default class todos extends Vue {
     viewPriority = ""
     viewStatus = ""
     viewDesc = ""
+    date = ""
     editTitle = ""
     editPriority = ""
     editDesc = ""
@@ -210,13 +221,15 @@ export default class todos extends Vue {
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
-                const task = {
-                    id: doc.id,
-                    title: doc.data().title,
-                    priority: doc.data().priority,
-                    status: doc.data().status,
-                    desc: doc.data().desc
-                }
+                let myDate = new Date(doc.data().duedate * 1000).toDateString()
+                    const task = {
+                        id: doc.id,
+                        title: doc.data().title,
+                        duedate: myDate,
+                        priority: doc.data().priority,
+                        status: doc.data().status,
+                        desc: doc.data().desc
+                    }
                 fbTasks.push(task)
             })
                 this.tasks = fbTasks
@@ -228,13 +241,15 @@ export default class todos extends Vue {
         onSnapshot(q, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
-                const task = {
-                    id: doc.id,
-                    title: doc.data().title,
-                    priority: doc.data().priority,
-                    status: doc.data().status,
-                    desc: doc.data().desc
-                }
+                let myDate = new Date(doc.data().duedate * 1000).toDateString()
+                    const task = {
+                        id: doc.id,
+                        title: doc.data().title,
+                        duedate: myDate,
+                        priority: doc.data().priority,
+                        status: doc.data().status,
+                        desc: doc.data().desc
+                    }
                 fbTasks.push(task)
             })
                 this.tasks = fbTasks
@@ -246,9 +261,11 @@ export default class todos extends Vue {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 if (doc.data().status == 'In progress') {
+                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: myDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -265,9 +282,11 @@ export default class todos extends Vue {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 if (doc.data().status == 'Completed') {
+                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: myDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -284,9 +303,11 @@ export default class todos extends Vue {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 if (doc.data().status == 'Overdue') {
+                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: myDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -303,9 +324,11 @@ export default class todos extends Vue {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 if (doc.data().priority == 'High') {
+                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: myDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -322,9 +345,11 @@ export default class todos extends Vue {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 if (doc.data().priority == 'Medium') {
+                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: myDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -341,9 +366,11 @@ export default class todos extends Vue {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 if (doc.data().priority == 'Low') {
+                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: myDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -409,6 +436,10 @@ export default class todos extends Vue {
 
     .submenu a:hover{
         cursor: pointer;
+    }
+
+    .tablemenu{
+        margin-left: -100px;
     }
     .cover{
         white-space: nowrap;

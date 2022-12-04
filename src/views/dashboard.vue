@@ -1,7 +1,6 @@
 <template>
     <nav-bar :navlink1="navText1"/>
-
-    <h5 class="my-5 fs-4 fw-bold container">Welcome {{ name }}, view your data</h5>
+    <h5 class="my-5 fs-4 fw-bold container">Welcome <span class="text-success">{{ name }}</span>, view your progress</h5>
 
     <!-- <div>User {{ $route.params.id }}</div> -->
     <!-- <div class="container text-center mb-5 mt-5">
@@ -14,6 +13,44 @@
         </div>    
     </div>
     </div> -->
+    
+
+    <!-- <div class="container mb-5">
+        <div class="row ">
+            <div class="col-md-3">
+                <div class="card border-primary">
+                <div class="card-body text-center">
+                    <h4 class="card-title fw-bold">All Tasks</h4>
+                    <h1 class="card-text fw-bold data text-primary">{{ tasks.length }}</h1>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-warning">
+                <div class="card-body text-center">
+                    <h4 class="card-title fw-bold">In Progress</h4>
+                    <h1 class="card-text fw-bold data text-warning">{{ inProgressTasks.length }}</h1>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-success">
+                <div class="card-body text-center">
+                    <h4 class="card-title fw-bold">Tasks Completed</h4>
+                    <h1 class="card-text fw-bold data text-success">{{ completedTasks.length }}</h1>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-danger">
+                <div class="card-body text-center">
+                    <h4 class="card-title fw-bold">Tasks Overdue</h4>
+                    <h1 class="card-text fw-bold data text-danger">{{ overdueTasks.length }}</h1>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
 
     <div class="container text-center">
     <div class="row">
@@ -25,18 +62,14 @@
         </div>
     </div>
     </div>
-    <div class="container text-center">
-    <div class="row">
-        <!-- <div class="col-lg-6 mt-5">
-            <maintable/>
-        </div> -->
-        <div class="col-lg-6 dbimg">
-            <img src="../assets/dashboard.png" alt="dashboard image">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <img src="../assets/dashboard.png" class="img-fluid" alt="dashboard image">
+            </div>
         </div>
     </div>
-    </div>
-    
-    <!-- <nkselector/> -->
     
     <router-view/>
     <my-footer/>
@@ -47,8 +80,6 @@
     import navBar from "@/components/UI/navbar.vue"
     import myFooter from "@/components/UI/footer.vue"
     import VueApexCharts from "vue3-apexcharts"
-    import maintable from "@/components/UI/table.vue"
-    import nkselector from "@/components/UI/nkselector.vue"
     import { getAuth, onAuthStateChanged } from "firebase/auth"
     import { db } from "@/firebase.js" 
     import { collection, doc, onSnapshot, query, orderBy} from "firebase/firestore"
@@ -58,43 +89,85 @@
             navBar,
             myFooter,
             VueApexCharts,
-            maintable,
-            nkselector
         }
     })
 
 export default class dashboard extends Vue {
         navText1 = "Dashboard"
         name = ""
-        todos = []
+        tasks = []
+        completedTasks = []
+        overdueTasks = []
+        inProgressTasks = []
         auth = getAuth()
         user = this.auth.currentUser
         id = this.user.uid
-        months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-        todosCollectionRef = collection( db, `users/${this.id}/todos` )
+        todosCollectionRef = collection( db, `users/${this.id}/tasks` )
         todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"))
         mounted(){
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                        // chart.updateSeries([{
-                        //     name: 'Sales',
-                        //     data: response
-                        // }])
-                    const fbTodos = []
+                    const fbTasks = []
                     querySnapshot.forEach((doc) => {
-                        const todo = {
+                        const task = {
                             id: doc.id,
-                            name: doc.data().name,
-                            done: doc.data().done,
-                            day: doc.data().day,
-                            month: doc.data().month
+                            title: doc.data().title,
+                            priority: doc.data().priority,
+                            status: doc.data().status,
+                            desc: doc.data().desc
                         }
-                        fbTodos.push(todo)
+                        fbTasks.push(task)
                     })
-                        this.todos = fbTodos
-                        // if(this.todos.done){
-                        // console.log(this.todos.length)}
+                        this.tasks = fbTasks
+                    })
+                    onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                    const fbcompletedTasks = []
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data().status == 'Completed'){
+                          const task = {
+                            id: doc.id,
+                            title: doc.data().title,
+                            priority: doc.data().priority,
+                            status: doc.data().status,
+                            desc: doc.data().desc
+                        }
+                        fbcompletedTasks.push(task)  
+                        }
+                    })
+                        this.completedTasks = fbcompletedTasks
+                    })
+                    onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                    const fboverdueTasks = []
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data().status == 'Overdue'){
+                          const task = {
+                            id: doc.id,
+                            title: doc.data().title,
+                            priority: doc.data().priority,
+                            status: doc.data().status,
+                            desc: doc.data().desc
+                        }
+                        fboverdueTasks.push(task)  
+                        }
+                    })
+                        this.overdueTasks = fboverdueTasks
+                    })
+                    onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                    const fbinProgressTasks = []
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data().status == 'In progress'){
+                          const task = {
+                            id: doc.id,
+                            title: doc.data().title,
+                            priority: doc.data().priority,
+                            status: doc.data().status,
+                            desc: doc.data().desc
+                        }
+                        fbinProgressTasks.push(task)  
+                        }
+                    })
+                        this.inProgressTasks = fbinProgressTasks
                     })
                     if(user.displayName != null){
                         this.name = user.displayName
@@ -123,9 +196,8 @@ export default class dashboard extends Vue {
 }
 </script>
 
-<style>
-    .dbimg img{
-        max-width: 100%;
-        height: auto;
+<style scoped>
+    .data{
+        text-shadow: 1px 3px rgba(0, 0, 0, 0.35);
     }
 </style>
