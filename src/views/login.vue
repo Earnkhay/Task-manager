@@ -47,7 +47,8 @@
                                     </div>
                                 </div>
                     
-                            <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} <a href="" id="link" @click.prevent="setLoginPage"> {{ pageType == "signUp" ? "Log in here" : "Sign up here" }}</a></p>
+                            <p id="account" class="text-center"> {{pageType == "signUp" ? "Already have an account?" : "Don't have an account?"}} 
+                                <a href="" id="link" @click.prevent="setLoginPage"> {{ pageType == "signUp" ? "Log in here" : "Sign up here" }}</a></p>
                         </form>    
                     </div>
                 </div>
@@ -134,8 +135,7 @@
                 this.email = ""
                 this.password = ""
             }
-                
-            }
+        }
             toggleVisibility() {
                 if (this.showEye) this.passwordType = "text";
                 else this.passwordType = "password";
