@@ -104,7 +104,7 @@ import spinner from '@/components/UI/spinner.vue'
 import addModal from '@/components/addModal.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { db } from "@/firebase.js"
-import { collection, doc, addDoc, getDoc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
+import { collection, doc, getDoc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
 
 @Options({
   components: {

@@ -1,6 +1,6 @@
 <template>
     <nav-bar :navlink1="navText1"/>
-    <h5 class="my-5 fs-4 fw-bold container">Welcome <span class="text-success">{{ name }}</span>, view your progress</h5>
+    <h5 class="my-5 fs-4 fw-bold container">Welcome <span class="text-success">{{ name }}</span> to your Dashboard</h5>
 
     <!-- <div>User {{ $route.params.id }}</div> -->
     <!-- <div class="container text-center mb-5 mt-5">
@@ -18,7 +18,7 @@
     <div class="container mb-5">
         <div class="row ">
             <div class="col-md-3 mb-3">
-                <div class="card border-primary">
+                <div class="card border-primary shadow">
                 <div class="card-body text-center">
                     <h4 class="card-title fw-bold">All Tasks</h4>
                     <h1 class="card-text fw-bold data text-primary">{{ tasks.length }}</h1>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="card border-warning">
+                <div class="card border-warning shadow">
                 <div class="card-body text-center">
                     <h4 class="card-title fw-bold">In Progress</h4>
                     <h1 class="card-text fw-bold data text-warning">{{ inProgressTasks.length }}</h1>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="card border-success">
+                <div class="card border-success shadow">
                 <div class="card-body text-center">
                     <h4 class="card-title fw-bold">Completed</h4>
                     <h1 class="card-text fw-bold data text-success">{{ completedTasks.length }}</h1>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="card border-danger">
+                <div class="card border-danger shadow">
                 <div class="card-body text-center">
                     <h4 class="card-title fw-bold">Overdue</h4>
                     <h1 class="card-text fw-bold data text-danger">{{ overdueTasks.length }}</h1>
@@ -199,5 +199,12 @@ export default class dashboard extends Vue {
 <style scoped>
     .data{
         text-shadow: 1px 3px rgba(0, 0, 0, 0.35);
+    }
+
+    @media screen and (max-width: 399px){
+       h5{
+        font-size: 22px !important;
+        text-align: center;
+       }
     }
 </style>
