@@ -1,36 +1,37 @@
 <template>
     <div class="container bg-light p-4 rounded-2 cover">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-            <th scope="col">Recent Task</th>
-            <!-- <th scope="col">Due Date</th> -->
-            <th scope="col">Priority</th>
-            <th scope="col">Status</th>
-            <th scope="col"> 
-                <div class="dropstart d-flex justify-content-end">
-                        <i class="fa-solid fa-ellipsis-vertical text-primary fs-5" data-bs-toggle="dropdown"></i>
-                    <ul class="dropdown-menu">
-                        <div class="dropdstart">
-                            <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Status</a>
-                                <ul class="dropdown-menu tablemenu">
-                                    <li><a class="dropdown-item text-primary fw-bold" @click="viewNotStarted" href="#">Not Started</a></li>
-                                    <li><a class="dropdown-item text-warning fw-bold" @click="viewInProgress" href="#">In Progress</a></li>
-                                    <li><a class="dropdown-item text-success fw-bold" @click="viewCompleted" href="#">Completed</a></li>
-                                    <li><a class="dropdown-item text-danger fw-bold" @click="viewOverdue" href="#">Overdue</a></li>
-                                    <li><a class="dropdown-item fw-bold" @click="viewAll" href="#">All</a></li>
-                                </ul>
-                            </li>
-                        </div>
-                        <div class="dropstart">
-                            <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Priority</a>
-                                <ul class="dropdown-menu tablemenu">
-                                    <li><a class="dropdown-item text-danger fw-bold" @click="viewHigh" href="#">High</a></li>
-                                    <li><a class="dropdown-item text-warning fw-bold" @click="viewMedium" href="#">Medium</a></li>
-                                    <li><a class="dropdown-item text-secondary fw-bold" @click="viewLow" href="#">Low</a></li>
-                                    <li><a class="dropdown-item fw-bold" @click="viewAll" href="#">All</a></li>
-                                </ul>
-                            </li>
+        <table class="table table-hover dropdownIndex">
+            <thead>
+                <tr>
+                    <th scope="col">Recent Task</th>
+                    <!-- <th scope="col">Due Date</th> -->
+                    <th scope="col">Priority</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"> 
+                        <div class="dropstart d-flex justify-content-end dropdownIndex">
+                            <i class="fa-solid fa-ellipsis-vertical text-primary fs-5" data-bs-toggle="dropdown"></i>
+                            <ul class="dropdown-menu dropdownIndex">
+                                <div class="dropdstart">
+                                    <li class="submenu">
+                                        <a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Status</a>
+                                        <ul class="dropdown-menu tablemenu">
+                                            <li><a class="dropdown-item text-primary fw-bold" @click="filterStatus('Not started')" href="#">Not Started</a></li>
+                                            <li><a class="dropdown-item text-warning fw-bold" @click="filterStatus('In progress')" href="#">In Progress</a></li>
+                                            <li><a class="dropdown-item text-success fw-bold" @click="filterStatus('Completed')" href="#">Completed</a></li>
+                                            <li><a class="dropdown-item text-danger fw-bold" @click="filterStatus('Overdue')" href="#">Overdue</a></li>
+                                            <li><a class="dropdown-item fw-bold" @click="viewAll" href="#">All</a></li>
+                                        </ul>
+                                    </li>
+                                </div>
+                                <div class="dropstart">
+                                    <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Priority</a>
+                                        <ul class="dropdown-menu tablemenu">
+                                            <li><a class="dropdown-item text-danger fw-bold" @click="filterPriority('High')" href="#">High</a></li>
+                                            <li><a class="dropdown-item text-warning fw-bold" @click="filterPriority('Medium')" href="#">Medium</a></li>
+                                            <li><a class="dropdown-item text-secondary fw-bold" @click="filterPriority('Low')" href="#">Low</a></li>
+                                            <li><a class="dropdown-item fw-bold" @click="viewAll" href="#">All</a></li>
+                                        </ul>
+                                    </li>
                         </div>
                         <div class="dropstart">
                             <li class="submenu"><a class="dropdown-item dropdown-toggle" href="#">Date</a>
@@ -45,8 +46,11 @@
             </th>
             </tr>
         </thead>
-        
+ 
         <tbody>
+            <tr v-if="spinnerShow">
+              <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
+            </tr>
             <tr v-for="(task, id) in tasks" :key="id">
                 <th>{{ task.title }}</th>
                 <!-- <td> {{ task.duedate }} </td> -->
@@ -62,6 +66,9 @@
                     <i class="fa-solid fa-pen-to-square text-primary mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal2" @click="editTask(task.id)"></i>
                     <i class="fa-solid fa-trash text-danger ms-2" @click.prevent="deleteTask(task.id)"></i>
                 </td>
+            </tr>
+            <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
+                <i class="fa-solid fa-info text-danger m-4"></i> No Records Found. 
             </tr>
         </tbody>
     </table>
@@ -111,7 +118,7 @@
 
     <!-- Edit Modal -->
     <div class="modal fade" id="exampleModal2" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
         <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Task</h1>
@@ -148,7 +155,7 @@
 <script>
 import {Options, Vue} from "vue-class-component"
 import { db } from "@/firebase.js"
-// import spinner from '@/components/UI/spinner.vue'
+import spinner from '@/components/UI/spinner.vue'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import nkselector from '@/components/UI/nkselector.vue'
@@ -157,7 +164,7 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, query
 
 @Options({
     components: {
-        // spinner,
+        spinner,
         nkselector,
         Datepicker
     }
@@ -165,6 +172,7 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, query
 
 export default class todos extends Vue {
     spinnerShow = false
+    spinnerSize = "spinner-border-lg"
     tasks = []
     currentTask
     viewTitle = ""
@@ -190,9 +198,6 @@ export default class todos extends Vue {
 
     mounted(){ 
         this.spinnerShow = true
-        setTimeout(() => {  
-            this.spinnerShow = false
-        }, 1000) 
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
@@ -212,6 +217,7 @@ export default class todos extends Vue {
                     fbTasks.push(task)
                 })
                     this.tasks = fbTasks
+                    this.spinnerShow = false
                 })
             }
         })
@@ -236,8 +242,9 @@ export default class todos extends Vue {
             })
     }
 
-    viewNotStarted(){
-        const q = query(collection(db, `users/${this.id}/tasks`), where("status", "==", "Not started"));
+    filterStatus(status){
+        console.log(status, "TASK Status");
+        const q = query(collection(db, `users/${this.id}/tasks`), where("status", "==", status));
         onSnapshot(q, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
@@ -256,116 +263,34 @@ export default class todos extends Vue {
         })
     }
 
-    viewInProgress(){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-            const fbTasks = []
-            querySnapshot.forEach((doc) => {
-                if (doc.data().status == 'In progress') {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: myDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-                }
-            })
-                this.tasks = fbTasks
-        })
-    }
+    // filterStatus(status){
+    //     console.log(status, "TASK Status");
+    //     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+    //         const fbTasks = []
+    //         querySnapshot.forEach((doc) => {
+    //             if (doc.data().status == status) {
+    //                 let myDate = new Date(doc.data().duedate * 1000).toDateString()
+    //                 const task = {
+    //                     id: doc.id,
+    //                     title: doc.data().title,
+    //                     duedate: myDate,
+    //                     priority: doc.data().priority,
+    //                     status: doc.data().status,
+    //                     desc: doc.data().desc
+    //                 }
+    //                 fbTasks.push(task)
+    //             }
+    //         })
+    //             this.tasks = fbTasks
+    //     })
+    // }
 
-    viewCompleted(){
+    filterPriority(priority){
+        console.log(priority, "TASK priority");
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
-                if (doc.data().status == 'Completed') {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: myDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-                }
-            })
-                this.tasks = fbTasks
-        })
-    }
-
-    viewOverdue(){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-            const fbTasks = []
-            querySnapshot.forEach((doc) => {
-                if (doc.data().status == 'Overdue') {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: myDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-                }
-            })
-                this.tasks = fbTasks
-        })
-    }
-
-    viewHigh(){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-            const fbTasks = []
-            querySnapshot.forEach((doc) => {
-                if (doc.data().priority == 'High') {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: myDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-                }
-            })
-                this.tasks = fbTasks
-        })
-    }
-
-    viewMedium(){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-            const fbTasks = []
-            querySnapshot.forEach((doc) => {
-                if (doc.data().priority == 'Medium') {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: myDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-                }
-            })
-                this.tasks = fbTasks
-        })
-    }
-
-    viewLow(){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-            const fbTasks = []
-            querySnapshot.forEach((doc) => {
-                if (doc.data().priority == 'Low') {
+                if (doc.data().priority == priority) {
                     let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
@@ -430,6 +355,9 @@ export default class todos extends Vue {
         background-color: rgb(164, 243, 164);
     }
 
+    .dropdownIndex{
+        z-index: 1000 !important;
+    }
     .submenu:hover .tablemenu {
         display: block;
     }

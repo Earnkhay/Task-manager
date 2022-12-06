@@ -32,14 +32,14 @@
                             
                                 <div class="text-center">
                                     <button type="submit" class="mb-2 btn bg-primary mainBtn" id="signup" @click.prevent="checkPageTypeAuth(pageType)" >
-                                        <spinner v-if="spinnerShow"/>
+                                        <spinner v-if="spinnerShow" :spinnerSize="spinnerSize"/>
                                         <div v-else>
                                             {{ pageType == "signUp" ? "Sign Up" : "Sign In"}}
                                         </div>
                                     </button>
                                     <div class="d-grid gap-2 mb-2">
                                         <button class="btn bg-transparent text-dark googleBtn" @click.prevent="signUpWithGoogle">
-                                            <spinner v-if="spinnerShows"/>
+                                            <spinner v-if="spinnerShows" :spinnerSize="spinnerSize"/>
                                             <div v-else>
                                                 {{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}
                                             </div>
@@ -114,6 +114,7 @@
         pageType ="signUp"
         spinnerShow = false
         spinnerShows = false
+        spinnerSize = "spinner-border-sm"
         name = ""
         newUser = ""
         email = ""
@@ -207,7 +208,6 @@
                     name: this.name
                 }
                 const auth = getAuth()
-                // const user = auth.currentUser
                 if (pageType == 'signUp' && this.name != "" && this.email != "" && this.password != '' && this.mailformat.test(this.email) && this.regPassword.test(this.password)) {
                     await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
                     .then((user) => {
@@ -217,7 +217,6 @@
                         axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                             formData: formData
                         })
-                        // console.log(user.user.uid, "Successfully registered");
                         this.alertTitle = "Success !, You're Welcome"
                         this.alertType = "Success"
                         this.alertShow = true

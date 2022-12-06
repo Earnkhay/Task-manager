@@ -31,6 +31,9 @@
                         </thead>
                         
                         <tbody>
+                            <tr v-if="spinnerShow">
+                                <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
+                            </tr>
                             <tr data-bs-toggle="modal" data-bs-target="#exampleModal1" v-for="(task, id) in tasks" :key="id" @click="viewTask(task.id)">
                                 <th>{{ task.title }}</th>
                                 <!-- <td> {{ task.duedate }} </td> -->
@@ -38,6 +41,9 @@
                                 <td class="badge rounded-pill" :class="[task.status == 'Not started' ? 'text-bg-primary' : task.status == 'In progress' ? 'text-bg-warning' : task.status == 'Completed' ? 'text-bg-success' : task.status == 'Overdue' ? 'text-bg-danger' : 'bg-transparent' ]">
                                     {{task.status}}
                                 </td>
+                            </tr>
+                            <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
+                                <i class="fa-solid fa-info text-danger m-3"></i>No Recent Tasks. 
                             </tr>
                         </tbody>
                     </table> 
@@ -117,6 +123,7 @@ import { collection, doc, getDoc, onSnapshot, query, orderBy, limit} from "fireb
 export default class landingpage extends Vue {
     navText1 = "Dashboard"
     spinnerShow = false 
+    spinnerSize = "spinner-border-lg"
     name = ""
     viewTitle = ""
     viewPriority = ""
@@ -150,17 +157,9 @@ export default class landingpage extends Vue {
         }
     }
     mounted(){
-        // const auth = getAuth()
-        // this.spinnerShow = true
-        // setTimeout(() => {  
-        //     this.spinnerShow = false
-        // }, 2000) 
+        this.spinnerShow = true
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
-                this.spinnerShow = true
-                setTimeout(() => {  
-                    this.spinnerShow = false
-                }, 2000) 
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTasks = []
                 querySnapshot.forEach((doc) => {
@@ -176,6 +175,7 @@ export default class landingpage extends Vue {
                     fbTasks.push(task)
                 })
                     this.tasks = fbTasks
+                    this.spinnerShow = false
                 })
                 
                 if(user.displayName != null){
