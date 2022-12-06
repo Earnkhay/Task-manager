@@ -1,13 +1,13 @@
 <template>
-    <div class="container bg-light p-4 rounded-2 cover">
+    <div class="container bg-light pb-4 rounded-2 cover">
         <table class="table table-hover dropdownIndex">
-            <thead>
+            <thead class="border-bottom-none">
                 <tr>
-                    <th scope="col">Recent Task</th>
+                    <th scope="col" class="py-4">Recent Task</th>
                     <!-- <th scope="col">Due Date</th> -->
-                    <th scope="col">Priority</th>
-                    <th scope="col">Status</th>
-                    <th scope="col"> 
+                    <th scope="col" class="py-4">Priority</th>
+                    <th scope="col" class="py-4">Status</th>
+                    <th scope="col" class="py-4"> 
                         <div class="dropstart d-flex justify-content-end dropdownIndex">
                             <i class="fa-solid fa-ellipsis-vertical text-primary fs-5" data-bs-toggle="dropdown"></i>
                             <ul class="dropdown-menu dropdownIndex">
@@ -42,9 +42,9 @@
                         </div>
                         
                     </ul>
-                </div>
-            </th>
-            </tr>
+                        </div>
+                    </th>
+                </tr>
         </thead>
  
         <tbody>
@@ -390,6 +390,5 @@ export default class todos extends Vue {
     .selectStatus{
         width: 100% !important;
     }
-
 }
 </style>

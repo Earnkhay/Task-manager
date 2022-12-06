@@ -9,8 +9,8 @@
     </div>
 
     <add-modal/>
-
     <todos/>
+    <my-footer/>
 </template>
 
 <script>
@@ -18,6 +18,7 @@ import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/UI/navbar.vue"
 import todos from '@/components/todos.vue'
 import addModal from '@/components/addModal.vue'
+import myFooter from "@/components/UI/footer.vue"
 import { db } from "@/firebase.js"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { collection, onSnapshot, doc } from "firebase/firestore";
@@ -27,6 +28,7 @@ import { collection, onSnapshot, doc } from "firebase/firestore";
         navBar,
         addModal,
         todos,
+        myFooter
     }
 })
 
