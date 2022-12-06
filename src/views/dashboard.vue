@@ -105,7 +105,7 @@ export default class dashboard extends Vue {
         todosCollectionRef = collection( db, `users/${this.id}/tasks` )
         todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"))
         mounted(){
-            console.log("mounted in dashboard");
+            // console.log("mounted in dashboard");
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
@@ -138,7 +138,7 @@ export default class dashboard extends Vue {
                     })
                         this.notStartedTasks = fbnotStartedTasks
                         this.statusCount.push(fbnotStartedTasks.length)
-                        console.log(fbnotStartedTasks, 'not started', this.statusCount);
+                        // console.log(fbnotStartedTasks, 'not started', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                     const fbinProgressTasks = []
@@ -156,7 +156,7 @@ export default class dashboard extends Vue {
                     })
                         this.inProgressTasks = fbinProgressTasks
                         this.statusCount.push(fbinProgressTasks.length)
-                        console.log(fbinProgressTasks, 'In Progress', this.statusCount);
+                        // console.log(fbinProgressTasks, 'In Progress', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                     const fbcompletedTasks = []
@@ -174,7 +174,7 @@ export default class dashboard extends Vue {
                     })
                         this.completedTasks = fbcompletedTasks
                         this.statusCount.push(fbcompletedTasks.length)
-                        console.log(fbcompletedTasks, 'Completed', this.statusCount);
+                        // console.log(fbcompletedTasks, 'Completed', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                     const fboverdueTasks = []
@@ -192,9 +192,9 @@ export default class dashboard extends Vue {
                     })
                         this.overdueTasks = fboverdueTasks
                         this.statusCount.push(fboverdueTasks.length)
-                        console.log(fboverdueTasks, 'overdue', this.statusCount);
+                        // console.log(fboverdueTasks, 'overdue', this.statusCount);
                     })
-                    console.log(this.statusCount);
+                    // console.log(this.statusCount);
                     if(user.displayName != null){
                         this.name = user.displayName
                     }else {

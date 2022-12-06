@@ -14,11 +14,11 @@
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <label class="form-label">Start date {{startDate}}</label>
+                    <label class="form-label">Start date</label>
                     <Datepicker v-model="startDate" :enable-time-picker="false"/>
                 </div>
                 <div>
-                    <label class="form-label">End date{{dueDate}}</label>
+                    <label class="form-label">End date</label>
                     <Datepicker v-model="dueDate" :enable-time-picker="false"/>
                 </div>
             </div>
