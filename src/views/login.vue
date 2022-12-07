@@ -148,9 +148,7 @@
                 // console.log('work................', this.mailformat, 'hello', this.email);
                     if (this.mailformat.test(this.email)) {
                         // console.log('valid email address');
-                        
                     } else if(this.email == ""){
-                         
                         this.alertTitle = "Please input Email address"
                         this.alertType = "Danger"
                         this.alertShow = true

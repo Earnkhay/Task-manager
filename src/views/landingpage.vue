@@ -43,7 +43,7 @@
                                 </td>
                             </tr>
                             <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
-                                <i class="fa-solid fa-info text-danger m-3"></i>No Recent Tasks. 
+                                <i class="fa-solid fa-info text-danger m-3"></i>No Recent Task. 
                             </tr>
                         </tbody>
                     </table> 

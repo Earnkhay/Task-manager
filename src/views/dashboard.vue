@@ -1,4 +1,5 @@
 <template>
+    <div id="app">
     <nav-bar :navlink1="navText1"/>
     <h5 class="my-5 fs-4 fw-bold container">Welcome <span class="text-success">{{ name }}</span> to your Dashboard</h5>
 
@@ -50,15 +51,15 @@
         </div>
     </div>
 
-    <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <vue-apex-charts width="380" type="donut" :options="options" :chartOptions="options.chartOptions"  :series="statusCount"  > </vue-apex-charts>
+    <div class="container" v-if="tasks.length != 0">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <vue-apex-charts width="380" type="donut" :options="chartOptions" :series="statusCount"> </vue-apex-charts>
+            </div>
+            <div class="col-md-6">
+                <vue-apex-charts width="380" type="pie" :options="chartOptions" :series="statusCount"> </vue-apex-charts>
+            </div>
         </div>
-        <!-- <div class=" col">
-            <vue-apex-charts class="img-fluid" width="400" type="area" :options="options" :series="series"></vue-apex-charts>
-        </div> -->
-    </div>
     </div>
 
     <!-- <div class="container">
@@ -68,9 +69,8 @@
             </div>
         </div>
     </div> -->
-    
-    <router-view/>
     <my-footer/>
+    </div>
 </template>
 
 <script>
@@ -205,11 +205,27 @@ export default class dashboard extends Vue {
                 }
             })
         }
-       options = {
-            chartOptions: {
-            labels: ['Not  Started', 'In Progress', 'Completed', 'Overdue']
+
+        chartOptions= {
+            // chart: {
+            // width: 380,
+            // type: 'pie',
+            // },
+            labels: ['Not Started', 'In progress', 'Completed', 'Overdue'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 275,
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
+            colors: ['#0d6efd', '#ffc107', '#198754', '#dc3545'] 
         }
-    }
+        
 
 }
 </script>
@@ -223,6 +239,10 @@ export default class dashboard extends Vue {
        h5{
         font-size: 22px !important;
         text-align: center;
+       }
+
+       #app{
+        overflow: hidden;
        }
     }
 </style>

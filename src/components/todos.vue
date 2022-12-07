@@ -263,28 +263,6 @@ export default class todos extends Vue {
         })
     }
 
-    // filterStatus(status){
-    //     console.log(status, "TASK Status");
-    //     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-    //         const fbTasks = []
-    //         querySnapshot.forEach((doc) => {
-    //             if (doc.data().status == status) {
-    //                 let myDate = new Date(doc.data().duedate * 1000).toDateString()
-    //                 const task = {
-    //                     id: doc.id,
-    //                     title: doc.data().title,
-    //                     duedate: myDate,
-    //                     priority: doc.data().priority,
-    //                     status: doc.data().status,
-    //                     desc: doc.data().desc
-    //                 }
-    //                 fbTasks.push(task)
-    //             }
-    //         })
-    //             this.tasks = fbTasks
-    //     })
-    // }
-
     filterPriority(priority){
         console.log(priority, "TASK priority");
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
