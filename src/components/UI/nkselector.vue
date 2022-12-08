@@ -17,8 +17,8 @@ import VueMultiselect from 'vue-multiselect'
   },
 })
 export default class nkselector extends Vue {
-      selected = 'not started'
-      options = ['not started', 'In progress', 'Completed', 'Overdue']
+      selected = ''
+      options = ['High', 'Medium', 'Low']
 }
 </script>
 
