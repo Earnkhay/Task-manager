@@ -1,6 +1,5 @@
 <template>
     <div id="login-page" class="py-5">
-        <!-- <router-view/> -->
          <div class="p-5 bg">
         <div class="container ">
             <div class="row gx-0">
@@ -14,18 +13,18 @@
                             <form action="" id="login-form" class=" col-md-10 text-xs-center">   
                                 <div class="mb-3 text-xs-center" v-if="pageType == 'signUp'">
                                     <label for="exampleFormControlInput1" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Username" v-model="name"  required>
+                                    <input type="text" class="form-control" id="username" placeholder="Username" v-model="name">
                                   </div>
                                 
                                 <div class="mb-3 text-xs-center">
                                     <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Email" v-model="email" @blur="validateEmail"  required>
+                                    <input type="email" class="form-control" id="email" placeholder="Email" v-model="email" @blur="validateEmail">
                                   </div>
                     
                                 <div class="mb-4 text-xs-center">
                                     <label for="inputPassword" class=" form-label">Password</label>
                                     <div class="password-icon">
-                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Password" v-model="password" @blur="checkPageTypePassword"  required>
+                                      <input :type="passwordType" class="form-control password" id="inputPassword" placeholder="Password" v-model="password" @blur="checkPageTypePassword">
                                       <i class="fa-solid icon" :class="{'fa-eye': showEye, 'fa-eye-slash': !showEye}" id="togglePassword" @click="toggleVisibility"></i>
                                       </div>
                                     </div>
@@ -109,391 +108,253 @@
     })
 
 
-    export default class login extends Vue{
-        passwordType = 'password'
-        pageType ="signUp"
-        spinnerShow = false
-        spinnerShows = false
-        spinnerSize = "spinner-border-sm"
-        name = ""
-        newUser = ""
-        email = ""
-        password = ""
-        alertTitle = ""
-        alertType = ""
-        alertShow = false
-        mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-        //To check a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
-        regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
-        
-        setLoginPage(){     
-            if(this.pageType == "signUp"){
-                this.pageType = "login"
-                this.email = ""
-                this.password = ""
-            }else if(this.pageType == "login"){
-                this.pageType = "signUp"
-                this.email = ""
-                this.password = ""
-            }
+export default class login extends Vue{
+    passwordType = 'password'
+    pageType ="signUp"
+    spinnerShow = false
+    spinnerShows = false
+    spinnerSize = "spinner-border-sm"
+    name = ""
+    newUser = ""
+    email = ""
+    password = ""
+    alertTitle = ""
+    alertType = ""
+    alertShow = false
+    mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+    //To check a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
+    regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
+    
+    setLoginPage(){     
+        if(this.pageType == "signUp"){
+            this.pageType = "login"
+            this.email = ""
+            this.password = ""
+        }else if(this.pageType == "login"){
+            this.pageType = "signUp"
+            this.email = ""
+            this.password = ""
         }
-            toggleVisibility() {
-                if (this.showEye) this.passwordType = "text";
-                else this.passwordType = "password";
-            }
-            get showEye() {
-                return this.passwordType == "password";
-            }
-            validateEmail() {
-                // console.log('work................', this.mailformat, 'hello', this.email);
-                    if (this.mailformat.test(this.email)) {
-                        // console.log('valid email address');
-                    } else if(this.email == ""){
-                        this.alertTitle = "Please input Email address"
-                        this.alertType = "Danger"
-                        this.alertShow = true
-                        setTimeout(
-                            () => {
-                                this.alertShow = false
-                        },3000)
-                    }else{
-                        this.alertTitle = "Please input valid Email address"
-                        this.alertType = "Danger"
-                        this.alertShow = true
-                        setTimeout(
-                            () => {
-                                this.alertShow = false
-                                this.email = ""
-                        },3000)
-                    }
-                }
-            validatePassword() {
-                    if (this.regPassword.test(this.password)) {
-                        // console.log('valid password');   
+    }
+    toggleVisibility() {
+        if (this.showEye) this.passwordType = "text";
+        else this.passwordType = "password";
+    }
+    get showEye() {
+        return this.passwordType == "password";
+    }
+    validateEmail() {
+        // console.log('work................', this.mailformat, 'hello', this.email);
+            if (this.mailformat.test(this.email)) {
+                // console.log('valid email address');
+            } else if(this.email == ""){
+                this.alertTitle = "Please input Email address"
+                this.alertType = "Danger"
+                this.alertShow = true
+                setTimeout(
+                    () => {
                         this.alertShow = false
-                    }else if(this.password == ""){
-                        this.alertTitle = "Please input Password"
-                        this.alertType = "Danger"
-                        this.alertShow = true
-                        setTimeout(
-                            () => {
-                                this.alertShow = false
-                        },3000)
-                        // console.log('blur event for no password entered');
-                    }else{
-                        this.alertTitle = "Password should be at least 6 characters long, contain at least one uppercase & one digit"
-                        this.alertType = "Danger"
-                        this.alertShow = true
-                        setTimeout(
-                            () => {
-                                this.password = ""
-                        },3000)
-                        // console.log('blur event for wrong password format');
-                    }
-                }
-            checkPageTypePassword() {
-                if (this.pageType == 'signUp') {
-                    this.validatePassword()
-                }else {
-                    return null
-                }
+                },3000)
+            }else{
+                this.alertTitle = "Please input valid Email address"
+                this.alertType = "Danger"
+                this.alertShow = true
+                setTimeout(
+                    () => {
+                        this.alertShow = false
+                        this.email = ""
+                },3000)
             }
+    }
+    validatePassword() {
+            if (this.regPassword.test(this.password)) {
+                // console.log('valid password');   
+                this.alertShow = false
+            }else if(this.password == ""){
+                this.alertTitle = "Please input Password"
+                this.alertType = "Danger"
+                this.alertShow = true
+                setTimeout(
+                    () => {
+                        this.alertShow = false
+                },3000)
+                // console.log('blur event for no password entered');
+            }else{
+                this.alertTitle = "Password should be at least 6 characters long, contain at least one uppercase & one digit"
+                this.alertType = "Danger"
+                this.alertShow = true
+                setTimeout(
+                    () => {
+                        this.password = ""
+                },3000)
+                // console.log('blur event for wrong password format');
+            }
+    }
+    checkPageTypePassword() {
+        if (this.pageType == 'signUp') {
+            this.validatePassword()
+        }else {
+            return null
+        }
+    }
 
-            async checkPageTypeAuth(pageType){
-                const formData = {
-                    email: this.email,
-                    password: this.password,
+    async checkPageTypeAuth(pageType){
+        const formData = {
+            email: this.email,
+            password: this.password,
+            name: this.name
+        }
+        const auth = getAuth()
+        if (pageType == 'signUp' && this.name != "" && this.email != "" && this.password != '') {
+            await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
+            .then((user) => {
+                setDoc(doc(db, "users", user.user.uid), {
                     name: this.name
+                });
+                axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
+                    formData: formData
+                })
+                this.alertTitle = "Success !, You're Welcome"
+                this.alertType = "Success"
+                this.alertShow = true
+                this.spinnerShow = true
+                setTimeout(() => {  
+                        this.alertShow = false 
+                        this.spinnerShow = false 
+                        // this.$router.push(`/landingPage`)
+                        this.pageType = 'login'   
+                        this.email = ''
+                        this.password = '' 
+                        this.name = '' 
+                },3000) 
+            })
+            .catch((err) => {
+                // this.alertTitle = err.code
+                this.alertType = "danger"
+                this.alertShow = true
+                this.spinnerShow = true
+                switch (err.code) {
+                    case "auth/email-already-in-use":
+                        this.alertTitle = "Email is already in use";
+                        break;
+                    case "auth/invalid-email":
+                        this.alertTitle = "The email address is Invalid";
+                        break;
+                    case "auth/operation-not-allowed":
+                        this.alertTitle = "Operation not allowed";
+                        break;
+                    default:
+                        this.alertTitle = "Email or password was incorrect";
+                        break;
                 }
-                const auth = getAuth()
-                if (pageType == 'signUp' && this.name != "" && this.email != "" && this.password != '' && this.mailformat.test(this.email) && this.regPassword.test(this.password)) {
-                    await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-                    .then((user) => {
-                        setDoc(doc(db, "users", user.user.uid), {
-                            name: this.name
-                        });
-                        axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
-                            formData: formData
-                        })
-                        this.alertTitle = "Success !, You're Welcome"
-                        this.alertType = "Success"
-                        this.alertShow = true
-                        this.spinnerShow = true
-                        setTimeout(() => {  
-                                this.alertShow = false 
-                                this.spinnerShow = false 
-                                // this.$router.push(`/landingPage`)
-                                this.pageType = 'login'   
-                                this.email = ''
-                                this.password = '' 
-                                this.name = '' 
-                        },3000) 
-                    })
-                    .catch((err) => {
-                        // this.alertTitle = err.code
-                        this.alertType = "danger"
-                        this.alertShow = true
-                        this.spinnerShow = true
-                        switch (err.code) {
-                            case "auth/email-already-in-use":
-                                this.alertTitle = "Email is already in use";
-                                break;
-                            case "auth/invalid-email":
-                                this.alertTitle = "The email address is Invalid";
-                                break;
-                            case "auth/operation-not-allowed":
-                                this.alertTitle = "Operation not allowed";
-                                break;
-                            default:
-                                this.alertTitle = "Email or password was incorrect";
-                                break;
-                        }
-                        setTimeout(() => {         
-                                this.alertShow = false
-                                this.spinnerShow = false
-                                this.email = ''
-                                this.password = ''
-                                this.name = ''
-                        },3000) 
-                    });
-                }else if(pageType == 'login'){
-                    signInWithEmailAndPassword(auth, this.email, this.password)
-                    .then(() => {
-                        // console.log(res, "Successfully logged in");
-                        // console.log(auth.currentUser);
-                        this.alertTitle = "Success !, You're Welcome"
-                        this.alertType = "Success"
-                        this.alertShow = true
-                        this.spinnerShow = true
-                        setTimeout(() => {  
-                                this.alertShow = false  
-                                this.spinnerShow = false
-                                this.$router.push('/landingpage')    
-                        },3000) 
-                    })
-                    .catch((err) => {
-                        // console.error(err)
-                        // console.log(err.code);
-                        this.alertType = "danger"
-                        this.alertShow = true
-                        this.spinnerShow = true
-                        switch (err.code) {
-                            case "auth/invalid-email":
-                                this.alertTitle = "Invalid email";
-                                break;
-                            case "auth/user-not-found":
-                                this.alertTitle = "No Account with that email was found";
-                                break;
-                            case "auth/wrong-password":
-                                this.alertTitle = "Incorrect password";
-                                break;
-                            default:
-                                this.alertTitle = "Email or password was incorrect";
-                                break;
-                        }
-                        setTimeout(() => {         
-                                this.alertShow = false
-                                this.spinnerShow = false
-                                this.email = ''
-                                this.password = ''
-                        },3000) 
-                    });
-                }else if(this.name == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
-                    this.alertTitle = "Please input your Name"
-                    this.alertType = "Danger"
-                    this.alertShow = true
-                    this.spinnerShow = true
-                    setTimeout(
-                        () => {
-                            this.alertShow = false
-                            this.spinnerShow = false
-                            this.name = ''
-                        },3000)
-                }else{
-                    // console.log('why');
-                    this.alertTitle = "Error !, Please input Required details"
-                    this.alertType = "Danger"
-                    this.alertShow = true
-                    this.spinnerShow = true
-                    setTimeout(
-                        () => {
-                            this.alertShow = false
-                            this.spinnerShow = false
-                            this.email = ''
-                            this.name = ''
-                            this.password = ''
-                        },3000)
-                    return 
+                setTimeout(() => {         
+                        this.alertShow = false
+                        this.spinnerShow = false
+                        this.email = ''
+                        this.password = ''
+                        this.name = ''
+                },3000) 
+            });
+        }else if(pageType == 'login'){
+            signInWithEmailAndPassword(auth, this.email, this.password)
+            .then(() => {
+                // console.log(auth.currentUser);
+                this.alertTitle = "Success !, You're Welcome"
+                this.alertType = "Success"
+                this.alertShow = true
+                this.spinnerShow = true
+                setTimeout(() => {  
+                        this.alertShow = false  
+                        this.spinnerShow = false
+                        this.$router.push('/landingpage')    
+                },3000) 
+            })
+            .catch((err) => {
+                // console.error(err)
+                // console.log(err.code);
+                this.alertType = "danger"
+                this.alertShow = true
+                this.spinnerShow = true
+                switch (err.code) {
+                    case "auth/invalid-email":
+                        this.alertTitle = "Invalid email";
+                        break;
+                    case "auth/user-not-found":
+                        this.alertTitle = "No Account with that email was found";
+                        break;
+                    case "auth/wrong-password":
+                        this.alertTitle = "Incorrect password";
+                        break;
+                    default:
+                        this.alertTitle = "Email or password was incorrect";
+                        break;
                 }
-            }
+                setTimeout(() => {         
+                        this.alertShow = false
+                        this.spinnerShow = false
+                        this.email = ''
+                        this.password = ''
+                },3000) 
+            });
+        }else{
+            this.alertTitle = "Error !, Please input Required details"
+            this.alertType = "Danger"
+            this.alertShow = true
+            this.spinnerShow = true
+            setTimeout(
+                () => {
+                    this.alertShow = false
+                    this.spinnerShow = false
+                    this.email = ''
+                    this.name = ''
+                    this.password = ''
+                },3000)
+            return 
+        }
+    }
 
-            signUpWithGoogle(){
-                // let auth = getAuth();
-                const provider = new GoogleAuthProvider();
-                signInWithPopup(getAuth(), provider)
-                    .then(() => {
-                        this.alertTitle = "Success !, You're Welcome"
-                        this.alertType = "Success"
-                        this.alertShow = true
-                        this.spinnerShows = true
-                        setTimeout(() => {  
-                                this.alertShow = false  
-                                this.spinnerShows = false
-                                this.$router.push('/landingpage')    
-                        },3000) 
-                    })
-                    .catch((err) => {
-                        this.alertType = "danger"
-                        this.alertShow = true
-                        this.spinnerShows = true
-                        switch (err.code) {
-                            case "auth/email-already-in-use":
-                                this.alertTitle = "Email is already in use";
-                                break;
-                            case "auth/cancelled-popup-request":
-                                this.alertTitle = "You cancelled the popup request";
-                                break;
-                            case "auth/operation-not-allowed":
-                                this.alertTitle = "Operation not allowed";
-                                break;
-                            default:
-                                this.alertTitle = "Email or password was incorrect";
-                                break;
-                        }
-                        setTimeout(() => {         
-                                this.alertShow = false
-                                this.spinnerShows = false
-                        },3000)
-                    })
-            }
-
-            //register a new user using the cdn
-            // eslint-disable-next-line
-            // async checkPageTypeAuth(pageType: string){
-            //     if (pageType == 'signUp') {
-            //         await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
-            //             email: this.email,
-            //             password: this.password,
-            //             username: this.username,
-            //             returnSecureToken: true
-            //         })
-            //         .then((res) => {
-                        // console.log(res, 'successful authentication')
-            //             setTimeout(() => {         
-            //                     this.email = ''
-            //                     this.password = ''
-            //                     this.username = ''
-            //             },3000) 
-            //         })
-            //         .catch((err) => {
-            //             console.error(err.message, "what's the error msg")
-            //             this.alertTitle = 'Error !, Account already exists... '
-            //             this.alertType = "danger"
-            //             this.alertShow = true
-            //             setTimeout(() => {         
-            //                     this.alertShow = false
-            //                     this.email = ''
-            //                     this.password = ''
-            //                     this.username = ''
-            //             },3000) 
-                        
-            //         });
-            //     }else{
-            //         await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg', {
-            //             email: this.email,
-            //             password: this.password,
-            //             username: this.username,
-            //             returnSecureToken: true
-            //         })
-            //         .then((res) => {
-            //             console.log(res, 'successful authentication')
-            //             this.alertTitle = "Success !, You're Welcome"
-            //             this.alertType = "Success"
-            //             this.alertShow = true
-            //             setTimeout(() => {         
-            //                     this.alertShow = false
-            //                     this.email = ''
-            //                     this.password = ''
-            //                     this.username = ''
-            //                     this.$router.push('landingpage') 
-            //             },3000) 
-            //         })
-            //         .catch((err) => {
-            //             console.error(err.message, "what's the error msg")
-            //             this.alertTitle = 'Error !, wrong email or password. Please try again...'
-            //             this.alertType = "danger"
-            //             this.alertShow = true
-            //             setTimeout(() => {         
-            //                     this.alertShow = false
-            //                     this.email = ''
-            //                     this.password = ''
-            //                     this.username = ''
-            //             },3000) 
-                        
-            //         });
-            //     }
-            //     return
-            // }
-            // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDISfT_jx0hkD-SDgy5Z8tlPVT79dNEdXg
-            // eslint-disable-next-line
-            // async submitAction(pageType: string){
-            //     const formData = {
-            //         email: this.email,
-            //         password: this.password,
-            //         username: this.username
-            //     }
-            //     // console.log(pageType, "PAGE TYPE", formData);
-            //     if(this.username != "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
-                    
-            //         await axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
-            //             formData: formData
-            //         })
-            //         .then((res) => {
-            //             console.log(res)
-            //             this.alertTitle = "Success !, You're Welcome"
-            //             this.alertType = "Success"
-            //             this.alertShow = true
-            //             setTimeout(() => {  
-            //                     this.alertShow = false      
-            //                     // this.$router.push('landingpage') 
-            //             },3000) 
-            //         })
-            //         .catch((err) => {
-            //             console.error(err)
-            //             this.alertTitle = 'Failed to save data - please try again later'
-            //             this.alertType = "danger"
-            //             this.alertShow = true
-            //             setTimeout(() => {         
-            //                     this.alertShow = false
-            //                     this.email = ''
-            //                     this.password = ''
-            //                     this.username = ''
-            //             },3000) 
-            //         });
-            //     }else if(this.username == "" && this.pageType == 'signUp' && this.mailformat.test(this.email) && this.regPassword.test(this.password)){
-            //         this.alertTitle = "Please input Username"
-            //         this.alertType = "Danger"
-            //         this.alertShow = true
-            //         setTimeout(
-            //             () => {
-            //                 this.alertShow = false
-            //                 this.username = ''
-            //             },3000)
-            //     }else if(pageType == 'signUp') {
-            //         this.alertTitle = "Error !, Please input Required details"
-            //         this.alertType = "Danger"
-            //         this.alertShow = true
-            //         setTimeout(
-            //             () => {
-            //                 this.alertShow = false
-            //                 this.email = ''
-            //                 this.username = ''
-            //                 this.password = ''
-            //             },3000)
-            //         return 
-            //     }
-            // }
-       }   
+    signUpWithGoogle(){
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(getAuth(), provider)
+            .then(() => {
+                this.alertTitle = "Success !, You're Welcome"
+                this.alertType = "Success"
+                this.alertShow = true
+                this.spinnerShows = true
+                setTimeout(() => {  
+                        this.alertShow = false  
+                        this.spinnerShows = false
+                        this.$router.push('/landingpage')    
+                },3000) 
+            })
+            .catch((err) => {
+                this.alertType = "danger"
+                this.alertShow = true
+                this.spinnerShows = true
+                switch (err.code) {
+                    case "auth/email-already-in-use":
+                        this.alertTitle = "Email is already in use";
+                        break;
+                    case "auth/cancelled-popup-request":
+                        this.alertTitle = "You cancelled the popup request";
+                        break;
+                    case "auth/popup-closed-by-user":
+                        this.alertTitle = "You closed the popup request";
+                        break;
+                    case "auth/operation-not-allowed":
+                        this.alertTitle = "Operation not allowed";
+                        break;
+                    default:
+                        this.alertTitle = "Email or password was incorrect";
+                        break;
+                }
+                setTimeout(() => {         
+                        this.alertShow = false
+                        this.spinnerShows = false
+                },3000)
+            })
+    }
+}   
 
 </script>
 
@@ -509,7 +370,7 @@
 }
 
 .googleBtn:hover{
-    background-color: rgb(2, 117, 216) !important;
+    background-color: #0d6efd !important;
     color: white !important;
 }
 
@@ -583,7 +444,7 @@ form a:hover{
 
     .googleBtn{
         font-size: 14.5px;
-        padding: 7px;
+        padding: 10px;
     }
 
     #header{
@@ -618,7 +479,7 @@ form a:hover{
 
     .googleBtn{
         font-size: 13.5px;
-        padding: 7px;
+        padding: 11px;
     }
 }
 
@@ -645,7 +506,7 @@ form a:hover{
     }
     .googleBtn{
         font-size: 12px;
-        padding: 7px;
+        padding: 10px;
     }
 
     .mainBtn{
@@ -660,13 +521,12 @@ form a:hover{
         border-top-right-radius: 20px;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
-        padding:  20px; 
+        padding: 10px; 
     }
 
     #header{
         font-size: 0.9rem;
-        margin-bottom: 0;
-        padding-bottom: 0;
+        margin-top: 9px;
     }
 
     #login-form p{

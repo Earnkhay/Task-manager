@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
         <div class="modal-header">
@@ -18,18 +18,19 @@
                     <Datepicker v-model="startDate" :enable-time-picker="false"/>
                 </div>
                 <div>
-                    <label class="form-label">End date</label>
+                    <label class="form-label">End date </label>
                     <Datepicker v-model="dueDate" :enable-time-picker="false"/>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Task Priority</label>
-                <select class="form-select" aria-label="Default select example" v-model="priority">
+                <select class="form-select" aria-label="Default select example" v-model="priority" :class="[priority == 'High' ? 'text-danger' : priority == 'Medium' ? 'text-warning' : priority == 'Low' ? 'text-secondary' : '']">
                     <option selected></option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
+                    <option value="High" class="text-danger"><i class="fa-solid fa-flag">High</i></option>
+                    <option value="Medium" class="text-warning">Medium</option>
+                    <option value="Low" class="text-secondary">Low</option>
                 </select>
+                <!-- <nkselector v-model="priority"/> -->
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
@@ -37,7 +38,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearAll">Close</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click.prevent="addTask">Add</button>
         </div>
         </div>
@@ -49,13 +50,15 @@
 import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase.js"
 import { getAuth } from "firebase/auth"
+import nkselector from '@/components/UI/nkselector.vue'
 import { collection, addDoc } from "firebase/firestore";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
 @Options({
     components: {
-        Datepicker
+        Datepicker,
+        nkselector
     },
 })
 export default class addModal extends Vue {
@@ -95,6 +98,14 @@ export default class addModal extends Vue {
          this.startDate = ""
          this.dueDate = ""
         }
+    }
+
+    clearAll() {
+        this.newTask = "" 
+        this.description = ""
+        this.priority = ""
+        this.startDate = ""
+        this.dueDate = ""
     }
 }
 </script>
