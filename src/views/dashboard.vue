@@ -52,12 +52,12 @@
     </div>
 
     <div class="container" v-if="tasks.length != 0">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
+        <div class="row justify-content-center chart">
+            <div class="col-md-6 donut">
                 <vue-apex-charts width="380" type="donut" :options="chartOptions" :series="statusCount"> </vue-apex-charts>
             </div>
-            <div class="col-md-6">
-                <vue-apex-charts width="380" type="pie" :options="chartOptions" :series="statusCount"> </vue-apex-charts>
+            <div class="col-md-6 piechart">
+                <vue-apex-charts width="370" type="pie" :options="chartOption" :series="priorityCount"> </vue-apex-charts>
             </div>
         </div>
     </div>
@@ -98,10 +98,14 @@ export default class dashboard extends Vue {
         inProgressTasks = []
         completedTasks = []
         overdueTasks = []
+        highTasks = []
+        mediumTasks = []
+        lowTasks = []
         auth = getAuth()
         user = this.auth.currentUser
         id = this.user.uid
         statusCount= []
+        priorityCount= []
         todosCollectionRef = collection( db, `users/${this.id}/tasks` )
         todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"))
         mounted(){
@@ -112,11 +116,7 @@ export default class dashboard extends Vue {
                     const fbTasks = []
                     querySnapshot.forEach((doc) => {
                         const task = {
-                            id: doc.id,
-                            title: doc.data().title,
-                            priority: doc.data().priority,
-                            status: doc.data().status,
-                            desc: doc.data().desc
+                            title: doc.data().title
                         }
                         fbTasks.push(task)
                     })
@@ -127,11 +127,7 @@ export default class dashboard extends Vue {
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'Not started'){
                           const task = {
-                            id: doc.id,
-                            title: doc.data().title,
-                            priority: doc.data().priority,
                             status: doc.data().status,
-                            desc: doc.data().desc
                          }
                         fbnotStartedTasks.push(task)  
                         }
@@ -145,11 +141,7 @@ export default class dashboard extends Vue {
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'In progress'){
                           const task = {
-                            id: doc.id,
-                            title: doc.data().title,
-                            priority: doc.data().priority,
                             status: doc.data().status,
-                            desc: doc.data().desc
                         }
                         fbinProgressTasks.push(task)  
                         }
@@ -163,11 +155,7 @@ export default class dashboard extends Vue {
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'Completed'){
                           const task = {
-                            id: doc.id,
-                            title: doc.data().title,
-                            priority: doc.data().priority,
                             status: doc.data().status,
-                            desc: doc.data().desc
                         }
                         fbcompletedTasks.push(task)  
                         }
@@ -181,11 +169,7 @@ export default class dashboard extends Vue {
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'Overdue'){
                           const task = {
-                            id: doc.id,
-                            title: doc.data().title,
-                            priority: doc.data().priority,
                             status: doc.data().status,
-                            desc: doc.data().desc
                         }
                         fboverdueTasks.push(task)  
                         }
@@ -194,7 +178,46 @@ export default class dashboard extends Vue {
                         this.statusCount.push(fboverdueTasks.length)
                         // console.log(fboverdueTasks, 'overdue', this.statusCount);
                     })
-                    // console.log(this.statusCount);
+                    onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                    const fbHighTasks = []
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data().priority == 'High'){
+                          const task = {
+                            priority: doc.data().priority,
+                        }
+                        fbHighTasks.push(task)  
+                        }
+                    })
+                        this.highTasks = fbHighTasks
+                        this.priorityCount.push(fbHighTasks.length)
+                    })
+                    onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                    const fbmediumTasks = []
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data().priority == 'Medium'){
+                          const task = {
+                            priority: doc.data().priority,
+                        }
+                        fbmediumTasks.push(task)  
+                        }
+                    })
+                        this.mediumTasks = fbmediumTasks
+                        this.priorityCount.push(fbmediumTasks.length)
+                    })
+                    onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+                    const fblowTasks = []
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data().priority == 'Low'){
+                          const task = {
+                            priority: doc.data().priority,
+                        }
+                        fblowTasks.push(task)  
+                        }
+                    })
+                        this.lowTasks = fblowTasks
+                        this.priorityCount.push(fblowTasks.length)
+                    })
+                    console.log(this.priorityCount, this.statusCount);
                     if(user.displayName != null){
                         this.name = user.displayName
                     }else {
@@ -207,16 +230,12 @@ export default class dashboard extends Vue {
         }
 
         chartOptions= {
-            // chart: {
-            // width: 380,
-            // type: 'pie',
-            // },
             labels: ['Not Started', 'In progress', 'Completed', 'Overdue'],
             responsive: [{
                 breakpoint: 480,
                 options: {
                     chart: {
-                        width: 275,
+                        width: 300,
                     },
                     legend: {
                         position: 'bottom'
@@ -224,6 +243,25 @@ export default class dashboard extends Vue {
                 }
             }],
             colors: ['#0d6efd', '#ffc107', '#198754', '#dc3545'] 
+        }
+        chartOption = {
+            // chart: {
+            // width: 380,
+            // type: 'pie',
+            // },
+            labels: ['High', 'Medium', 'Low'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 300,
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
+            colors: ['#dc3545', '#ffc107', '#808080'] 
         }
         
 
@@ -243,6 +281,19 @@ export default class dashboard extends Vue {
 
        #app{
         overflow: hidden;
+       }
+
+       .chart{
+        display: flex;
+        justify-content: center;
+       }
+
+       .piechart{
+         margin-right: 30px;
+         margin-top: 12px;
+       }
+       .donut{
+         margin-right: 30px;
        }
     }
 </style>
