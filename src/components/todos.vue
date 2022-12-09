@@ -1,13 +1,12 @@
 <template>
     <div class="container bg-light pb-4 rounded-2 cover">
-        <table class="table table-hover dropdownIndex">
+        <table class="table table-hover" id="table_id">
             <thead class="border-bottom-none">
                 <tr>
                     <th scope="col" class="py-4">Recent Task</th>
-                    <!-- <th scope="col">Due Date</th> -->
                     <th scope="col" class="py-4">Priority</th>
                     <th scope="col" class="py-4">Status</th>
-                    <th scope="col" class="py-4"> 
+                    <th scope="col" class="py-4 dropdownIndex"> 
                         <div class="dropstart d-flex justify-content-end dropdownIndex">
                             <i class="fa-solid fa-ellipsis-vertical text-primary fs-5" data-bs-toggle="dropdown"></i>
                             <ul class="dropdown-menu dropdownIndex">
@@ -45,33 +44,49 @@
                         </div>
                     </th>
                 </tr>
-        </thead>
+            </thead>
  
-        <tbody>
-            <tr v-if="spinnerShow">
-              <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
-            </tr>
-            <tr v-for="(task, id) in tasks" :key="id">
-                <th>{{ task.title }}</th>
-                <!-- <td> {{ task.duedate }} </td> -->
-                <td><i class="fa-solid fa-flag" v-if="task.priority" :class="[task.priority == 'High' ? 'text-danger' : task.priority == 'Medium' ? 'text-warning' : task.priority == 'Low' ? 'text-secondary' : '']"></i> {{ task.priority }} </td>
-                <td>
-                    <select class="form-select text-light rounded-5 w-75 selectStatus" v-model="task.status" @change="updateStatus(task.id, task.status)" :class="[task.status == 'Not started' ? 'bg-primary' : task.status == 'In progress' ? 'bg-warning' : task.status == 'Completed' ? 'bg-success' : task.status == 'Overdue' ? 'bg-danger' : 'bg-transparent' ]" aria-label="Default select example">
-                        <option selected  v-text="task.status"> </option>
-                        <option v-for="(s, i) in statusList" :key="i" :value="s.sText">{{s.sText}}</option>
-                    </select>
-                </td>
-                <td>
-                    <i class="fa-solid fa-eye text-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="viewTask(task.id)"></i>
-                    <i class="fa-solid fa-pen-to-square text-primary mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal2" @click="editTask(task.id)"></i>
-                    <i class="fa-solid fa-trash text-danger ms-2" @click.prevent="deleteTask(task.id)"></i>
-                </td>
-            </tr>
-            <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
-                <i class="fa-solid fa-info text-danger m-4"></i> No Records Found. 
-            </tr>
-        </tbody>
-    </table>
+            <tbody>
+                <tr v-if="spinnerShow">
+                <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
+                </tr>
+                <tr v-for="(task, id) in tasks" :key="id">
+                    <th>{{ task.title }}</th>
+                    <td><i class="fa-solid fa-flag" v-if="task.priority" :class="[task.priority == 'High' ? 'text-danger' : task.priority == 'Medium' ? 'text-warning' : task.priority == 'Low' ? 'text-secondary' : '']"></i> {{ task.priority }} </td>
+                    <td>
+                        <select class="form-select text-light rounded-5 w-75 selectStatus" v-model="task.status" @change="updateStatus(task.id, task.status)" :class="[task.status == 'Not started' ? 'bg-primary' : task.status == 'In progress' ? 'bg-warning' : task.status == 'Completed' ? 'bg-success' : task.status == 'Overdue' ? 'bg-danger' : 'bg-transparent' ]" aria-label="Default select example">
+                            <option selected  v-text="task.status"> </option>
+                            <option v-for="(s, i) in statusList" :key="i" :value="s.sText">{{s.sText}}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye text-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="viewTask(task.id)"></i>
+                        <i class="fa-solid fa-pen-to-square text-primary mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal2" @click="editTask(task.id)"></i>
+                        <i class="fa-solid fa-trash text-danger ms-2" @click.prevent="deleteTask(task.id)"></i>
+                    </td>
+                </tr>
+                <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
+                    <i class="fa-solid fa-info text-danger m-4"></i> No Records Found. 
+                </tr>
+            </tbody>
+        </table>
+                <!-- <nav v-if="(tasks.length >= 7)" aria-label="Page navigation example">
+                    <ul class="pagination fw-bold justify-content-center">
+                        <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item" @click="nextTableData"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item" v-if="(tasks.length > 14)"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                        </li>
+                    </ul>
+                </nav> -->
     </div>
 
     <!-- View Modal -->
@@ -160,7 +175,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import nkselector from '@/components/UI/nkselector.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, endAt, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
@@ -174,6 +189,7 @@ export default class todos extends Vue {
     spinnerShow = false
     spinnerSize = "spinner-border-lg"
     tasks = []
+    lastdoc
     currentTask
     viewTitle = ""
     viewPriority = ""
@@ -223,6 +239,36 @@ export default class todos extends Vue {
         })
     }
 
+    // nextTableData(){
+    //     let q
+    //     // let q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.tasks.length), limit(7));
+    //     this.spinnerShow = true
+    //     if (this.lastdoc) {
+    //         q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc));
+    //         console.log(q, this.lastdoc);
+    //     } else {
+    //         q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc), limit(15))
+    //         console.log(q, this.lastdoc);
+    //     }
+    //     onSnapshot(q, (querySnapshot) => {
+    //         const fbTasks = [] 
+    //         this.lastdoc = querySnapshot.docs[querySnapshot.docs.length - 1]
+    //             console.log(this.lastdoc); 
+    //         querySnapshot.forEach((doc) => {
+    //                 const task = {
+    //                     id: doc.id,
+    //                     title: doc.data().title,
+    //                     priority: doc.data().priority,
+    //                     status: doc.data().status,
+    //                     desc: doc.data().desc
+    //                 }
+    //                 fbTasks.push(task)
+    //         })
+    //             this.tasks = fbTasks
+    //             this.spinnerShow = false
+    //     })
+    // }
+
     viewAll(){
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
@@ -243,8 +289,7 @@ export default class todos extends Vue {
     }
 
     filterStatus(status){
-        console.log(status, "TASK Status");
-        const q = query(collection(db, `users/${this.id}/tasks`), where("status", "==", status));
+        const q = query(this.todosCollectionRef, where("status", "==", status));
         onSnapshot(q, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
@@ -264,7 +309,6 @@ export default class todos extends Vue {
     }
 
     filterPriority(priority){
-        console.log(priority, "TASK priority");
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {

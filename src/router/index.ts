@@ -4,18 +4,18 @@ import notFoundPage from '@/views/notFoundPage.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
-  // {
-  //   path: '/main',
-  //   name: 'main',
-  //   component: () => import( '@/views/main.vue'),
-  //   children: [
-  //     {
-  //       path: '/main',
-  //       name: 'exlandingpage',
-  //       component: () => import( '@/components/not-in-use/exlandingpage.vue'),
-  //     }
-  //   ]
-  // },
+  {
+    path: '/main',
+    name: 'main',
+    component: () => import( '@/components/not-in-use/main.vue'),
+    // children: [
+    //   {
+    //     path: '/main',
+    //     name: 'exlandingpage',
+    //     component: () => import( '@/components/not-in-use/exlandingpage.vue'),
+    //   }
+    // ]
+  },
   {
     path: '/',
     name: 'login',

@@ -3,7 +3,7 @@
     <nav-bar :navlink1="navText1"/>
     <h5 class="my-5 fs-4 fw-bold container">Welcome <span class="text-success">{{ name }}</span> to your Dashboard</h5>
 
-    <div class="container px-5 mb-4">
+    <!-- <div class="container px-5 mb-4">
         <div class="row justify-content-center">
            <div class="card border-info shadow">
                 <div class="card-body text-center">
@@ -12,7 +12,7 @@
                 </div>
             </div> 
         </div>
-    </div>
+    </div> -->
 
     <div class="container mb-5">
         <div class="row ">
@@ -69,6 +69,7 @@
             </div>
         </div>
     </div> -->
+
     <my-footer/>
     </div>
 </template>
@@ -108,6 +109,7 @@ export default class dashboard extends Vue {
         priorityCount= []
         todosCollectionRef = collection( db, `users/${this.id}/tasks` )
         todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"))
+
         mounted(){
             // console.log("mounted in dashboard");
             onAuthStateChanged(this.auth, (user) => {
@@ -217,7 +219,7 @@ export default class dashboard extends Vue {
                         this.lowTasks = fblowTasks
                         this.priorityCount.push(fblowTasks.length)
                     })
-                    console.log(this.priorityCount, this.statusCount);
+                    // console.log(this.priorityCount, this.statusCount);
                     if(user.displayName != null){
                         this.name = user.displayName
                     }else {
