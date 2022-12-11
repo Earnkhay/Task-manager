@@ -29,8 +29,7 @@
 import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged, signOut  } from '@firebase/auth';
 
-let auth;
-
+// let auth;
   @Options({
     props: {
       navlink1: String,
@@ -39,8 +38,10 @@ let auth;
     // export default {
     //     name: 'navBar'
     // }
-    export default class navBar extends Vue {
+  export default class navBar extends Vue {
       navText = "emitted parameter"
+      auth = getAuth()
+      isLoggedIn = false
       // mounted(){
       //   setTimeout(
       //     () => {
@@ -48,11 +49,8 @@ let auth;
       //   },5000)
       // }
 
-      isLoggedIn = false
-    
     mounted(){
-      auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(this.auth, (user) => {
         if (user) {
           this.isLoggedIn = true;
         } else {
@@ -62,10 +60,12 @@ let auth;
     }
     
     logOutAction(){
-      auth = getAuth();
-      signOut(auth).then(() => {
+      signOut(this.auth).then(() => {
         this.$router.push("/")
-      })
+      }).catch((error) => {
+        console.error(error, 'what is the error')
+        console.log(error, 'error please');
+      });
     }
   }
 </script>
