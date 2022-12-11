@@ -70,23 +70,23 @@
                 </tr>
             </tbody>
         </table>
-                <!-- <nav v-if="(tasks.length >= 7)" aria-label="Page navigation example">
+                <nav aria-label="Page navigation example">
                     <ul class="pagination fw-bold justify-content-center">
                         <li class="page-item">
                         <a class="page-link" href="#" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                         </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item" @click="nextTableData"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item" v-if="(tasks.length > 14)"><a class="page-link" href="#">3</a></li>
+                        <!-- <li class="page-item" :class="[active1 == true ? 'active' : '']" @click="viewAll"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item" :class="[active == true ? 'active' : '']" @click="nextTableData"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item" @click="nextTableData"><a class="page-link" @click="nextTableData" href="#">3</a></li> -->
                         <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
+                        <a class="page-link" href="#" aria-label="Next" @click="nextTableData">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                         </li>
                     </ul>
-                </nav> -->
+                </nav>
     </div>
 
     <!-- View Modal -->
@@ -175,7 +175,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import nkselector from '@/components/UI/nkselector.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, endAt, limit, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, startAt, getDocs, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
@@ -189,13 +189,15 @@ export default class todos extends Vue {
     spinnerShow = false
     spinnerSize = "spinner-border-lg"
     tasks = []
-    lastdoc
     currentTask
+    lastdoc
     viewTitle = ""
     viewPriority = ""
     viewStatus = ""
     viewDesc = ""
     date = ""
+    active = false
+    active1 = false
     editTitle = ""
     editPriority = ""
     editDesc = ""
@@ -204,7 +206,7 @@ export default class todos extends Vue {
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"));
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(10));
     statusList = [ 
         {sText: 'Not started'},
         {sText: 'In progress'},
@@ -213,6 +215,7 @@ export default class todos extends Vue {
     ]
 
     mounted(){ 
+        this.active1 = true
         this.spinnerShow = true
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
@@ -239,37 +242,73 @@ export default class todos extends Vue {
         })
     }
 
-    // nextTableData(){
-    //     let q
-    //     // let q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.tasks.length), limit(7));
-    //     this.spinnerShow = true
-    //     if (this.lastdoc) {
-    //         q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc));
-    //         console.log(q, this.lastdoc);
-    //     } else {
-    //         q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc), limit(15))
-    //         console.log(q, this.lastdoc);
-    //     }
-    //     onSnapshot(q, (querySnapshot) => {
-    //         const fbTasks = [] 
-    //         this.lastdoc = querySnapshot.docs[querySnapshot.docs.length - 1]
-    //             console.log(this.lastdoc); 
-    //         querySnapshot.forEach((doc) => {
-    //                 const task = {
-    //                     id: doc.id,
-    //                     title: doc.data().title,
-    //                     priority: doc.data().priority,
-    //                     status: doc.data().status,
-    //                     desc: doc.data().desc
-    //                 }
-    //                 fbTasks.push(task)
-    //         })
-    //             this.tasks = fbTasks
-    //             this.spinnerShow = false
-    //     })
+    async nextTableData(){
+        let next
+        this.spinnerShow = true
+        const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(10))
+        const documentSnapshots = await getDocs(first);
+
+        // Get the last visible document
+        const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+        console.log("last", lastVisible);
+
+        // Construct a new query starting at this document,
+        if (lastVisible) {
+            next = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(lastVisible), limit(10));
+            console.log(first, 'first and next data logged', next)
+        } else {
+            console.log(first, 'first and next data', next)
+        }
+        onSnapshot(next, (querySnapshot) => {
+            const fbTasks = [] 
+            querySnapshot.forEach((doc) => {
+                    const task = {
+                        id: doc.id,
+                        title: doc.data().title,
+                        priority: doc.data().priority,
+                        status: doc.data().status,
+                        desc: doc.data().desc
+                    }
+                    fbTasks.push(task)
+            })
+                this.tasks = fbTasks
+                this.spinnerShow = false
+        })
+    }
+    // async nextTableData(){
+        // let q
+        // this.spinnerShow = true
+        // if (this.lastdoc) {
+            
+        //     console.log(q, this.lastdoc);
+        // } else {
+        //     q = query(this.todosCollectionRef, orderBy("date", "desc"), limit(15))
+        //     console.log(q, this.lastdoc);
+        // }
+        // onSnapshot(q, (querySnapshot) => {
+        //     q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc));
+        //     const fbTasks = [] 
+        //     this.lastdoc = querySnapshot.docs[querySnapshot.docs.length - 1]
+        //         console.log(this.lastdoc); 
+        //     querySnapshot.forEach((doc) => {
+        //         const task = {
+        //             id: doc.id,
+        //             title: doc.data().title,
+        //             priority: doc.data().priority,
+        //             status: doc.data().status,
+        //             desc: doc.data().desc
+        //         }
+        //         fbTasks.push(task)
+        //     })
+        //         this.tasks = fbTasks
+        //         this.spinnerShow = false
+        // })
+    
     // }
 
     viewAll(){
+        this.active1 = true
+        this.active = false
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
