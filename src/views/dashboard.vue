@@ -1,7 +1,7 @@
 <template>
     <div id="app">
     <nav-bar :navlink1="navText1"/>
-    <h5 class="my-5 fs-4 fw-bold container">Welcome <span class="text-success">{{ name }}</span> to your Dashboard</h5>
+    <h5 class="my-5 fs-4 fw-bold container">Hello <span class="text-success">{{ name }}</span>. Welcome to your Dashboard</h5>
 
     <!-- <div class="container px-5 mb-4">
         <div class="row justify-content-center">
