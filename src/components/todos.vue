@@ -1,6 +1,6 @@
 <template>
     <div class="container bg-light pb-4 rounded-2 cover">
-        <table class="table table-hover" id="table_id">
+        <table class="table table-sm table-hover" id="table_id">
             <thead class="border-bottom-none">
                 <tr>
                     <th scope="col" class="py-4">Recent Task</th>
@@ -73,8 +73,8 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination fw-bold justify-content-center">
                         <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+                        <a class="page-link" href="#" aria-label="Previous" @click="previous">
+                            <span aria-hidden="true">&laquo; Previous</span>
                         </a>
                         </li>
                         <!-- <li class="page-item" :class="[active1 == true ? 'active' : '']" @click="viewAll"><a class="page-link" href="#">1</a></li>
@@ -82,12 +82,24 @@
                         <li class="page-item" @click="nextTableData"><a class="page-link" @click="nextTableData" href="#">3</a></li> -->
                         <li class="page-item">
                         <a class="page-link" href="#" aria-label="Next" @click="nextTableData">
-                            <span aria-hidden="true">&raquo;</span>
+                            <span aria-hidden="true">Next &raquo;</span>
                         </a>
                         </li>
                     </ul>
                 </nav>
     </div>
+
+    <!-- <div class="container mt-3">
+        <EasyDataTable :headers="headers" :items="tasks" buttons-pagination>
+        <template #tasks-operation="">
+            <div class="operation-wrapper">
+                <i class="fa-solid fa-eye text-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="viewTask(task.id)"></i>
+                <i class="fa-solid fa-pen-to-square text-primary mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal2" @click="editTask(task.id)"></i>
+                <i class="fa-solid fa-trash text-danger ms-2" @click.prevent="deleteTask(task.id)"></i>
+            </div>
+        </template>
+        </EasyDataTable>
+    </div> -->
 
     <!-- View Modal -->
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
@@ -173,6 +185,7 @@ import { db } from "@/firebase.js"
 import spinner from '@/components/UI/spinner.vue'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import EasyDataTable from 'vue3-easy-data-table';
 import nkselector from '@/components/UI/nkselector.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, startAt, getDocs, limit, query, orderBy } from "firebase/firestore";
@@ -181,7 +194,8 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, start
     components: {
         spinner,
         nkselector,
-        Datepicker
+        Datepicker,
+        EasyDataTable
     }
 })
 
@@ -189,8 +203,9 @@ export default class todos extends Vue {
     spinnerShow = false
     spinnerSize = "spinner-border-lg"
     tasks = []
+    task
     currentTask
-    lastdoc
+    lastdoc = null
     viewTitle = ""
     viewPriority = ""
     viewStatus = ""
@@ -206,12 +221,18 @@ export default class todos extends Vue {
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(10));
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20));
     statusList = [ 
         {sText: 'Not started'},
         {sText: 'In progress'},
         {sText: 'Completed'},
         {sText: 'Overdue'}
+    ]
+    headers = [
+          { text: "Recent Task", value: "title" },
+          { text: "Priority", value: "priority"},
+          { text: "Status", value: "status"},
+          { text: "Operation", value: "operation"},
     ]
 
     mounted(){ 
@@ -244,21 +265,22 @@ export default class todos extends Vue {
 
     async nextTableData(){
         let next
-        this.spinnerShow = true
-        const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(10))
+        // this.spinnerShow = true
+        const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
         const documentSnapshots = await getDocs(first);
 
         // Get the last visible document
-        const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
-        console.log("last", lastVisible);
+        this.lastdoc = documentSnapshots.docs[documentSnapshots.docs.length-1];
+        // console.log("last", this.lastdoc);
 
         // Construct a new query starting at this document,
-        if (lastVisible) {
-            next = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(lastVisible), limit(10));
-            console.log(first, 'first and next data logged', next)
+        if (this.lastdoc) {
+            next = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc), limit(20));
+            // console.log(first, 'first and next data logged', next)
         } else {
-            console.log(first, 'first and next data', next)
+            // console.log(first, 'first and next data', next)
         }
+        
         onSnapshot(next, (querySnapshot) => {
             const fbTasks = [] 
             querySnapshot.forEach((doc) => {
@@ -275,36 +297,77 @@ export default class todos extends Vue {
                 this.spinnerShow = false
         })
     }
+    
     // async nextTableData(){
-        // let q
-        // this.spinnerShow = true
-        // if (this.lastdoc) {
-            
-        //     console.log(q, this.lastdoc);
-        // } else {
-        //     q = query(this.todosCollectionRef, orderBy("date", "desc"), limit(15))
-        //     console.log(q, this.lastdoc);
-        // }
-        // onSnapshot(q, (querySnapshot) => {
-        //     q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc));
-        //     const fbTasks = [] 
-        //     this.lastdoc = querySnapshot.docs[querySnapshot.docs.length - 1]
-        //         console.log(this.lastdoc); 
-        //     querySnapshot.forEach((doc) => {
-        //         const task = {
-        //             id: doc.id,
-        //             title: doc.data().title,
-        //             priority: doc.data().priority,
-        //             status: doc.data().status,
-        //             desc: doc.data().desc
-        //         }
-        //         fbTasks.push(task)
-        //     })
-        //         this.tasks = fbTasks
-        //         this.spinnerShow = false
-        // })
+    //     let q
+    //     // this.spinnerShow = true
+        
+    //     // if (this.lastdoc) {
+    //     //     q = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc), limit(10));
+    //     //     console.log(q, this.lastdoc);
+    //     // } else {
+    //     //     q = query(this.todosCollectionRef, orderBy("date", "desc"), limit(15))
+    //     //     console.log(q, this.lastdoc);
+    //     // }
+    //     onSnapshot(q, (querySnapshot) => {
+    //         this.lastdoc = querySnapshot.docs[querySnapshot.docs.length - 1]
+    //         const fbTasks = [] 
+    //             console.log(querySnapshot); 
+    //         querySnapshot.forEach((doc) => {
+    //             const task = {
+    //                 id: doc.id,
+    //                 title: doc.data().title,
+    //                 priority: doc.data().priority,
+    //                 status: doc.data().status,
+    //                 desc: doc.data().desc
+    //             }
+    //             fbTasks.push(task)
+    //         })
+    //             this.tasks = fbTasks
+    //             this.spinnerShow = false
+    //     })
     
     // }
+
+    // next(){
+    //     this.nextTableData()
+    // }
+
+    async previous(){
+        let prev
+        let prevdoc
+        // this.spinnerShow = true
+        const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
+        const documentSnapshots = await getDocs(first);
+
+        // Get the last visible document
+        prevdoc = documentSnapshots.docs[0];
+        // console.log("last", prevdoc);
+
+        // Construct a new query starting at this document,
+        if (prevdoc) {
+            prev = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(prevdoc), limit(20));
+            // console.log(first, 'first and prev data logged', prev)
+        } else {
+            // console.log(first, 'first and prev data', prev)
+        }
+        
+        onSnapshot(prev, (querySnapshot) => {
+            const fbTasks = [] 
+            querySnapshot.forEach((doc) => {
+                    const task = {
+                        id: doc.id,
+                        title: doc.data().title,
+                        priority: doc.data().priority,
+                        status: doc.data().status,
+                        desc: doc.data().desc
+                    }
+                    fbTasks.push(task)
+            })
+                this.tasks = fbTasks
+                this.spinnerShow = false
+        })
+    }
 
     viewAll(){
         this.active1 = true

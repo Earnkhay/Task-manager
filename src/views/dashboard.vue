@@ -111,11 +111,11 @@ export default class dashboard extends Vue {
         todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"))
 
         created(){
-            console.log("mounted in dashboard");
+            // console.log("mounted in dashboard");
             //alternative fix for data rendering twice issue. Still not sure created works well
-            // this.$nextTick(() => {
-            //     window.dispatchEvent(new Event('resize'));
-            // });
+            this.$nextTick(() => {
+                window.dispatchEvent(new Event('resize'));
+            });
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
