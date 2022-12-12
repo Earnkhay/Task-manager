@@ -20,33 +20,33 @@
 
                 <h6 class="fw-bold border-bottom p-2">Recent Tasks</h6> 
                     <div class="table-responsive">        
-                        <table class="table table-hover cover">
-                        <thead>
-                            <tr>
-                            <th scope="col">Task</th>
-                            <!-- <th scope="col">Due Date</th> -->
-                            <th scope="col">Priority</th>
-                            <th scope="col">Status</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            <tr v-if="spinnerShow">
-                                <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
-                            </tr>
-                            <tr data-bs-toggle="modal" data-bs-target="#exampleModal1" v-for="(task, id) in tasks" :key="id" @click="viewTask(task.id)">
-                                <th>{{ task.title }}</th>
-                                <!-- <td> {{ task.duedate }} </td> -->
-                                <td><i class="fa-solid fa-flag" v-if="task.priority" :class="[task.priority == 'High' ? 'text-danger' : task.priority == 'Medium' ? 'text-warning' : task.priority == 'Low' ? 'text-secondary' : '']"></i> {{ task.priority }} </td>
-                                <td class="badge rounded-pill" :class="[task.status == 'Not started' ? 'text-bg-primary' : task.status == 'In progress' ? 'text-bg-warning' : task.status == 'Completed' ? 'text-bg-success' : task.status == 'Overdue' ? 'text-bg-danger' : 'bg-transparent' ]">
-                                    {{task.status}}
-                                </td>
-                            </tr>
-                            <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
-                                <i class="fa-solid fa-info text-danger m-3"></i>No Recent Task. 
-                            </tr>
-                        </tbody>
-                    </table> 
+                        <table class="table table-sm table-hover cover">
+                            <thead>
+                                <tr>
+                                <th scope="col">Task</th>
+                                <!-- <th scope="col">Due Date</th> -->
+                                <th scope="col">Priority</th>
+                                <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                <tr v-if="spinnerShow">
+                                    <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
+                                </tr>
+                                <tr data-bs-toggle="modal" data-bs-target="#exampleModal1" v-for="(task, id) in tasks" :key="id" @click="viewTask(task.id)">
+                                    <th>{{ task.title }}</th>
+                                    <!-- <td> {{ task.duedate }} </td> -->
+                                    <td><i class="fa-solid fa-flag" v-if="task.priority" :class="[task.priority == 'High' ? 'text-danger' : task.priority == 'Medium' ? 'text-warning' : task.priority == 'Low' ? 'text-secondary' : '']"></i> {{ task.priority }} </td>
+                                    <td class="badge rounded-pill" :class="[task.status == 'Not started' ? 'text-bg-primary' : task.status == 'In progress' ? 'text-bg-warning' : task.status == 'Completed' ? 'text-bg-success' : task.status == 'Overdue' ? 'text-bg-danger' : 'bg-transparent' ]">
+                                        {{task.status}}
+                                    </td>
+                                </tr>
+                                <tr v-if="tasks.length == 0 && !spinnerShow " class="fw-bold fs-5">
+                                    <i class="fa-solid fa-info text-danger m-3"></i>No Recent Task. 
+                                </tr>
+                            </tbody>
+                        </table> 
                     </div>
                     <div class="fw-bold d-flex justify-content-end">
                         <router-link :to="{name: 'todo'}" id="todolink">View All></router-link>
@@ -140,7 +140,7 @@ export default class landingpage extends Vue {
     hour = this.d.getHours()
     auth = getAuth()
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(4));
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(5));
     greetImage(){
         if (this.hour >= 0 && this.hour <= 11) {
             return 'morningsvg'          
