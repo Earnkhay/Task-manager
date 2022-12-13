@@ -1,7 +1,5 @@
 <template>
-      <footer class="justify-content-center align-items-center p-2 mt-3 border-top">
-          
-
+      <footer class="container justify-content-center align-items-center p-2 mt-3 border-top">
           <ul class="nav justify-content-center">
             <li class="nav-item">
               <router-link class="nav-link link-dark" active-class="text-success" :to="{name: 'landingpage'}">Home</router-link>
