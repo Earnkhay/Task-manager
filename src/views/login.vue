@@ -219,8 +219,8 @@ export default class login extends Vue{
                 setTimeout(() => {  
                         this.alertShow = false 
                         this.spinnerShow = false 
-                        // this.$router.push(`/landingPage`)
-                        this.pageType = 'login'   
+                        this.$router.push(`/`)
+                        // this.pageType = 'login'   
                         this.email = ''
                         this.password = '' 
                         this.name = '' 
@@ -264,7 +264,7 @@ export default class login extends Vue{
                 setTimeout(() => {  
                         this.alertShow = false  
                         this.spinnerShow = false
-                        this.$router.push('/landingpage')    
+                        this.$router.push('/')    
                 },3000) 
             })
             .catch((err) => {

@@ -61,11 +61,11 @@ export default class navBar extends Vue {
   
   logOutAction(){
     signOut(this.auth).then(() => {
-      this.$router.push("/")
+      this.$router.push("/login")
     })
-    .catch((error) => {
-      console.error(error, 'what is the error')
-      console.log(error, 'error please');
+    .catch(() => {
+      // console.error(error, 'what is the error')
+      // console.log(error, 'error please');
     });
   }
 }
