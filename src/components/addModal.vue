@@ -20,6 +20,7 @@
                 <div>
                     <label class="form-label">End date </label>
                     <Datepicker v-model="dueDate" :enable-time-picker="false"/>
+                    <!-- <input type="date" v-model="dueDate"> -->
                 </div>
             </div>
             <div class="mb-3">

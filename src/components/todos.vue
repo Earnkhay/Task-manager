@@ -4,6 +4,7 @@
             <thead class="border-bottom-none">
                 <tr>
                     <th scope="col" class="py-4">Recent Task</th>
+                    <th scope="col" class="py-4">Due date</th>
                     <th scope="col" class="py-4">Priority</th>
                     <th scope="col" class="py-4">Status</th>
                     <th scope="col" class="py-4 dropdownIndex"> 
@@ -35,7 +36,7 @@
                         <div class="dropstart">
                             <li class="submenu"><a class="dropdown-item dropdown-toggle" href="#">Date</a>
                                 <ul class="dropdown-menu tablemenu">
-                                    <li><Datepicker v-model="date" inline auto-apply /></li>
+                                    <li><Datepicker v-model="date" @change="filterDate" inline auto-apply /></li>
                                 </ul>
                             </li>
                         </div>
@@ -45,17 +46,18 @@
                     </th>
                 </tr>
             </thead>
- 
+ {{ date }}
             <tbody>
                 <tr v-if="spinnerShow">
-                <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
+                    <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
                 </tr>
                 <tr v-for="(task, id) in tasks" :key="id">
                     <th>{{ task.title }}</th>
+                    <th>{{ task.duedate }}</th>
                     <td><i class="fa-solid fa-flag" v-if="task.priority" :class="[task.priority == 'High' ? 'text-danger' : task.priority == 'Medium' ? 'text-warning' : task.priority == 'Low' ? 'text-secondary' : '']"></i> {{ task.priority }} </td>
                     <td>
                         <select class="form-select text-light rounded-5 w-75 selectStatus" v-model="task.status" @change="updateStatus(task.id, task.status)" :class="[task.status == 'Not started' ? 'bg-primary' : task.status == 'In progress' ? 'bg-warning' : task.status == 'Completed' ? 'bg-success' : task.status == 'Overdue' ? 'bg-danger' : 'bg-transparent' ]" aria-label="Default select example">
-                            <option selected  v-text="task.status"> </option>
+                            <option selected v-text="task.status"> </option>
                             <option v-for="(s, i) in statusList" :key="i" :value="s.sText">{{s.sText}}</option>
                         </select>
                     </td>
@@ -118,6 +120,12 @@
                 <div class="col-md-9">
                     <p> {{viewDesc}} </p>
                 </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold">Due on</h6>
+                </div>
+                <div class="col-md-9">
+                    <p> {{viewDuedate}} </p>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
@@ -155,6 +163,10 @@
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Title</label>
                 <input class="form-control" v-model="editTitle" type="text" aria-label="default input example">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Due date</label>
+                <Datepicker v-model="editDuedate" :enable-time-picker="false"/>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Task Priority</label>
@@ -210,11 +222,11 @@ export default class todos extends Vue {
     viewPriority = ""
     viewStatus = ""
     viewDesc = ""
+    viewDuedate = ""
     date = ""
-    active = false
-    active1 = false
     editTitle = ""
     editPriority = ""
+    editDuedate = ""
     editDesc = ""
     editStatus = ""
     auth = getAuth()
@@ -226,30 +238,29 @@ export default class todos extends Vue {
         {sText: 'Not started'},
         {sText: 'In progress'},
         {sText: 'Completed'},
-        {sText: 'Overdue'}
+        // {sText: 'Overdue'}
     ]
-    headers = [
-          { text: "Recent Task", value: "title" },
-          { text: "Priority", value: "priority"},
-          { text: "Status", value: "status"},
-          { text: "Operation", value: "operation"},
-    ]
+    // headers = [
+    //       { text: "Recent Task", value: "title" },
+    //       { text: "Priority", value: "priority"},
+    //       { text: "Status", value: "status"},
+    //       { text: "Operation", value: "operation"},
+    // ]
 
     mounted(){ 
-        this.active1 = true
         this.spinnerShow = true
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTasks = []
                 querySnapshot.forEach((doc) => {
-                    // let timestamp = doc.data().duedate
-                    // let myDate = new Date(timestamp * 1000) 
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
+                    // const date = new Date(doc.data().duedate);
+                    const date = new Date(doc.data().duedate.seconds * 1000);
+                    const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
-                        duedate: myDate,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -258,6 +269,21 @@ export default class todos extends Vue {
                 })
                     this.tasks = fbTasks
                     this.spinnerShow = false
+                    const overdueTasks = this.tasks.filter(task => {
+                        const currentDate = new Date();
+                        const duedate = new Date(task.duedate);
+                        // console.log(duedate, 'duedate');
+                        // console.log(currentDate, 'current date');
+                        return currentDate > duedate;
+                    });
+                    overdueTasks.forEach(task => {
+                        if(task.status != 'Completed'){
+                            task.status = 'Overdue';
+                            updateDoc(doc(db, `users/${this.id}/tasks`, task.id), {
+                                status: task.status,
+                            });
+                        }
+                    });
                 })
             }
         })
@@ -370,16 +396,15 @@ export default class todos extends Vue {
     }
 
     viewAll(){
-        this.active1 = true
-        this.active = false
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
-                let myDate = new Date(doc.data().duedate * 1000).toDateString()
+                const date = new Date(doc.data().duedate.seconds * 1000);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
-                        duedate: myDate,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -390,16 +415,40 @@ export default class todos extends Vue {
             })
     }
 
+    filterDate(){
+        console.log(this.date);
+        const fdate = new Date(this.date);
+        const formattedfDate = fdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const q = query(this.todosCollectionRef, where("duedate", "==", formattedfDate));
+        onSnapshot(q, (querySnapshot) => {
+            const fbTasks = []
+            querySnapshot.forEach((doc) => {
+                const date = new Date(doc.data().duedate.seconds * 1000);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const task = {
+                        id: doc.id,
+                        title: doc.data().title,
+                        duedate: formattedDate,
+                        priority: doc.data().priority,
+                        status: doc.data().status,
+                        desc: doc.data().desc
+                    }
+                fbTasks.push(task)
+            })
+                this.tasks = fbTasks
+        })
+    }
     filterStatus(status){
         const q = query(this.todosCollectionRef, where("status", "==", status));
         onSnapshot(q, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
-                let myDate = new Date(doc.data().duedate * 1000).toDateString()
+                const date = new Date(doc.data().duedate.seconds * 1000);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
-                        duedate: myDate,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -410,16 +459,17 @@ export default class todos extends Vue {
         })
     }
 
-    filterPriority(priority){
+    filterPriority(priority){8
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
+                const date = new Date(doc.data().duedate.seconds * 1000);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 if (doc.data().priority == priority) {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
-                        duedate: myDate,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -435,9 +485,9 @@ export default class todos extends Vue {
         const taskToUpdate = this.tasks.find((task) => task.id === id)
         this.editTitle = taskToUpdate.title,
         this.editPriority = taskToUpdate.priority,
-        this.editDesc = taskToUpdate.desc
+        this.editDesc = taskToUpdate.desc,
+        this.editDuedate = taskToUpdate.duedate,
         this.currentTask = taskToUpdate
-        // console.log(taskToUpdate);
     }
 
     updateStatus(id, status){
@@ -450,7 +500,8 @@ export default class todos extends Vue {
         await updateDoc(doc(db, `users/${this.id}/tasks`, this.currentTask.id), {
             title: this.editTitle,
             priority: this.editPriority,
-            desc: this.editDesc
+            desc: this.editDesc,
+            duedate: this.editDuedate,
         });
     }
 
@@ -459,11 +510,13 @@ export default class todos extends Vue {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
+            const date = new Date(docSnap.data().duedate.seconds * 1000);
+            const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             this.viewTitle = docSnap.data().title
             this.viewPriority = docSnap.data().priority
             this.viewStatus = docSnap.data().status
             this.viewDesc = docSnap.data().desc
-            // console.log("Document data:", docSnap.data());
+            this.viewDuedate = formattedDate
         }
     }
 
