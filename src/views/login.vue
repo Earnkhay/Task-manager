@@ -90,8 +90,6 @@
     //     }    
         
     // }
-
-    
     import {Options, Vue} from "vue-class-component"
     import alert from '@/components/UI/alert.vue'
     import axios from 'axios'

@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     // ]
   },
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: login,
   },
@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/landingpage',
+    path: '/',
     name: 'landingpage',
     component: () => import( '@/views/landingpage.vue'),
     meta: {
@@ -82,7 +82,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     }else{
       alert("You do not have access!")
-      next("/")
+      next("/login")
     }
   } else {
     next();

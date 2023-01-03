@@ -30,45 +30,45 @@ import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged, signOut  } from '@firebase/auth';
 
 // let auth;
-  @Options({
-    props: {
-      navlink1: String,
-    }
-  })
-    // export default {
-    //     name: 'navBar'
-    // }
-  export default class navBar extends Vue {
-      navText = "emitted parameter"
-      auth = getAuth()
-      isLoggedIn = false
-      // mounted(){
-      //   setTimeout(
-      //     () => {
-      //     this.$emit('actionText', this.navText);
-      //   },5000)
-      // }
-
-    mounted(){
-      onAuthStateChanged(this.auth, (user) => {
-        if (user) {
-          this.isLoggedIn = true;
-        } else {
-          this.isLoggedIn = false;
-        }
-      })
-    }
-    
-    logOutAction(){
-      signOut(this.auth).then(() => {
-        this.$router.push("/")
-      })
-      .catch((error) => {
-        console.error(error, 'what is the error')
-        console.log(error, 'error please');
-      });
-    }
+@Options({
+  props: {
+    navlink1: String,
   }
+})
+  // export default {
+  //     name: 'navBar'
+  // }
+export default class navBar extends Vue {
+    navText = "emitted parameter"
+    auth = getAuth()
+    isLoggedIn = false
+    // mounted(){
+    //   setTimeout(
+    //     () => {
+    //     this.$emit('actionText', this.navText);
+    //   },5000)
+    // }
+
+  mounted(){
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.isLoggedIn = true;
+      } else {
+        this.isLoggedIn = false;
+      }
+    })
+  }
+  
+  logOutAction(){
+    signOut(this.auth).then(() => {
+      this.$router.push("/")
+    })
+    .catch((error) => {
+      console.error(error, 'what is the error')
+      console.log(error, 'error please');
+    });
+  }
+}
 </script>
 
 <style scoped>

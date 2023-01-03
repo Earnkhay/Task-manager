@@ -138,7 +138,6 @@ export default class landingpage extends Vue {
     id = this.user.uid
     d = new Date()
     hour = this.d.getHours()
-    auth = getAuth()
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(5));
     greetImage(){
