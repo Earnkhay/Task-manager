@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="container" v-if="tasks.length != 0">
+    <div class="container mb-3" v-if="tasks.length != 0">
         <div class="row justify-content-center chart">
             <div class="col-md-6 donut">
                 <vue-apex-charts width="380" type="donut" :options="chartOptions" :series="statusCount"> </vue-apex-charts>
@@ -80,7 +80,7 @@
     import myFooter from "@/components/UI/footer.vue"
     import VueApexCharts from "vue3-apexcharts"
     import { getAuth, onAuthStateChanged } from "firebase/auth"
-    import { db } from "@/firebase.js" 
+    import { db } from "@/firebase" 
     import { collection, doc, onSnapshot, query, orderBy} from "firebase/firestore"
  
     @Options({

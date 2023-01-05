@@ -15,11 +15,11 @@
             <div class="d-flex justify-content-between mb-3">
                 <div>
                     <label class="form-label">Start date</label>
-                    <Datepicker v-model="startDate" :enable-time-picker="false"/>
+                    <Datepicker v-model="startDate" :enable-time-picker="false" auto-apply/>
                 </div>
                 <div>
                     <label class="form-label">End date </label>
-                    <Datepicker v-model="dueDate" :enable-time-picker="false"/>
+                    <Datepicker v-model="dueDate" :enable-time-picker="false" auto-apply/>
                     <!-- <input type="date" v-model="dueDate"> -->
                 </div>
             </div>
@@ -49,7 +49,7 @@
   
 <script>
 import { Options, Vue } from 'vue-class-component';
-import { db } from "@/firebase.js"
+import { db } from "@/firebase"
 import { getAuth } from "firebase/auth"
 import nkselector from '@/components/UI/nkselector.vue'
 import { collection, addDoc } from "firebase/firestore";

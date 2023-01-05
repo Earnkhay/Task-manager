@@ -95,7 +95,7 @@
     import axios from 'axios'
     import spinner from '@/components/UI/spinner.vue'
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-    import { db } from "@/firebase.js"
+    import { db } from "@/firebase"
     import { doc, setDoc } from "firebase/firestore";
 
     @Options({
@@ -322,7 +322,7 @@ export default class login extends Vue{
                 setTimeout(() => {  
                         this.alertShow = false  
                         this.spinnerShows = false
-                        this.$router.push('/landingpage')    
+                        this.$router.push('/')    
                 },3000) 
             })
             .catch((err) => {
