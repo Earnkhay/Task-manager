@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" class="mb-4">
         <nav-bar :navlink1="navText1"/>
         
         <div class="container mt-5">
@@ -20,13 +20,12 @@
 
                 <h6 class="fw-bold border-bottom p-2">Recent Tasks</h6> 
                     <div class="table-responsive">        
-                        <table class="table table-sm table-hover cover">
+                        <table class="table table-sm table-hover">
                             <thead>
                                 <tr>
-                                <th scope="col">Task</th>
-                                <!-- <th scope="col">Due Date</th> -->
-                                <th scope="col">Priority</th>
-                                <th scope="col">Status</th>
+                                    <th scope="col">Task</th>
+                                    <th scope="col">Due Date</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             
@@ -36,8 +35,7 @@
                                 </tr>
                                 <tr data-bs-toggle="modal" data-bs-target="#exampleModal1" v-for="(task, id) in tasks" :key="id" @click="viewTask(task.id)">
                                     <th>{{ task.title }}</th>
-                                    <!-- <td> {{ task.duedate }} </td> -->
-                                    <td><i class="fa-solid fa-flag" v-if="task.priority" :class="[task.priority == 'High' ? 'text-danger' : task.priority == 'Medium' ? 'text-warning' : task.priority == 'Low' ? 'text-secondary' : '']"></i> {{ task.priority }} </td>
+                                    <td> {{ task.duedate }} </td>
                                     <td class="badge rounded-pill" :class="[task.status == 'Not started' ? 'text-bg-primary' : task.status == 'In progress' ? 'text-bg-warning' : task.status == 'Completed' ? 'text-bg-success' : task.status == 'Overdue' ? 'text-bg-danger' : 'bg-transparent' ]">
                                         {{task.status}}
                                     </td>
@@ -69,6 +67,14 @@
                             </div>
                             <div class="col-md-9">
                                 <p> {{viewDesc}} </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6 class="fw-bold">Due on</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <p> {{viewDuedate}} </p>
                             </div>
                         </div>
                         <div class="row">
@@ -111,7 +117,7 @@ import spinner from '@/components/UI/spinner.vue'
 import addModal from '@/components/addModal.vue'
 import myFooter from "@/components/UI/footer.vue"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
-import { db } from "@/firebase.js"
+import { db } from "@/firebase"
 import { collection, doc, getDoc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
 
 @Options({
@@ -132,6 +138,7 @@ export default class landingpage extends Vue {
     viewPriority = ""
     viewStatus = ""
     viewDesc = ""
+    viewDuedate = ""
     tasks = []
     auth = getAuth()
     user = this.auth.currentUser
@@ -165,11 +172,12 @@ export default class landingpage extends Vue {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
                 const fbTasks = []
                 querySnapshot.forEach((doc) => {
-                    let myDate = new Date(doc.data().duedate * 1000).toDateString()
+                    const date = new Date(doc.data().duedate.seconds * 1000);
+                    const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
-                        duedate: myDate,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -195,6 +203,9 @@ export default class landingpage extends Vue {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
+            const date = new Date(docSnap.data().duedate.seconds * 1000);
+            const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            this.viewDuedate = formattedDate
             this.viewTitle = docSnap.data().title
             this.viewPriority = docSnap.data().priority
             this.viewStatus = docSnap.data().status
@@ -212,6 +223,10 @@ export default class landingpage extends Vue {
     }
     #new:hover{
         color: black;
+    }
+
+    tr:hover{
+        cursor: pointer;
     }
     .cover{
         white-space: nowrap;

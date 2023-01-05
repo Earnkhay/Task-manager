@@ -1,16 +1,17 @@
 <template>
+    
     <div class="container bg-light pb-4 rounded-2 cover">
-        <table class="table table-sm table-hover" id="table_id">
+        <table class="table table-sm table-hover" id="table_id" style="z-index: 1;">
             <thead class="border-bottom-none">
                 <tr>
                     <th scope="col" class="py-4">Recent Task</th>
                     <th scope="col" class="py-4">Due date</th>
                     <th scope="col" class="py-4">Priority</th>
                     <th scope="col" class="py-4">Status</th>
-                    <th scope="col" class="py-4 dropdownIndex"> 
-                        <div class="dropstart d-flex justify-content-end dropdownIndex">
+                    <th scope="col" class="py-4"> 
+                        <div class="dropstart d-flex justify-content-end" style="z-index: 10;">
                             <i class="fa-solid fa-ellipsis-vertical text-primary fs-5" data-bs-toggle="dropdown"></i>
-                            <ul class="dropdown-menu dropdownIndex">
+                            <ul class="dropdown-menu">
                                 <div class="dropdstart">
                                     <li class="submenu">
                                         <a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Status</a>
@@ -33,8 +34,8 @@
                                         </ul>
                                     </li>
                         </div>
-                        <div class="dropstart">
-                            <li class="submenu"><a class="dropdown-item dropdown-toggle" href="#">Date</a>
+                        <div class="dropstart" style="z-index: 100;">
+                            <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" href="#">Date</a>
                                 <ul class="dropdown-menu tablemenu">
                                     <li><Datepicker v-model="date" @change="filterDate" inline auto-apply /></li>
                                 </ul>
@@ -46,7 +47,7 @@
                     </th>
                 </tr>
             </thead>
- {{ date }}
+
             <tbody>
                 <tr v-if="spinnerShow">
                     <td colspan="4"> <spinner :spinnerSize="spinnerSize"></spinner></td>  
@@ -75,17 +76,17 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination fw-bold justify-content-center">
                         <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous" @click="previous">
-                            <span aria-hidden="true">&laquo; Previous</span>
-                        </a>
+                            <a class="page-link" href="#" aria-label="Previous" @click="previous">
+                                <span aria-hidden="true">&laquo; Previous</span>
+                            </a>
                         </li>
                         <!-- <li class="page-item" :class="[active1 == true ? 'active' : '']" @click="viewAll"><a class="page-link" href="#">1</a></li>
                         <li class="page-item" :class="[active == true ? 'active' : '']" @click="nextTableData"><a class="page-link" href="#">2</a></li>
                         <li class="page-item" @click="nextTableData"><a class="page-link" @click="nextTableData" href="#">3</a></li> -->
                         <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next" @click="nextTableData">
-                            <span aria-hidden="true">Next &raquo;</span>
-                        </a>
+                            <a class="page-link" href="#" aria-label="Next" @click="nextTableData" disabled>
+                                <span aria-hidden="true">Next &raquo;</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -120,6 +121,8 @@
                 <div class="col-md-9">
                     <p> {{viewDesc}} </p>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-3">
                     <h6 class="fw-bold">Due on</h6>
                 </div>
@@ -164,9 +167,15 @@
                 <label for="exampleFormControlInput1" class="form-label">Title</label>
                 <input class="form-control" v-model="editTitle" type="text" aria-label="default input example">
             </div>
-            <div class="mb-3">
-                <label class="form-label">Due date</label>
-                <Datepicker v-model="editDuedate" :enable-time-picker="false"/>
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <label class="form-label">Start date</label>
+                    <Datepicker v-model="editStartdate" :enable-time-picker="false"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Due date</label>
+                    <Datepicker v-model="editDuedate" :enable-time-picker="false"/>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Task Priority</label>
@@ -193,14 +202,14 @@
 
 <script>
 import {Options, Vue} from "vue-class-component"
-import { db } from "@/firebase.js"
+import { db } from "@/firebase"
 import spinner from '@/components/UI/spinner.vue'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import EasyDataTable from 'vue3-easy-data-table';
 import nkselector from '@/components/UI/nkselector.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy, Timestamp } from "firebase/firestore";
 
 @Options({
     components: {
@@ -227,6 +236,7 @@ export default class todos extends Vue {
     editTitle = ""
     editPriority = ""
     editDuedate = ""
+    editStartdate = ""
     editDesc = ""
     editStatus = ""
     auth = getAuth()
@@ -255,12 +265,15 @@ export default class todos extends Vue {
                 const fbTasks = []
                 querySnapshot.forEach((doc) => {
                     // const date = new Date(doc.data().duedate);
-                    const date = new Date(doc.data().duedate.seconds * 1000);
-                    const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const duedate = new Date(doc.data().duedate.seconds * 1000);
+                    const formattedDate = duedate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const startdate = new Date(doc.data().startdate.seconds * 1000);
+                    const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
                         duedate: formattedDate,
+                        startdate: formattedStartDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -272,8 +285,6 @@ export default class todos extends Vue {
                     const overdueTasks = this.tasks.filter(task => {
                         const currentDate = new Date();
                         const duedate = new Date(task.duedate);
-                        // console.log(duedate, 'duedate');
-                        // console.log(currentDate, 'current date');
                         return currentDate > duedate;
                     });
                     overdueTasks.forEach(task => {
@@ -310,9 +321,12 @@ export default class todos extends Vue {
         onSnapshot(next, (querySnapshot) => {
             const fbTasks = [] 
             querySnapshot.forEach((doc) => {
+                const date = new Date(doc.data().duedate.seconds * 1000);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -362,28 +376,26 @@ export default class todos extends Vue {
     async previous(){
         let prev
         let prevdoc
-        // this.spinnerShow = true
         const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
         const documentSnapshots = await getDocs(first);
 
-        // Get the last visible document
         prevdoc = documentSnapshots.docs[0];
-        // console.log("last", prevdoc);
 
-        // Construct a new query starting at this document,
         if (prevdoc) {
             prev = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(prevdoc), limit(20));
-            // console.log(first, 'first and prev data logged', prev)
         } else {
-            // console.log(first, 'first and prev data', prev)
+            //
         }
         
         onSnapshot(prev, (querySnapshot) => {
             const fbTasks = [] 
             querySnapshot.forEach((doc) => {
+                const date = new Date(doc.data().duedate.seconds * 1000);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
+                        duedate: formattedDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
                         desc: doc.data().desc
@@ -416,10 +428,10 @@ export default class todos extends Vue {
     }
 
     filterDate(){
+        // const fdate = new Date(this.date);
+        // const formattedfDate = fdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         console.log(this.date);
-        const fdate = new Date(this.date);
-        const formattedfDate = fdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        const q = query(this.todosCollectionRef, where("duedate", "==", formattedfDate));
+        const q = query(this.todosCollectionRef, where("duedate", "==", this.date));
         onSnapshot(q, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
@@ -459,7 +471,7 @@ export default class todos extends Vue {
         })
     }
 
-    filterPriority(priority){8
+    filterPriority(priority){
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
@@ -487,6 +499,7 @@ export default class todos extends Vue {
         this.editPriority = taskToUpdate.priority,
         this.editDesc = taskToUpdate.desc,
         this.editDuedate = taskToUpdate.duedate,
+        this.editStartdate = taskToUpdate.startdate,
         this.currentTask = taskToUpdate
     }
 
@@ -497,12 +510,22 @@ export default class todos extends Vue {
     }
 
     async updateTask(){
+        //firebase Timestamp can be used to change the date to a timestamp before saving back to firebase
+        // const duedate = Timestamp.fromDate(new Date(this.editDuedate));
+        // const startdate = Timestamp.fromDate(new Date(this.editStartdate));
+
+        //or you can also use the js date object
+        const duedate = new Date(this.editDuedate);
+        const startdate = new Date(this.editStartdate);
+
         await updateDoc(doc(db, `users/${this.id}/tasks`, this.currentTask.id), {
             title: this.editTitle,
             priority: this.editPriority,
             desc: this.editDesc,
-            duedate: this.editDuedate,
+            duedate: duedate,
+            startdate: startdate,
         });
+        // console.log(duedate, startdate);
     }
 
     async viewTask(id){
@@ -532,9 +555,6 @@ export default class todos extends Vue {
         background-color: rgb(164, 243, 164);
     }
 
-    .dropdownIndex{
-        z-index: 1000 !important;
-    }
     .submenu:hover .tablemenu {
         display: block;
     }
