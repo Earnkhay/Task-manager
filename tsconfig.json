@@ -41,5 +41,8 @@
   ],
   "files": [
     "typings.d.ts"
-  ]
+  ],
+  "types": [
+    "vue-sweetalert2"
+  ],
 }

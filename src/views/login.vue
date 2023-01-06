@@ -1,4 +1,5 @@
 <template>
+    <toast v-if="toastShow" :icon="toastIcon" :title="toastTitle"/>
     <div id="login-page" class="py-5">
          <div class="p-5 bg">
         <div class="container ">
@@ -90,21 +91,22 @@
     //     }    
         
     // }
-    import {Options, Vue} from "vue-class-component"
-    import alert from '@/components/UI/alert.vue'
-    import axios from 'axios'
-    import spinner from '@/components/UI/spinner.vue'
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-    import { db } from "@/firebase"
-    import { doc, setDoc } from "firebase/firestore";
+import {Options, Vue} from "vue-class-component"
+import alert from '@/components/UI/alert.vue'
+import axios from 'axios'
+import spinner from '@/components/UI/spinner.vue'
+import toast from '@/components/UI/toast.vue'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { db } from "@/firebase"
+import { doc, setDoc } from "firebase/firestore";
 
-    @Options({
-        components: {
-            alert,
-            spinner
-        }
-    })
-
+@Options({
+    components: {
+        alert,
+        spinner,
+        toast
+    }
+})
 
 export default class login extends Vue{
     passwordType = 'password'
@@ -112,6 +114,9 @@ export default class login extends Vue{
     spinnerShow = false
     spinnerShows = false
     spinnerSize = "spinner-border-sm"
+    toastIcon = ''
+    toastTitle = ''
+    toastShow = false
     name = ""
     newUser = ""
     email = ""
@@ -204,7 +209,7 @@ export default class login extends Vue{
         }
         const auth = getAuth()
         if (pageType == 'signUp' && this.name != "" && this.email != "" && this.password != '') {
-            await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
+            await createUserWithEmailAndPassword(auth, this.email, this.password)
             .then((user) => {
                 setDoc(doc(db, "users", user.user.uid), {
                     name: this.name
@@ -212,19 +217,11 @@ export default class login extends Vue{
                 axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                     formData: formData
                 })
-                this.alertTitle = "Success !, You're Welcome"
-                this.alertType = "Success"
-                this.alertShow = true
                 this.spinnerShow = true
-                setTimeout(() => {  
-                        this.alertShow = false 
-                        this.spinnerShow = false 
-                        this.$router.push(`/`)
-                        // this.pageType = 'login'   
-                        this.email = ''
-                        this.password = '' 
-                        this.name = '' 
-                },3000) 
+                this.toastIcon = 'success'
+                this.toastTitle = 'Signed up successfully'
+                this.toastShow = true
+                this.$router.push(`/`)
             })
             .catch((err) => {
                 // this.alertTitle = err.code
@@ -256,20 +253,13 @@ export default class login extends Vue{
         }else if(pageType == 'login'){
             signInWithEmailAndPassword(auth, this.email, this.password)
             .then(() => {
-                // console.log(auth.currentUser);
-                this.alertTitle = "Success !, You're Welcome"
-                this.alertType = "Success"
-                this.alertShow = true
                 this.spinnerShow = true
-                setTimeout(() => {  
-                        this.alertShow = false  
-                        this.spinnerShow = false
-                        this.$router.push('/')    
-                },3000) 
+                this.toastIcon = 'success'
+                this.toastTitle = 'Signed in successfully'
+                this.toastShow = true
+                this.$router.push('/')  
             })
             .catch((err) => {
-                // console.error(err)
-                // console.log(err.code);
                 this.alertType = "danger"
                 this.alertShow = true
                 this.spinnerShow = true
@@ -311,19 +301,16 @@ export default class login extends Vue{
         }
     }
 
+
     signUpWithGoogle(){
         const provider = new GoogleAuthProvider();
         signInWithPopup(getAuth(), provider)
             .then(() => {
-                this.alertTitle = "Success !, You're Welcome"
-                this.alertType = "Success"
-                this.alertShow = true
                 this.spinnerShows = true
-                setTimeout(() => {  
-                        this.alertShow = false  
-                        this.spinnerShows = false
-                        this.$router.push('/')    
-                },3000) 
+                this.toastIcon = 'success'
+                this.toastTitle = 'Welcome to your Task manager app'
+                this.toastShow = true
+                this.$router.push('/') 
             })
             .catch((err) => {
                 this.alertType = "danger"
