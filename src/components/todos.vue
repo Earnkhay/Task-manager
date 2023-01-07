@@ -209,7 +209,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import EasyDataTable from 'vue3-easy-data-table';
 import nkselector from '@/components/UI/nkselector.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy, Timestamp } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy, } from "firebase/firestore";
 
 @Options({
     components: {

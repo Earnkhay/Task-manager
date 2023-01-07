@@ -301,7 +301,6 @@ export default class login extends Vue{
         }
     }
 
-
     signUpWithGoogle(){
         const provider = new GoogleAuthProvider();
         signInWithPopup(getAuth(), provider)

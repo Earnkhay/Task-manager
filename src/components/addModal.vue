@@ -1,4 +1,5 @@
 <template>
+    <toast v-if="toastShow" :icon="toastIcon" :title="toastTitle"/>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -52,6 +53,7 @@ import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase"
 import { getAuth } from "firebase/auth"
 import nkselector from '@/components/UI/nkselector.vue'
+import toast from '@/components/UI/toast.vue'
 import { collection, addDoc } from "firebase/firestore";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -59,7 +61,8 @@ import '@vuepic/vue-datepicker/dist/main.css'
 @Options({
     components: {
         Datepicker,
-        nkselector
+        nkselector,
+        toast
     },
 })
 export default class addModal extends Vue {
@@ -70,6 +73,9 @@ export default class addModal extends Vue {
     priority = ""
     tasks = []
     status = "Not started"
+    toastIcon = ''
+    toastTitle = ''
+    toastShow = false
     months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
     weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
     d = new Date()
@@ -81,7 +87,7 @@ export default class addModal extends Vue {
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
 
     addTask(){
-        if(this.newTask) {
+        if(this.newTask && this.dueDate && this.startDate) {
             addDoc(this.todosCollectionRef, { 
                 title: this.newTask,
                 desc: this.description,
@@ -93,6 +99,9 @@ export default class addModal extends Vue {
                 day: this.day,
                 month: this.month
             })
+            this.toastIcon = 'success'
+            this.toastTitle = 'Task added successfully'
+            this.toastShow = true
          this.newTask = "" 
          this.description = ""
          this.priority = ""
