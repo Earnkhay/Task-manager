@@ -1,5 +1,4 @@
 <template>
-    
     <div class="container bg-light pb-4 rounded-2 cover">
         <table class="table table-sm table-hover" id="table_id" style="z-index: 1;">
             <thead class="border-bottom-none">
@@ -208,6 +207,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import EasyDataTable from 'vue3-easy-data-table';
 import nkselector from '@/components/UI/nkselector.vue'
+import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy, } from "firebase/firestore";
 
@@ -216,7 +216,7 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, start
         spinner,
         nkselector,
         Datepicker,
-        EasyDataTable
+        EasyDataTable,
     }
 })
 
@@ -227,6 +227,8 @@ export default class todos extends Vue {
     task
     currentTask
     lastdoc = null
+    toastIcon = ''
+    toastTitle = ''
     viewTitle = ""
     viewPriority = ""
     viewStatus = ""
@@ -509,6 +511,19 @@ export default class todos extends Vue {
         });
     }
 
+    displayToast() {
+        this.$swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        }).fire({
+            icon: this.toastIcon,
+            title: this.toastTitle,
+        })
+    } 
+
     async updateTask(){
         //firebase Timestamp can be used to change the date to a timestamp before saving back to firebase
         // const duedate = Timestamp.fromDate(new Date(this.editDuedate));
@@ -525,7 +540,10 @@ export default class todos extends Vue {
             duedate: duedate,
             startdate: startdate,
         });
-        // console.log(duedate, startdate);
+        this.toastIcon = 'success'
+        this.toastTitle = 'Task updated successfully'
+        this.$swal = Swal;
+        this.displayToast()
     }
 
     async viewTask(id){
@@ -545,6 +563,10 @@ export default class todos extends Vue {
 
     deleteTask(id){
         deleteDoc(doc(db, `users/${this.id}/tasks`, id));
+        this.toastIcon = 'success'
+        this.toastTitle = 'Task deleted successfully'
+        this.$swal = Swal;
+        this.displayToast()
     }
 
 }
