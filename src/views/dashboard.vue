@@ -81,7 +81,7 @@
     import VueApexCharts from "vue3-apexcharts"
     import { getAuth, onAuthStateChanged } from "firebase/auth"
     import { db } from "@/firebase" 
-    import { collection, doc, onSnapshot, query, orderBy} from "firebase/firestore"
+    import { collection, doc, onSnapshot, query, where} from "firebase/firestore"
  
     @Options({
         components: {
@@ -107,8 +107,8 @@ export default class dashboard extends Vue {
         id = this.user.uid
         statusCount= []
         priorityCount= []
-        todosCollectionRef = collection( db, `users/${this.id}/tasks` )
-        todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"))
+        todosCollectionRef = collection( db, `tasks` )
+        todosCollectionQuery = query(this.todosCollectionRef, where("assignedTo", "==", this.id))
 
         created(){
             // console.log("mounted in dashboard");
