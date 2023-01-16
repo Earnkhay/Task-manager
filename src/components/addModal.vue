@@ -32,7 +32,17 @@
                     <option value="Medium" class="text-warning">Medium</option>
                     <option value="Low" class="text-secondary">Low</option>
                 </select>
-                <!-- <nkselector v-model="priority"/> -->
+            </div>
+            <div class="mb-3">
+                <label for="selector" class="form-label">Assign Task</label>
+                <VueMultiselect
+                    v-model="selected"
+                    :options="options"
+                    :custom-label="email"
+                    track-by="email"
+                    label="email"
+                />
+                <!-- {{ selected.id }} -->
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
@@ -52,16 +62,17 @@
 import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase"
 import { getAuth } from "firebase/auth"
-import nkselector from '@/components/UI/nkselector.vue'
+// import nkselector from '@/components/UI/nkselector.vue'
+import VueMultiselect from 'vue-multiselect'
 import toast from '@/components/UI/toast.vue'
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, getDocs } from "firebase/firestore";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
 @Options({
     components: {
         Datepicker,
-        nkselector,
+        VueMultiselect,
         toast
     },
 })
@@ -72,6 +83,8 @@ export default class addModal extends Vue {
     dueDate = ""
     priority = ""
     tasks = []
+    selected = []
+    options = []
     status = "Not started"
     toastIcon = ''
     toastTitle = ''
@@ -84,7 +97,7 @@ export default class addModal extends Vue {
     auth = getAuth()
     user = this.auth.currentUser
     id = this.user.uid
-    todosCollectionRef = collection(db, `users/${this.id}/tasks`)
+    todosCollectionRef = collection(db, `tasks`)
 
     addTask(){
         if(this.newTask && this.dueDate && this.startDate) {
@@ -95,9 +108,11 @@ export default class addModal extends Vue {
                 duedate: this.dueDate,
                 priority: this.priority,
                 status: this.status,
+                createdBy: this.id,
+                assignedTo: this.selected.id,
                 date: Date.now(),
                 day: this.day,
-                month: this.month
+                // month: this.month
             })
             this.toastIcon = 'success'
             this.toastTitle = 'Task added successfully'
@@ -110,6 +125,29 @@ export default class addModal extends Vue {
         }
     }
 
+    async mounted(){
+      const citiesRef = collection(db, "users");
+      const q = query(citiesRef);
+
+      const querySnapshot = await getDocs(q);
+
+      const fbUsers = []
+      querySnapshot.forEach((doc) => {
+        const user = {
+            id: doc.id,
+            email: doc.data().email,
+            // name: doc.data().name,
+        }
+        fbUsers.push(user)
+        // console.log(doc.id, " => ", doc.data());
+      });
+      this.options = fbUsers
+    }
+
+    email ({ email }) {
+      return `${email}`
+    }
+
     clearAll() {
         this.newTask = "" 
         this.description = ""
@@ -119,3 +157,5 @@ export default class addModal extends Vue {
     }
 }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

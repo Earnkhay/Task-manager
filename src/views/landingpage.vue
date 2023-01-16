@@ -87,6 +87,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-3">
+                                <h6 class="fw-bold">Assigned By</h6>
+                            </div>
+                            <div class="col-md-9">
+                                <p> {{createdBy}}  </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
                                 <h6 class="fw-bold">Status </h6>
                             </div>
                             <div class="col-md-9">
@@ -116,9 +124,9 @@ import navBar from "@/components/UI/navbar.vue"
 import spinner from '@/components/UI/spinner.vue'
 import addModal from '@/components/addModal.vue'
 import myFooter from "@/components/UI/footer.vue"
-import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { getAuth, onAuthStateChanged, } from "firebase/auth"
 import { db } from "@/firebase"
-import { collection, doc, getDoc, onSnapshot, query, orderBy, limit} from "firebase/firestore"
+import { collection, doc, getDoc, onSnapshot, query, orderBy, limit, where} from "firebase/firestore"
 
 @Options({
   components: {
@@ -134,6 +142,7 @@ export default class landingpage extends Vue {
     spinnerShow = false 
     spinnerSize = "spinner-border-lg"
     name = ""
+    createdBy = ""
     viewTitle = ""
     viewPriority = ""
     viewStatus = ""
@@ -145,8 +154,8 @@ export default class landingpage extends Vue {
     id = this.user.uid
     d = new Date()
     hour = this.d.getHours()
-    todosCollectionRef = collection(db, `users/${this.id}/tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(5));
+    todosCollectionRef = collection(db, `tasks`)
+    todosCollectionQuery = query(this.todosCollectionRef, where("assignedTo", "==", this.id), limit(5));
     greetImage(){
         if (this.hour >= 0 && this.hour <= 11) {
             return 'morningsvg'          
@@ -174,15 +183,17 @@ export default class landingpage extends Vue {
                 querySnapshot.forEach((doc) => {
                     const date = new Date(doc.data().duedate.seconds * 1000);
                     const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: formattedDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
+                    // if (doc.data().assignedTo == this.id) {
+                        const task = {
+                            id: doc.id,
+                            title: doc.data().title,
+                            duedate: formattedDate,
+                            priority: doc.data().priority,
+                            status: doc.data().status,
+                            desc: doc.data().desc
+                        }
+                        fbTasks.push(task)
+                    // }
                 })
                     this.tasks = fbTasks
                     this.spinnerShow = false
@@ -199,12 +210,15 @@ export default class landingpage extends Vue {
         })
     }
     async viewTask(id){
-        const docRef = doc(db, `users/${this.id}/tasks`, id );
+        const docRef = doc(db, `tasks`, id );
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             const date = new Date(docSnap.data().duedate.seconds * 1000);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
+                this.createdBy = doc.data().email
+            })
             this.viewDuedate = formattedDate
             this.viewTitle = docSnap.data().title
             this.viewPriority = docSnap.data().priority

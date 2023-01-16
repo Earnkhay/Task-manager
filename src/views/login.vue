@@ -212,7 +212,9 @@ export default class login extends Vue{
             await createUserWithEmailAndPassword(auth, this.email, this.password)
             .then((user) => {
                 setDoc(doc(db, "users", user.user.uid), {
-                    name: this.name
+                    name: this.name,
+                    email: this.email,
+                    uid: user.user.uid
                 });
                 axios.post('https://vue-http-learning-b7e81-default-rtdb.firebaseio.com/loginPage.json', {
                     formData: formData
@@ -305,6 +307,15 @@ export default class login extends Vue{
         const provider = new GoogleAuthProvider();
         signInWithPopup(getAuth(), provider)
             .then(() => {
+                const auth = getAuth();
+                const user = auth.currentUser;
+                if (user) {
+                    setDoc(doc(db, "users", user.uid), {
+                        name: user.displayName,
+                        email: user.email,
+                        uid: user.uid
+                    });
+                }
                 this.spinnerShows = true
                 this.toastIcon = 'success'
                 this.toastTitle = 'Welcome to your Task manager app'
