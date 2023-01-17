@@ -223,7 +223,7 @@ export default class login extends Vue{
                 this.toastIcon = 'success'
                 this.toastTitle = 'Signed up successfully'
                 this.toastShow = true
-                this.$router.push(`/task/dashboard`)
+                this.$router.push(`/dashboard`)
             })
             .catch((err) => {
                 // this.alertTitle = err.code
@@ -259,7 +259,7 @@ export default class login extends Vue{
                 this.toastIcon = 'success'
                 this.toastTitle = 'Signed in successfully'
                 this.toastShow = true
-                this.$router.push('/task/dashboard')  
+                this.$router.push('/dashboard')  
             })
             .catch((err) => {
                 this.alertType = "danger"
@@ -320,7 +320,7 @@ export default class login extends Vue{
                 this.toastIcon = 'success'
                 this.toastTitle = 'Welcome to your Task manager app'
                 this.toastShow = true
-                this.$router.push('/task/dashboard') 
+                this.$router.push('/dashboard') 
             })
             .catch((err) => {
                 this.alertType = "danger"
