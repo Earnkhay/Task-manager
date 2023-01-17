@@ -1,6 +1,6 @@
 <template>
     <div id="app" class="mb-4">
-        <nav-bar :navlink1="navText1"/>
+        <nav-bar/>
         
         <div class="container mt-5">
             <div class="row gx-5 justify-content-between align-items-center">
@@ -115,7 +115,6 @@
             </div>
         </div>
     </div>
-    <my-footer/>
 </template>
 
 <script>
@@ -123,7 +122,6 @@ import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/UI/navbar.vue"
 import spinner from '@/components/UI/spinner.vue'
 import addModal from '@/components/addModal.vue'
-import myFooter from "@/components/UI/footer.vue"
 import { getAuth, onAuthStateChanged, } from "firebase/auth"
 import { db } from "@/firebase"
 import { collection, doc, getDoc, onSnapshot, query, orderBy, limit, where} from "firebase/firestore"
@@ -133,12 +131,10 @@ import { collection, doc, getDoc, onSnapshot, query, orderBy, limit, where} from
     navBar, 
     spinner,
     addModal, 
-    myFooter
   }
 })
 
 export default class landingpage extends Vue {
-    navText1 = "Dashboard"
     spinnerShow = false 
     spinnerSize = "spinner-border-lg"
     name = ""

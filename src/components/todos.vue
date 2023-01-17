@@ -89,7 +89,6 @@
                     </ul>
                 </nav> -->
     </div>
-
     <!-- <div class="container mt-3">
         <EasyDataTable :headers="headers" :items="tasks" buttons-pagination>
         <template #tasks-operation="">

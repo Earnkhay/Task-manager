@@ -46,6 +46,36 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: '/task',
+    name: 'sidebar',
+    component: () => import( '@/views/sidebar.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import( '@/views/dashboard.vue'),
+      },
+      {
+        path: 'todo',
+        name: 'todo',
+        component: () => import( '@/views/todo.vue'),
+      },
+      {
+        path: 'landingpage',
+        name: 'landingpage',
+        component: () => import( '@/views/landingpage.vue'),
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import( '@/views/profile.vue'),
+      },
+    ],
+  },
+  {
     path: "/404",
     name: "notFound",
     component: notFoundPage
