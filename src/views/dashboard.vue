@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-    <nav-bar :navlink1="navText1"/>
-    <h5 class="my-5 fs-4 fw-bold container">Hello <span class="text-success">{{ name }}</span>. Welcome to your Dashboard</h5>
+    <nav-bar :navTitle="navTitle"/>
+    <!-- <h5 class="my-5 fs-4 fw-bold container">Hello <span class="text-success">{{ name }}</span>. Welcome to your Dashboard</h5> -->
 
     <!-- <div class="container px-5 mb-4">
         <div class="row justify-content-center">
@@ -14,7 +14,7 @@
         </div>
     </div> -->
 
-    <div class="container mb-5">
+    <div class="container my-5">
         <div class="row ">
             <div class="col-md-3 mb-3">
                 <div class="card border-primary shadow">
@@ -70,14 +70,12 @@
         </div>
     </div> -->
 
-    <my-footer/>
     </div>
 </template>
 
 <script>
     import {Options, Vue} from "vue-class-component"
     import navBar from "@/components/UI/navbar.vue"
-    import myFooter from "@/components/UI/footer.vue"
     import VueApexCharts from "vue3-apexcharts"
     import { getAuth, onAuthStateChanged } from "firebase/auth"
     import { db } from "@/firebase" 
@@ -86,14 +84,13 @@
     @Options({
         components: {
             navBar,
-            myFooter,
             VueApexCharts,
         }
     })
 
 export default class dashboard extends Vue {
-        navText1 = "Dashboard"
         name = ""
+        navTitle = ""
         tasks = []
         notStartedTasks = []
         inProgressTasks = []
@@ -225,10 +222,12 @@ export default class dashboard extends Vue {
                     })
                     // console.log(this.priorityCount, this.statusCount);
                     if(user.displayName != null){
-                        this.name = user.displayName
+                        // this.name = user.displayName
+                        this.navTitle = `Welcome back, ${user.displayName}`
                     }else {
                         onSnapshot(doc(db, "users", user.uid), (doc) => {
-                            this.name = doc.data().name
+                            // this.name = doc.data().name
+                            this.navTitle = `Welcome back ${doc.data().name}`
                         })
                     }
                 }

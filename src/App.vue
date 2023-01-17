@@ -27,5 +27,9 @@ export default class App extends Vue {}
 <style>
   #app{
     font-family: 'Raleway', sans-serif;
+    min-height: 100vh;
+  }
+  i{
+    cursor: pointer;
   }
 </style>
