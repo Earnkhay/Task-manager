@@ -6,25 +6,25 @@
     <div class="d-flex" id="app">
             <div class="p-3 border-end bg-white adminbar" id="app" v-if="$store.state.sidebarVisible">
                 <div class="d-flex justify-content-between border-bottom mb-3 py-3">
-                    <router-link to="/task/dashboard" class="text-decoration-none fs-5 link-dark"><img src="../assets/Tictask-logo.png" class="img-fluid" alt=""></router-link>
+                    <router-link :to="{name: 'dashboard'}" class="text-decoration-none fs-5 link-dark"><img src="../assets/Tictask-logo.png" class="img-fluid" alt=""></router-link>
                     <i class="fa-solid fa-x menubar" @click="$store.commit('toggleSidebar')"></i> 
                 </div>
                 <ul class="nav nav-pills flex-column mb-auto py-3">
                     <li class="nav-item mb-1 p-1">
-                        <router-link to="/task/dashboard" active-class="active" class="nav-link link-dark fw-bold" aria-current="page">
+                        <router-link :to="{name: 'dashboard'}" active-class="active" class="nav-link link-dark fw-bold" aria-current="page">
                             <!-- <i class="fa-solid fa-chart-line p-1"></i> -->
                             <i class="fa-solid fa-border-all p-1"></i>
                             Dashboard
                         </router-link>
                     </li>
                     <li class="nav-item mb-1 p-1">
-                        <router-link to="/task/todo" active-class="active" class="nav-link text-dark fw-bold">
+                        <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold">
                             <i class="fa-regular fa-square-check p-1"></i>
                             To do
                         </router-link>
                     </li>
                     <li class="nav-item mb-1 p-1">
-                        <router-link to="/task/profile" active-class="active" class="nav-link text-dark fw-bold">
+                        <router-link :to="{name: 'profile'}" active-class="active" class="nav-link text-dark fw-bold">
                             <i class="fa-solid fa-user p-1"></i>
                                 Profile
                         </router-link>

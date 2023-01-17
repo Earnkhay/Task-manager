@@ -21,32 +21,32 @@ const routes: Array<RouteRecordRaw> = [
     name: 'login',
     component: login,
   },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import( '@/views/dashboard.vue'),
-    meta: {
-      requiresAuth: true,
-    }
-  },
+  // {
+  //   path: '/dashboard',
+  //   name: 'dashboard',
+  //   component: () => import( '@/views/dashboard.vue'),
+  //   meta: {
+  //     requiresAuth: true,
+  //   }
+  // },
+  // {
+  //   path: '/',
+  //   name: 'landingpage',
+  //   component: () => import( '@/views/landingpage.vue'),
+  //   meta: {
+  //     requiresAuth: true,
+  //   }
+  // },
+  // {
+  //   path: '/todo',
+  //   name: 'todo',
+  //   component: () => import( '@/views/todo.vue'),
+  //   meta: {
+  //     requiresAuth: true,
+  //   },
+  // },
   {
     path: '/',
-    name: 'landingpage',
-    component: () => import( '@/views/landingpage.vue'),
-    meta: {
-      requiresAuth: true,
-    }
-  },
-  {
-    path: '/todo',
-    name: 'todo',
-    component: () => import( '@/views/todo.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: '/task',
     name: 'sidebar',
     component: () => import( '@/views/sidebar.vue'),
     meta: {
