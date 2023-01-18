@@ -100,7 +100,7 @@ export default class addModal extends Vue {
     todosCollectionRef = collection(db, `tasks`)
 
     addTask(){
-        if(this.newTask && this.dueDate && this.startDate) {
+        if(this.newTask && this.dueDate && this.startDate && this.selected) {
             addDoc(this.todosCollectionRef, { 
                 title: this.newTask,
                 desc: this.description,
@@ -122,6 +122,11 @@ export default class addModal extends Vue {
          this.priority = ""
          this.startDate = ""
          this.dueDate = ""
+         this.selected = ""
+        }else{
+            this.toastIcon = 'warning'
+            this.toastTitle = 'Please add required fields'
+            this.toastShow = true
         }
     }
 

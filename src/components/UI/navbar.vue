@@ -1,10 +1,10 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-white p-3 border-bottom shadow">
+    <nav class="navbar navbar-expand-lg bg-white p-3 navpad border-bottom shadow">
       <div class="container">
         <button class="border-light menubar rounded-2 bg-transparent" @click="$store.commit('toggleSidebar')">
             <i class="fa-solid fa-bars text-secondary fs-4"></i>   
         </button>
-        <router-link class="navbar-brand fw-bold navtitle" :to="{name: 'landingpage'}">{{navTitle}}</router-link>
+        <router-link class="navbar-brand fw-bold navtitle" :to="{name: 'dashboard'}">{{navTitle}}</router-link>
         <button class="navbar-toggler p-0 border-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,12 +15,12 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
               </div>
             </li>
-            <li class="nav-item mt-1">
-              <div class="p-2">
+            <li class="nav-item mt-1 ms-1">
+              <div class="py-2">
                 <i class="fa-regular fa-bell"></i>
               </div>
             </li>
-            <li class="nav-item mt-1">
+            <li class="nav-item mt-1 ms-1">
               <router-link class="nav-link link-dark fw-bold" :to="{name: 'profile'}">
                 <i class="fa-solid fa-gear"></i>
               </router-link>
@@ -105,9 +105,12 @@ export default class navBar extends Vue {
         display: block;
     }
 }
-@media screen and (max-width: 300px){
+@media screen and (max-width: 400px){
     .navtitle{
       font-size: 12px;
+    }
+    .navpad{
+      padding: 10px 0px !important;
     }
 }
 </style>
