@@ -59,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import( '@/views/dashboard.vue'),
       },
       {
-        path: 'todo',
+        path: 'tasks',
         name: 'todo',
         component: () => import( '@/views/todo.vue'),
       },
@@ -72,6 +72,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'profile',
         name: 'profile',
         component: () => import( '@/views/profile.vue'),
+      },
+      {
+        path: 'taskcreated',
+        name: 'todos',
+        component: () => import( '@/views/todos.vue'),
       },
     ],
   },

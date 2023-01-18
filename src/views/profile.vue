@@ -170,6 +170,7 @@ export default class profile extends Vue {
   updateProfile(){
     updateDoc(doc(db, `users/${this.id}`), {
         name: this.name,
+        role: this.role
     })
     this.toastShow = true
     this.toastIcon = 'success'
