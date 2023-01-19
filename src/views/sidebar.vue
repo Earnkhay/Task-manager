@@ -11,16 +11,19 @@
             </div>
             <ul class="nav flex-column mb-auto py-3">
                 <li class="nav-item mb-1">
-                    <router-link :to="{name: 'dashboard'}" active-class="active" class="nav-link link-dark fw-bold" aria-current="page">
+                    <router-link :to="{name: 'dashboard'}" class="nav-link link-dark fw-bold" aria-current="page">
                         <!-- <i class="fa-solid fa-chart-line p-1"></i> -->
-                        <i class="fa-solid fa-border-all p-1"></i>
-                        Dashboard
+                        <i class="fa-solid fa-border-all p-1 me-1"></i>
+                       <span class="me-5">Dashboard</span> 
+                        <span class="ms-3"><i class="fa-solid fa-angle-right ms-5" ></i></span>
                     </router-link>
                 </li>
                 <li class="nav-item mb-1">
                     <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold" @click="minitodos = !minitodos">
-                        <i class="fa-regular fa-square-check p-1"></i>
-                        To do
+                        <i class="fa-regular fa-square-check p-1 me-1"></i>
+                        <span class="me-5 pe-2">Tasks</span>
+                        <span class="ms-5 ps-1" v-if="minitodos"><i class="fa-solid fa-angle-down ms-4 ps-3"></i></span>
+                        <span class="ms-5" v-else><i class="fa-solid fa-angle-right ms-5"></i></span>
                     </router-link>
                     <ul class="minitodos" v-if="minitodos">
                         <li>
@@ -29,7 +32,7 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{name: 'todo'}" class="nav-link text-dark fw-bold">
+                            <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold">
                                 Tasks Assigned
                             </router-link>
                         </li>
@@ -37,8 +40,9 @@
                 </li>
                 <li class="nav-item mb-1">
                     <router-link :to="{name: 'profile'}" active-class="active" class="nav-link text-dark fw-bold">
-                        <i class="fa-solid fa-user p-1"></i>
-                            Profile
+                        <i class="fa-solid fa-user p-1 me-1"></i>
+                        <span class="me-5">Profile</span>
+                        <span class="ms-5"><i class="fa-solid fa-angle-right ms-5"></i></span>
                     </router-link>
                 </li>
                 <li class="nav-item mb-1">
@@ -48,7 +52,7 @@
                     </a>
                 </li>
             </ul>
-            <hr>
+            <!-- <hr> -->
             <!-- <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
@@ -113,9 +117,9 @@ export default class sidebar extends Vue {
         window.addEventListener('resize', this.handleResize);
     }
 
-    toggleSidebar() {
-        this.sidebarVisible = !this.sidebarVisible;
-    }
+    // toggleSidebar() {
+    //     this.sidebarVisible = !this.sidebarVisible;
+    // }
 
     async logout(){
         const auth = getAuth();
