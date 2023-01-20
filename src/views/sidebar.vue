@@ -19,12 +19,12 @@
                     </router-link>
                 </li>
                 <li class="nav-item mb-1">
-                    <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold" @click="minitodos = !minitodos">
+                    <a class="nav-link text-dark fw-bold" @click="minitodos = !minitodos">
                         <i class="fa-regular fa-square-check p-1 me-1"></i>
                         <span class="me-5 pe-2">Tasks</span>
                         <span class="ms-5 ps-1" v-if="minitodos"><i class="fa-solid fa-angle-down ms-4 ps-3"></i></span>
                         <span class="ms-5" v-else><i class="fa-solid fa-angle-right ms-5"></i></span>
-                    </router-link>
+                    </a>
                     <ul class="minitodos" v-if="minitodos">
                         <li>
                             <router-link :to="{name: 'todos'}" active-class="active" class="nav-link text-dark fw-bold">

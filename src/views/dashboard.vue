@@ -1,6 +1,7 @@
 <template>
     <div id="app">
     <nav-bar :navTitle="navTitle"/>
+    <h5 class="my-5 fs-4 fw-bold container">Welcome  back, <span class="text-success">{{ name }}</span>. </h5>
 
     <!-- <div class="container px-5 mb-4">
         <div class="row justify-content-center">
@@ -88,7 +89,8 @@
     })
 
 export default class dashboard extends Vue {
-        navTitle = ""
+        name = ""
+        navTitle = "Dashboard"
         tasks = []
         notStartedTasks = []
         inProgressTasks = []
@@ -220,10 +222,12 @@ export default class dashboard extends Vue {
                     })
                     // console.log(this.priorityCount, this.statusCount);
                     if(user.displayName != null){
-                        this.navTitle = `Welcome ${user.displayName}`
+                        this.name = user.displayName
+                        // this.navTitle = `Welcome back, ${user.displayName}`
                     }else {
                         onSnapshot(doc(db, "users", user.uid), (doc) => {
-                            this.navTitle = `Welcome back, ${doc.data().name}`
+                            this.name = doc.data().name
+                            // this.navTitle = `Welcome back, ${doc.data().name}`
                         })
                     }
                 }
