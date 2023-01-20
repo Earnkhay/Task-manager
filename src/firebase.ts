@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken,  } from "firebase/messaging";
+import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -11,36 +12,46 @@ const firebaseConfig = {
   projectId: "vue-http-learning-b7e81",
   storageBucket: "vue-http-learning-b7e81.appspot.com",
   messagingSenderId: "512051751261",
-  appId: "1:512051751261:web:5ae2d5b116bbeed2efe0b4"
+  appId: "1:512051751261:web:5ae2d5b116bbeed2efe0b4",
+  measurementId: "G-Y2567YKSGH"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const messaging = getMessaging(app);
-// function requestPermission() {
-//   console.log('Requesting permission...');
-//   Notification.requestPermission().then((permission) => {
-//     if (permission === 'granted') {
-//       console.log('Notification permission granted.');
-//       getToken(messaging, { vapidKey: 'BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4' }).then((currentToken) => {
-//           if (currentToken) {
-//               // Send the token to your server and update the UI if necessary
-//               // ...
-//               console.log('current token: ', currentToken);
-//           } else {
-//               // Show permission request UI
-//               console.log('No registration token available. Request permission to generate one.');
-//               // ...
-//           }
-//           }).catch((err) => {
-//               console.log('An error occurred while retrieving token. ', err);
-//               // ...
-//           });
-//     }
-//   })
-// }
-// requestPermission()
+
+function requestPermission() {
+  // console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      // console.log('Notification permission granted.');
+      getToken(messaging, { vapidKey: 'BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4' }).then((currentToken) => {
+          if (currentToken) {
+              // Send the token to your server and update the UI if necessary
+              // ...
+              console.log('current token: ', currentToken);
+          } else {
+              // Show permission request UI
+              console.log('No registration token available. Request permission to generate one.');
+              // ...
+          }
+          }).catch((err) => {
+              console.log('An error occurred while retrieving token. ', err);
+              // ...
+          });
+    }
+  })
+}
+requestPermission()
+
+// navigator.serviceWorker.register('/firebase-messaging-sw.js')
+//   .then((registration) => {
+//     console.log('Service worker registered:', registration);
+//   }).catch(err => {
+//     console.log(`Service Worker Error: ${err}`);
+//   });
 export { db, storage, messaging }
