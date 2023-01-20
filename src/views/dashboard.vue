@@ -90,7 +90,7 @@
 
 export default class dashboard extends Vue {
         name = ""
-        navTitle = "Dashboard"
+        navTitle = "My Dashboard"
         tasks = []
         notStartedTasks = []
         inProgressTasks = []
