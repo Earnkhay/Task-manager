@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getMessaging, getToken } from "firebase/messaging";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -18,5 +19,28 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 const storage = getStorage(app);
-
-export { db, storage }
+const messaging = getMessaging(app);
+// function requestPermission() {
+//   console.log('Requesting permission...');
+//   Notification.requestPermission().then((permission) => {
+//     if (permission === 'granted') {
+//       console.log('Notification permission granted.');
+//       getToken(messaging, { vapidKey: 'BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4' }).then((currentToken) => {
+//           if (currentToken) {
+//               // Send the token to your server and update the UI if necessary
+//               // ...
+//               console.log('current token: ', currentToken);
+//           } else {
+//               // Show permission request UI
+//               console.log('No registration token available. Request permission to generate one.');
+//               // ...
+//           }
+//           }).catch((err) => {
+//               console.log('An error occurred while retrieving token. ', err);
+//               // ...
+//           });
+//     }
+//   })
+// }
+// requestPermission()
+export { db, storage, messaging }

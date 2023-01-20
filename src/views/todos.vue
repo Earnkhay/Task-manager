@@ -190,7 +190,7 @@ import addModal from '@/components/addModal.vue'
 import navBar from '@/components/UI/navbar.vue'
 import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy, } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query } from "firebase/firestore";
 
 @Options({
     components: {
@@ -211,7 +211,7 @@ export default class todos extends Vue {
     currentTask
     lastdoc 
     toastIcon = ''
-    navTitle = "Tasks Created"
+    navTitle = "Task Created"
     toastTitle = ''
     viewTitle = ""
     viewPriority = ""

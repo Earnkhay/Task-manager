@@ -68,6 +68,8 @@ import toast from '@/components/UI/toast.vue'
 import { collection, addDoc, query, getDocs } from "firebase/firestore";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import { getMessaging, getToken } from "firebase/messaging";
+// import { requestPermission } from 'firebase-messaging-sw'
 
 @Options({
     components: {
@@ -98,6 +100,7 @@ export default class addModal extends Vue {
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `tasks`)
+    messaging = getMessaging();
 
     addTask(){
         if(this.newTask && this.dueDate && this.startDate && this.selected) {
@@ -128,6 +131,7 @@ export default class addModal extends Vue {
             this.toastTitle = 'Please add required fields'
             this.toastShow = true
         }
+        
     }
 
     async mounted(){
@@ -141,13 +145,36 @@ export default class addModal extends Vue {
         const user = {
             id: doc.id,
             email: doc.data().email,
-            // name: doc.data().name,
         }
         fbUsers.push(user)
-        // console.log(doc.id, " => ", doc.data());
       });
       this.options = fbUsers
+      
+    //   this.requestPermission()
     }
+
+    // requestPermission() {
+    //     console.log('Requesting permission...');
+    //     Notification.requestPermission().then((permission) => {
+    //         if (permission === 'granted') {
+    //         console.log('Notification permission granted.');
+    //         getToken(this.messaging, {vapidKey: "BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4"}).then((currentToken) => {
+    //             if (currentToken) {
+    //                 // Send the token to your server and update the UI if necessary
+    //                 // ...
+    //                 console.log('current token', currentToken);
+    //             } else {
+    //                 // Show permission request UI
+    //                 console.log('No registration token available. Request permission to generate one.');
+    //                 // ...
+    //             }
+    //             }).catch((err) => {
+    //             console.log('An error occurred while retrieving token. ', err);
+    //             // ...
+    //             });
+    //         }
+    //     })
+    // }
 
     email ({ email }) {
       return `${email}`

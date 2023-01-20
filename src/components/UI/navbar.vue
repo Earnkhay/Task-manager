@@ -1,15 +1,15 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-white p-3 navpad border-bottom shadow">
+    <nav class="navbar navbar-expand bg-white p-3 navpad border-bottom shadow">
       <div class="container">
         <button class="border-light menubar rounded-2 bg-transparent" @click="$store.commit('toggleSidebar')">
             <i class="fa-solid fa-bars text-secondary fs-4"></i>   
         </button>
-        <router-link class="navbar-brand fw-bold navtitle" :to="{name: 'dashboard'}">{{navTitle}}</router-link>
-        <button class="navbar-toggler p-0 border-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <router-link class="navbar-brand fw-bold navtitle ms-4" :to="{name: 'dashboard'}">{{navTitle}}</router-link>
+        <!-- <button class="navbar-toggler p-0 border-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        </button> -->
+        <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 mt-2">
             <li class="nav-item mt-1">
               <div class="p-2">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -20,20 +20,20 @@
                 <i class="fa-regular fa-bell"></i>
               </div>
             </li>
-            <li class="nav-item mt-1 ms-1">
+            <!-- <li class="nav-item mt-1 ms-1">
               <router-link class="nav-link link-dark fw-bold" :to="{name: 'profile'}">
                 <i class="fa-solid fa-gear"></i>
               </router-link>
-            </li>
+            </li> -->
             <li class="nav-item px-2 avatar">
               <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'profile'}">
                 <img :src="photoURL" alt="avatar" v-if="photoURL"  width="35" height="35" class="rounded-circle bg-transparent">
                 <img src="@/assets/undraw_Pic_profile_re_7g2h.png" v-else alt="avatar" width="35" height="35" class="rounded-circle bg-transparent">
-                <span class="ms-2">{{ name }}</span>
+                <span class="ms-2 name">{{ name }}</span>
               </router-link>
             </li>
           </ul>
-        </div>
+        <!-- </div> -->
       </div>
     </nav>
 </template>
@@ -105,12 +105,26 @@ export default class navBar extends Vue {
         display: block;
     }
 }
-@media screen and (max-width: 400px){
+@media screen and (max-width: 528px){
+    .name{
+      display: none;
+    }
+}
+@media (min-width: 300px) and (max-width: 400px){
     .navtitle{
-      font-size: 12px;
+      font-size: 17px;
     }
     .navpad{
       padding: 10px 0px !important;
     }
 }
+@media screen and (max-width: 299px){
+    .navtitle{
+      font-size: 15px;
+    }
+    .navpad{
+      padding: 10px 0px !important;
+    }
+}
+
 </style>
