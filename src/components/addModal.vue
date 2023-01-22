@@ -68,8 +68,8 @@ import toast from '@/components/UI/toast.vue'
 import { collection, addDoc, query, getDocs } from "firebase/firestore";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import { getMessaging, getToken } from "firebase/messaging";
-// import { requestPermission } from 'firebase-messaging-sw'
+// import { getMessaging, onMessage } from "firebase/messaging";
+// import { onBackgroundMessage } from "firebase/messaging/sw";
 
 @Options({
     components: {
@@ -100,7 +100,7 @@ export default class addModal extends Vue {
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `tasks`)
-    messaging = getMessaging();
+    // messaging = getMessaging();
 
     addTask(){
         if(this.newTask && this.dueDate && this.startDate && this.selected) {
@@ -149,32 +149,23 @@ export default class addModal extends Vue {
         fbUsers.push(user)
       });
       this.options = fbUsers
-      
-    //   this.requestPermission()
-    }
+    //   onMessage(this.messaging, (payload) => {
+    //     console.log('Message received. ', payload);
+    //     // ...
+    //   });
+    //   onBackgroundMessage(this.messaging, (payload) => {
+    //     console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    //     // Customize notification here
+    //     const notificationTitle = 'Background Message Title';
+    //     const notificationOptions = {
+    //         body: 'Background Message body.',
+    //         icon: '/firebase-logo.png'
+    //     };
 
-    // requestPermission() {
-    //     console.log('Requesting permission...');
-    //     Notification.requestPermission().then((permission) => {
-    //         if (permission === 'granted') {
-    //         console.log('Notification permission granted.');
-    //         getToken(this.messaging, {vapidKey: "BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4"}).then((currentToken) => {
-    //             if (currentToken) {
-    //                 // Send the token to your server and update the UI if necessary
-    //                 // ...
-    //                 console.log('current token', currentToken);
-    //             } else {
-    //                 // Show permission request UI
-    //                 console.log('No registration token available. Request permission to generate one.');
-    //                 // ...
-    //             }
-    //             }).catch((err) => {
-    //             console.log('An error occurred while retrieving token. ', err);
-    //             // ...
-    //             });
-    //         }
-    //     })
-    // }
+    //     self.registration.showNotification(notificationTitle,
+    //         notificationOptions);
+    //     });
+    }
 
     email ({ email }) {
       return `${email}`
