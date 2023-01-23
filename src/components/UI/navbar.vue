@@ -4,7 +4,7 @@
         <button class="border-light menubar rounded-2 bg-transparent" @click="$store.commit('toggleSidebar')">
             <i class="fa-solid fa-bars text-secondary fs-4"></i>   
         </button>
-        <router-link class="navbar-brand fw-bold navtitle ms-4" :to="{name: 'dashboard'}">{{navTitle}}</router-link>
+        <router-link class="navbar-brand fw-bold navtitle ms-3" :to="{name: 'dashboard'}">{{navTitle}}</router-link>
         <!-- <button class="navbar-toggler p-0 border-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button> -->
@@ -15,16 +15,20 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
               </div>
             </li>
-            <li class="nav-item mt-1 ms-1">
-              <div class="py-2">
-                <i class="fa-regular fa-bell"></i>
-              </div>
+            <li class="nav-item mt-1 ms-1 dropdown">
+                <div class="py-2" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                  <i class="fa-regular fa-bell" @click="notificationSeen = false"></i>
+                  <span v-if="notificationSeen" class="position-absolute top-2 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                  </span>
+                </div>
+              
+                <ul class="dropdown-menu dropdown-menu-end" >
+                  <li><h6 class="dropdown-header">Notification</h6></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li v-for="(task, id) in tasks" :key="id"><p class="dropdown-item" href="#">A new task was assigned by <br> {{ task.createdByName }} on {{ task.startdate }}</p></li>
+                </ul>
             </li>
-            <!-- <li class="nav-item mt-1 ms-1">
-              <router-link class="nav-link link-dark fw-bold" :to="{name: 'profile'}">
-                <i class="fa-solid fa-gear"></i>
-              </router-link>
-            </li> -->
             <li class="nav-item px-2 avatar">
               <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'profile'}">
                 <img :src="photoURL" alt="avatar" v-if="photoURL"  width="35" height="35" class="rounded-circle bg-transparent">
@@ -42,7 +46,7 @@
 import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged  } from '@firebase/auth';
 import { db } from "@/firebase"
-import { onSnapshot, doc } from "firebase/firestore";
+import { collection, onSnapshot, doc, where, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
   props: {
@@ -54,6 +58,14 @@ export default class navBar extends Vue {
     auth = getAuth()
     photoURL = ""
     name = ""
+    auth = getAuth()
+    user = this.auth.currentUser
+    id = this.user.uid
+    notificationSeen = true
+    tasks = []
+    createdBy = ""
+    todosCollectionRef = collection(db, `tasks`)
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(7));
     // $store: any;
     // mounted(){
     //   setTimeout(
@@ -68,12 +80,34 @@ export default class navBar extends Vue {
         if(user.displayName != null && user.photoURL != null){
                 this.name = user.displayName,
                 this.photoURL = user.photoURL
-            }else{
-                onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
-                    this.name = doc.data().name
-                    this.photoURL = doc.data().photoURL
-                })
-            }
+        }else{
+            onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
+                this.name = doc.data().name
+                this.photoURL = doc.data().photoURL
+            })
+        }
+        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+          const fbTasks = []
+          querySnapshot.forEach((doc) => {
+              const startdate = new Date(doc.data().startdate.seconds * 1000);
+              const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+              if (doc.data().assignedTo == this.id) {
+                  const task = {
+                      id: doc.id,
+                      title: doc.data().title,
+                      startdate: formattedStartDate,
+                      priority: doc.data().priority,
+                      status: doc.data().status,
+                      desc: doc.data().desc,
+                      date: Date.now(),
+                      day: this.day,
+                      createdByName: doc.data().createdByName,
+                  }
+                  fbTasks.push(task)
+              }
+          })
+              this.tasks = fbTasks
+        })
       }
     })
   }

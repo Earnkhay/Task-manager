@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getMessaging, getToken,  } from "firebase/messaging";
+// import { getMessaging, getToken, Messaging,  } from "firebase/messaging";
 import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
@@ -22,36 +22,25 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-const messaging = getMessaging(app);
+// const messaging = getMessaging(app);
 
-function requestPermission() {
-  // console.log('Requesting permission...');
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      // console.log('Notification permission granted.');
-      getToken(messaging, { vapidKey: 'BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4' }).then((currentToken) => {
-          if (currentToken) {
-              // Send the token to your server and update the UI if necessary
-              // ...
-              // console.log('current token: ', currentToken);
-          } else {
-              // Show permission request UI
-              console.log('No registration token available. Request permission to generate one.');
-              // ...
-          }
-          }).catch((err) => {
-              console.log('An error occurred while retrieving token. ', err);
-              // ...
-          });
-    }
-  })
-}
-requestPermission()
+// function requestPermission() {
+//   // console.log('Requesting permission...');
+//   Notification.requestPermission().then((permission) => {
+//     if (permission === 'granted') {
+//       // console.log('Notification permission granted.');
+//       getToken(messaging, { vapidKey: 'BO4apUIK8YveU7oSf8QdysYObEHYnp5jp-ezxHvaKSzXs7IU12d_ZM4rgMA7ecUBr3YygkZdTDOzd5SdpSl7yp4' }).then((currentToken) => {
+//           if (currentToken) {
+//               // console.log('current token: ', currentToken);
+//           } else {
+//               console.log('No registration token available. Request permission to generate one.');
+//           }
+//           }).catch((err) => {
+//               console.log('An error occurred while retrieving token. ', err);
+//           });
+//     }
+//   })
+// }
+// requestPermission()
 
-// navigator.serviceWorker.register('/firebase-messaging-sw.js')
-//   .then((registration) => {
-//     console.log('Service worker registered:', registration);
-//   }).catch(err => {
-//     console.log(`Service Worker Error: ${err}`);
-//   });
-export { db, storage, messaging }
+export { db, storage, analytics }
