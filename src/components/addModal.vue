@@ -61,15 +61,13 @@
 <script>
 import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase"
-import { getAuth } from "firebase/auth"
 // import nkselector from '@/components/UI/nkselector.vue'
 import VueMultiselect from 'vue-multiselect'
 import toast from '@/components/UI/toast.vue'
-import { collection, addDoc, query, getDocs } from "firebase/firestore";
+import { collection, addDoc, query, getDocs, onSnapshot, doc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-// import { getMessaging, onMessage } from "firebase/messaging";
-// import { onBackgroundMessage } from "firebase/messaging/sw";
 
 @Options({
     components: {
@@ -83,6 +81,8 @@ export default class addModal extends Vue {
     description = ""
     startDate = ""
     dueDate = ""
+    createdEmail = ""
+    createdName = ""
     priority = ""
     tasks = []
     selected = []
@@ -100,7 +100,38 @@ export default class addModal extends Vue {
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `tasks`)
-    // messaging = getMessaging();
+    
+
+    async mounted(){
+      const citiesRef = collection(db, "users");
+      const q = query(citiesRef);
+
+      const querySnapshot = await getDocs(q);
+
+      const fbUsers = []
+      querySnapshot.forEach((doc) => {
+        const user = {
+            id: doc.id,
+            email: doc.data().email,
+            name: doc.data().name,
+        }
+        fbUsers.push(user)
+      });
+      this.options = fbUsers
+
+      onAuthStateChanged(this.auth, (user) => {
+            if (user) {
+                this.createdEmail = user.email;
+                if(user.displayName != null){
+                    this.createdName = user.displayName
+                }else {
+                    onSnapshot(doc(db, "users", user.uid), (doc) => {
+                        this.createdName = doc.data().name
+                    })
+                }
+            }
+        });
+    }
 
     addTask(){
         if(this.newTask && this.dueDate && this.startDate && this.selected) {
@@ -112,10 +143,13 @@ export default class addModal extends Vue {
                 priority: this.priority,
                 status: this.status,
                 createdBy: this.id,
+                createdByEmail: this.createdEmail,
+                createdByName: this.createdName,
                 assignedTo: this.selected.id,
+                assignedToEmail: this.selected.email,
                 date: Date.now(),
                 day: this.day,
-                // month: this.month
+                month: this.month
             })
             this.toastIcon = 'success'
             this.toastTitle = 'Task added successfully'
@@ -132,39 +166,6 @@ export default class addModal extends Vue {
             this.toastShow = true
         }
         
-    }
-
-    async mounted(){
-      const citiesRef = collection(db, "users");
-      const q = query(citiesRef);
-
-      const querySnapshot = await getDocs(q);
-
-      const fbUsers = []
-      querySnapshot.forEach((doc) => {
-        const user = {
-            id: doc.id,
-            email: doc.data().email,
-        }
-        fbUsers.push(user)
-      });
-      this.options = fbUsers
-    //   onMessage(this.messaging, (payload) => {
-    //     console.log('Message received. ', payload);
-    //     // ...
-    //   });
-    //   onBackgroundMessage(this.messaging, (payload) => {
-    //     console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    //     // Customize notification here
-    //     const notificationTitle = 'Background Message Title';
-    //     const notificationOptions = {
-    //         body: 'Background Message body.',
-    //         icon: '/firebase-logo.png'
-    //     };
-
-    //     self.registration.showNotification(notificationTitle,
-    //         notificationOptions);
-    //     });
     }
 
     email ({ email }) {

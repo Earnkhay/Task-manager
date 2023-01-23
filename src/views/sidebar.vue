@@ -33,7 +33,7 @@
                         </li>
                         <li>
                             <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold">
-                                Tasks Assigned
+                                Your Tasks
                             </router-link>
                         </li>
                     </ul>

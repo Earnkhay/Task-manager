@@ -190,7 +190,7 @@ import addModal from '@/components/addModal.vue'
 import navBar from '@/components/UI/navbar.vue'
 import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
@@ -230,7 +230,8 @@ export default class todos extends Vue {
     user = this.auth.currentUser
     id = this.user.uid
     todosCollectionRef = collection(db, `tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, where("createdBy", "==", this.id), limit(25),);
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(25));
+    todosCollectionQueries = query(this.todosCollectionRef, where("createdBy", "==", this.id));
     statusList = [ 
         {sText: 'Not started'},
         {sText: 'In progress'},
@@ -248,6 +249,7 @@ export default class todos extends Vue {
                     const formattedDate = duedate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const startdate = new Date(doc.data().startdate.seconds * 1000);
                     const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    if (doc.data().createdBy == this.id) {
                         const task = {
                             id: doc.id,
                             title: doc.data().title,
@@ -259,6 +261,7 @@ export default class todos extends Vue {
                             createdBy: doc.data().createdBy,
                         }
                         fbTasks.push(task)
+                    }
                 })
                     this.tasks = fbTasks
                     this.spinnerShow = false
@@ -281,7 +284,7 @@ export default class todos extends Vue {
     }
 
     viewAll(){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+        onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().duedate.seconds * 1000);
@@ -300,7 +303,7 @@ export default class todos extends Vue {
             })
     }
     filterStatus(status){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+        onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().duedate.seconds * 1000);
@@ -322,7 +325,7 @@ export default class todos extends Vue {
     }
 
     filterPriority(priority){
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
+        onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
             const fbTasks = []
             querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().duedate.seconds * 1000);
@@ -397,7 +400,7 @@ export default class todos extends Vue {
             const date = new Date(docSnap.data().duedate.seconds * 1000);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
-                this.createdBy = doc.data().email
+                this.createdBy = doc.data().name
             })
             this.viewTitle = docSnap.data().title
             this.viewPriority = docSnap.data().priority
