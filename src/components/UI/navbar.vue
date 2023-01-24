@@ -17,8 +17,8 @@
             </li>
             <li class="nav-item mt-1 ms-1 dropdown">
                 <div class="py-2" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                  <i class="fa-regular fa-bell" @click="tasks.length == 0"></i>
-                  <span  v-if="tasks.length != 0" class="position-absolute top-2 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                  <i class="fa-regular fa-bell" @click="notificationSeen = false"></i>
+                  <span  v-if="notificationSeen" class="position-absolute top-2 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                     <span class="visually-hidden">New alerts</span>
                   </span>
                 </div>
@@ -65,7 +65,7 @@ export default class navBar extends Vue {
     tasks = []
     createdBy = ""
     todosCollectionRef = collection(db, `tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(7));
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
     // $store: any;
     // mounted(){
     //   setTimeout(
@@ -90,7 +90,7 @@ export default class navBar extends Vue {
           const fbTasks = []
           querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().date);
-                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'short' });
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' });
               if (doc.data().assignedTo == this.id) {
                   const task = {
                       id: doc.id,
