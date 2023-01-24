@@ -52,7 +52,7 @@
     </div>
 
     <div class="container mb-3" v-if="tasks.length != 0">
-        <div class="row justify-content-center chart">
+        <div class="row justify-content-center align-items-center">
             <div class="col-md-6 donut">
                 <vue-apex-charts width="380" type="donut" :options="chartOptions" :series="statusCount"> </vue-apex-charts>
             </div>
@@ -267,8 +267,7 @@ export default class dashboard extends Vue {
                 }
             }],
             colors: ['#dc3545', '#ffc107', '#808080'] 
-        }
-        
+        } 
 
 }
 </script>
@@ -278,7 +277,27 @@ export default class dashboard extends Vue {
         text-shadow: 1px 3px rgba(0, 0, 0, 0.35);
     }
 
-    @media screen and (max-width: 399px){
+    @media (min-width: 395px) and (max-width: 480px){
+       .piechart{
+         margin-left: 70px;
+         margin-top: 12px;
+       }
+       .donut{
+         margin-left: 70px;
+       }
+    }
+    @media (min-width: 341px) and (max-width: 394px){
+       .piechart{
+         margin-left: 50px;
+         margin-right: 35px;
+         margin-top: 12px;
+       }
+       .donut{
+         margin-left: 50px;
+         margin-right: 35px;
+       }
+    }
+    @media screen and (max-width: 340px){
        h5{
         font-size: 22px !important;
         text-align: center;
@@ -288,17 +307,14 @@ export default class dashboard extends Vue {
         overflow: hidden;
        }
 
-       .chart{
-        display: flex;
-        justify-content: center;
-       }
-
        .piechart{
-         margin-right: 30px;
+         margin-left: 10px;
+         margin-right: 45px;
          margin-top: 12px;
        }
        .donut{
-         margin-right: 30px;
+         margin-left: 10px;
+         margin-right: 45px;
        }
     }
 </style>

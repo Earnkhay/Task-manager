@@ -18,7 +18,7 @@
             <li class="nav-item mt-1 ms-1 dropdown">
                 <div class="py-2" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                   <i class="fa-regular fa-bell" @click="notificationSeen = false"></i>
-                  <span v-if="notificationSeen" class="position-absolute top-2 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                  <span  v-if="notificationSeen" class="position-absolute top-2 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                     <span class="visually-hidden">New alerts</span>
                   </span>
                 </div>
@@ -26,7 +26,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" >
                   <li><h6 class="dropdown-header">Notification</h6></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li v-for="(task, id) in tasks" :key="id"><p class="dropdown-item" href="#">A new task was assigned by <br> {{ task.createdByName }} on {{ task.startdate }}</p></li>
+                  <li v-for="(task, id) in tasks" :key="id"><p class="dropdown-item" href="#">A new task was assigned to you by <br> {{ task.createdByName }} on {{ task.date }}</p></li>
                 </ul>
             </li>
             <li class="nav-item px-2 avatar">
@@ -46,7 +46,7 @@
 import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged  } from '@firebase/auth';
 import { db } from "@/firebase"
-import { collection, onSnapshot, doc, where, limit, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, doc, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
   props: {
@@ -65,7 +65,7 @@ export default class navBar extends Vue {
     tasks = []
     createdBy = ""
     todosCollectionRef = collection(db, `tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(7));
+    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
     // $store: any;
     // mounted(){
     //   setTimeout(
@@ -89,17 +89,16 @@ export default class navBar extends Vue {
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
           const fbTasks = []
           querySnapshot.forEach((doc) => {
-              const startdate = new Date(doc.data().startdate.seconds * 1000);
-              const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const date = new Date(doc.data().date);
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' });
               if (doc.data().assignedTo == this.id) {
                   const task = {
                       id: doc.id,
                       title: doc.data().title,
-                      startdate: formattedStartDate,
                       priority: doc.data().priority,
                       status: doc.data().status,
                       desc: doc.data().desc,
-                      date: Date.now(),
+                      date: formattedDate,
                       day: this.day,
                       createdByName: doc.data().createdByName,
                   }

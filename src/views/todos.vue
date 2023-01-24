@@ -399,14 +399,15 @@ export default class todos extends Vue {
         if (docSnap.exists()) {
             const date = new Date(docSnap.data().duedate.seconds * 1000);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
-                this.createdBy = doc.data().name
-            })
+            // onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
+            //     this.createdBy = doc.data().name
+            // })
             this.viewTitle = docSnap.data().title
             this.viewPriority = docSnap.data().priority
             this.viewStatus = docSnap.data().status
             this.viewDesc = docSnap.data().desc
             this.viewDuedate = formattedDate
+            this.createdBy = docSnap.data().createdByName
         }
     }
 
