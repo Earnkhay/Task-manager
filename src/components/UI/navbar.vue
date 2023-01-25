@@ -10,11 +10,11 @@
         </button> -->
         <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0 mt-2">
-            <li class="nav-item mt-1">
+            <!-- <li class="nav-item mt-1">
               <div class="p-2">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </div>
-            </li>
+            </li> -->
             <li class="nav-item mt-1 ms-1 dropdown">
                 <div class="py-2" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                   <i class="fa-regular fa-bell" @click="notificationSeen = false"></i>
@@ -26,7 +26,8 @@
                 <ul class="dropdown-menu dropdown-menu-end" >
                   <li><h6 class="dropdown-header">Notification</h6></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li v-for="(task, id) in tasks" :key="id"><p class="dropdown-item" href="#">A new task was assigned to you by <br> {{ task.createdByName }} on {{ task.date }}</p></li>
+                  <li v-if="tasks.length == 0"><p class="dropdown-item text-center" href="#">No notifications.</p></li>
+                  <li v-else v-for="(task, id) in tasks" :key="id"><p class="dropdown-item" href="#">New task was assigned to you by <br>{{ task.createdByName }} on {{ task.date }}</p></li>
                 </ul>
             </li>
             <li class="nav-item px-2 avatar">
@@ -90,7 +91,8 @@ export default class navBar extends Vue {
           const fbTasks = []
           querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().date);
-                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' });
+                // const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'short' });
+                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
               if (doc.data().assignedTo == this.id) {
                   const task = {
                       id: doc.id,
@@ -142,6 +144,10 @@ export default class navBar extends Vue {
     .name{
       display: none;
     }
+
+    p{
+      font-size: 12px;
+    }
 }
 @media (min-width: 300px) and (max-width: 400px){
     .navtitle{
@@ -157,6 +163,10 @@ export default class navBar extends Vue {
     }
     .navpad{
       padding: 10px 0px !important;
+    }
+
+    p{
+      font-size: 10px;
     }
 }
 

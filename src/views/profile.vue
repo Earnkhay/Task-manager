@@ -79,17 +79,21 @@ export default class profile extends Vue {
   created(){
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
-        onSnapshot(doc(db, `users/${this.id}`), (doc) => {
-            this.name = doc.data().name
-            this.role = doc.data().role
-        });
+        // onSnapshot(doc(db, `users/${this.id}`), (doc) => {
+        //     this.name = doc.data().name
+        //     this.role = doc.data().role
+        // });
         this.email = user.email;
-        if(user.displayName != null && user.photoURL != null){
+        if(user.displayName != null){
               this.photoURL = user.photoURL;
               this.name = user.displayName
+              onSnapshot(doc(db, `users/${this.id}`), (doc) => {
+                this.role = doc.data().role
+              })
           }else {
               onSnapshot(doc(db, "users", user.uid), (doc) => {
                   this.name = doc.data().name
+                  this.role = doc.data().role
               })
           }
       }
@@ -192,5 +196,10 @@ export default class profile extends Vue {
 <style scoped>
   #app{
     min-height: 100vh;
+  }
+  @media screen and (max-width: 405px){
+      p{
+        font-size: 13px;
+      }
   }
 </style>
