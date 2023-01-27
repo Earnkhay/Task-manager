@@ -257,7 +257,7 @@ export default class login extends Vue{
             .then(() => {
                 this.spinnerShow = true
                 this.toastIcon = 'success'
-                this.toastTitle = 'Signed in successfully'
+                this.toastTitle = 'Welcome to your Task manager app'
                 this.toastShow = true
                 this.$router.push('/')  
             })

@@ -43,7 +43,7 @@
     </nav>
 </template>
 
-<script>
+<script lang="ts">
 import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged  } from '@firebase/auth';
 import { db } from "@/firebase"
@@ -56,18 +56,19 @@ import { collection, onSnapshot, doc, limit, query, orderBy } from "firebase/fir
 })
 export default class navBar extends Vue {
     // navText = "emitted parameter"
-    auth = getAuth()
     photoURL = ""
     name = ""
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user.uid
+    // ? means a property is optional. a property can either have a value based on the type defined or its value can be undefined 
+    id = this.user?.uid
     notificationSeen = true
-    tasks = []
+    tasks: any = []
     createdBy = ""
     todosCollectionRef = collection(db, `tasks`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
-    // $store: any;
+    $store: any;
+    navTitle: any;
     // mounted(){
     //   setTimeout(
     //     () => {
@@ -77,18 +78,18 @@ export default class navBar extends Vue {
 
   mounted(){
     onAuthStateChanged(this.auth, (user) => {
-      if (user) {
+      if (user){
         if(user.displayName != null && user.photoURL != null){
-                this.name = user.displayName,
-                this.photoURL = user.photoURL
+            this.name = user.displayName,
+            this.photoURL = user.photoURL
         }else{
-            onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
-                this.name = doc.data().name
-                this.photoURL = doc.data().photoURL
-            })
-        }
+          onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
+              this.name = doc.data()?.name
+              this.photoURL = doc.data()?.photoURL
+          })
+      }
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-          const fbTasks = []
+          const fbTasks: { id: string; title: any; priority: any; status: any; desc: any; date: string; createdByName: any; }[] = []
           querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().date);
                 // const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'short' });
@@ -101,7 +102,6 @@ export default class navBar extends Vue {
                       status: doc.data().status,
                       desc: doc.data().desc,
                       date: formattedDate,
-                      day: this.day,
                       createdByName: doc.data().createdByName,
                   }
                   fbTasks.push(task)
