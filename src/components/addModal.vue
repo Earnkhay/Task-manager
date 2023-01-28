@@ -58,7 +58,7 @@
     </div>
 </template>
   
-<script>
+<script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase"
 // import nkselector from '@/components/UI/nkselector.vue'
@@ -81,12 +81,12 @@ export default class addModal extends Vue {
     description = ""
     startDate = ""
     dueDate = ""
-    createdEmail = ""
+    createdEmail: string|null = ""
     createdName = ""
     priority = ""
     tasks = []
-    selected = []
-    options = []
+    selected: any = []
+    options: object = []
     status = "Not started"
     toastIcon = ''
     toastTitle = ''
@@ -98,7 +98,7 @@ export default class addModal extends Vue {
     day = this.weekday[this.d.getDay()]
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user.uid
+    id = this.user?.uid
     todosCollectionRef = collection(db, `tasks`)
     
 
@@ -108,7 +108,7 @@ export default class addModal extends Vue {
 
       const querySnapshot = await getDocs(q);
 
-      const fbUsers = []
+      const fbUsers: { id: string; email: string; name: string; }[] = []
       querySnapshot.forEach((doc) => {
         const user = {
             id: doc.id,
@@ -126,7 +126,7 @@ export default class addModal extends Vue {
                     this.createdName = user.displayName
                 }else {
                     onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.createdName = doc.data().name
+                        this.createdName = doc.data()?.name
                     })
                 }
             }
@@ -168,8 +168,11 @@ export default class addModal extends Vue {
         
     }
 
-    email ({ email }) {
-      return `${email}`
+    // email ({ email }) {
+    //   return `${email}`
+    // }
+    email (option: { email: string; }) {
+      return `${option.email}`
     }
 
     clearAll() {

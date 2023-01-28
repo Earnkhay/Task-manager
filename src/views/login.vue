@@ -61,7 +61,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     // export default {
     //     name: 'loginPage',
     //     data(){
@@ -201,7 +201,7 @@ export default class login extends Vue{
         }
     }
 
-    async checkPageTypeAuth(pageType){
+    async checkPageTypeAuth(pageType: string){
         const formData = {
             email: this.email,
             password: this.password,

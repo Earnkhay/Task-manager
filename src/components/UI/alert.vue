@@ -6,17 +6,19 @@
 </template>
 
 <script lang="ts">
-    import {Options, Vue} from "vue-class-component"
-    @Options({
-        props: {
-            alertText: String,
-            alertType: String
-        }
-    })
-
-    export default class alert extends Vue {
-        
+import {Options, Vue} from "vue-class-component"
+@Options({
+    props: {
+        alertText: String,
+        alertType: String
     }
+})
+
+export default class alert extends Vue {
+    alertType!: string;
+    alertText: string|undefined;
+    
+}
 </script>
 
 <style scoped>

@@ -7,14 +7,15 @@
 </template>
 
 <script lang="ts">
-    import {Options, Vue} from "vue-class-component"
-    @Options({
-        props: {
-            spinnerSize: String,
-        }
-    })
-
-    export default class spinner extends Vue {
-        
+import {Options, Vue} from "vue-class-component"
+@Options({
+    props: {
+        spinnerSize: String,
     }
+})
+
+export default class spinner extends Vue {
+    spinnerSize!: string;
+    
+}
 </script>

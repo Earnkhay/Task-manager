@@ -117,14 +117,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/UI/navbar.vue"
 import spinner from '@/components/UI/spinner.vue'
 import addModal from '@/components/addModal.vue'
 import { getAuth, onAuthStateChanged, } from "firebase/auth"
 import { db } from "@/firebase"
-import { collection, doc, getDoc, onSnapshot, query, orderBy, limit, where} from "firebase/firestore"
+import { collection, doc, getDoc, onSnapshot, query, limit, where} from "firebase/firestore"
 
 @Options({
   components: {
@@ -144,10 +144,10 @@ export default class landingpage extends Vue {
     viewStatus = ""
     viewDesc = ""
     viewDuedate = ""
-    tasks = []
+    tasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string }[] = []
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user.uid
+    id = this.user!.uid
     d = new Date()
     hour = this.d.getHours()
     todosCollectionRef = collection(db, `tasks`)
@@ -175,7 +175,7 @@ export default class landingpage extends Vue {
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                const fbTasks = []
+                const fbTasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string }[] = []
                 querySnapshot.forEach((doc) => {
                     const date = new Date(doc.data().duedate.seconds * 1000);
                     const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -199,13 +199,13 @@ export default class landingpage extends Vue {
                     this.name = user.displayName
                 }else {
                     onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.name = doc.data().name
+                        this.name = doc.data()!.name
                     })
                 }
             }
         })
     }
-    async viewTask(id){
+    async viewTask(id: string){
         const docRef = doc(db, `tasks`, id );
         const docSnap = await getDoc(docRef);
 
@@ -213,7 +213,7 @@ export default class landingpage extends Vue {
             const date = new Date(docSnap.data().duedate.seconds * 1000);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
-                this.createdBy = doc.data().email
+                this.createdBy = doc.data()!.email
             })
             this.viewDuedate = formattedDate
             this.viewTitle = docSnap.data().title

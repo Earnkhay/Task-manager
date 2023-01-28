@@ -205,7 +205,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Options, Vue} from "vue-class-component"
 import { db } from "@/firebase"
 import spinner from '@/components/UI/spinner.vue'
@@ -229,10 +229,10 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, start
 export default class todos extends Vue {
     spinnerShow = false
     spinnerSize = "spinner-border-lg"
-    tasks = []
-    task
-    currentTask
-    lastdoc 
+    tasks: any = []
+    task: any
+    currentTask: { id: string; }|undefined;
+    lastdoc: any 
     toastIcon = ''
     toastTitle = ''
     viewTitle = ""
@@ -250,7 +250,7 @@ export default class todos extends Vue {
     editStatus = ""
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user.uid
+    id = this.user?.uid
     todosCollectionRef = collection(db, `tasks`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(25));
     todosCollectionQueries = query(this.todosCollectionRef, where("assignedTo", "==", this.id), limit(25));
@@ -260,6 +260,7 @@ export default class todos extends Vue {
         {sText: 'Completed'},
         // {sText: 'Overdue'}
     ]
+  $swal: any;
     // headers = [
     //       { text: "Recent Task", value: "title" },
     //       { text: "Priority", value: "priority"},
@@ -272,7 +273,7 @@ export default class todos extends Vue {
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                const fbTasks = []
+                const fbTasks: { id: string; title: string; duedate: string; startdate: string; priority: string; status: string; desc: string; createdBy: string; assignedTo: string; }[] = []
                 querySnapshot.forEach((doc) => {
                     // const date = new Date(doc.data().duedate);
                     const duedate = new Date(doc.data().duedate.seconds * 1000);
@@ -296,12 +297,12 @@ export default class todos extends Vue {
                 })
                     this.tasks = fbTasks
                     this.spinnerShow = false
-                    const overdueTasks = this.tasks.filter(task => {
+                    const overdueTasks = this.tasks.filter((task: { duedate: string|number|Date; }) => {
                         const currentDate = new Date();
                         const duedate = new Date(task.duedate);
                         return currentDate > duedate;
                     });
-                    overdueTasks.forEach(task => {
+                    overdueTasks.forEach((task: { status: string; id: string; }) => {
                         if(task.status != 'Completed'){
                             task.status = 'Overdue';
                             updateDoc(doc(db, `tasks`, task.id), {
@@ -314,37 +315,37 @@ export default class todos extends Vue {
         })
     }
 
-    async nextTableData(){
-        let next
-        const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
-        const documentSnapshots = await getDocs(first);
+    // async nextTableData(){
+    //     let next
+    //     const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
+    //     const documentSnapshots = await getDocs(first);
 
-        // Get the last visible document
-        this.lastdoc = documentSnapshots.docs[documentSnapshots.docs.length-1];
+    //     // Get the last visible document
+    //     this.lastdoc = documentSnapshots.docs[documentSnapshots.docs.length-1];
 
-        // Construct a new query starting at this document,
-        if (this.lastdoc) {
-            next = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc), limit(20));
-        } 
+    //     // Construct a new query starting at this document,
+    //     if (this.lastdoc) {
+    //         next = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(this.lastdoc), limit(20));
+    //     } 
                 
-        onSnapshot(next, (querySnapshot) => {
-            const fbTasks = [] 
-            querySnapshot.forEach((doc) => {
-                const date = new Date(doc.data().duedate.seconds * 1000);
-                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: formattedDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-            })
-                this.tasks = fbTasks
-        })
-    }
+    //     onSnapshot(next, (querySnapshot) => {
+    //         const fbTasks = [] 
+    //         querySnapshot.forEach((doc) => {
+    //             const date = new Date(doc.data().duedate.seconds * 1000);
+    //             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    //                 const task = {
+    //                     id: doc.id,
+    //                     title: doc.data().title,
+    //                     duedate: formattedDate,
+    //                     priority: doc.data().priority,
+    //                     status: doc.data().status,
+    //                     desc: doc.data().desc
+    //                 }
+    //                 fbTasks.push(task)
+    //         })
+    //             this.tasks = fbTasks
+    //     })
+    // }
     // async nextTableData() {
     //     let next
     //     let lastdoc
@@ -380,43 +381,43 @@ export default class todos extends Vue {
     //     })
     // }
 
-    async previous(){
-        let prev
-        let prevdoc
-        const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
-        const documentSnapshots = await getDocs(first);
+    // async previous(){
+    //     let prev
+    //     let prevdoc
+    //     const first = query(this.todosCollectionRef, orderBy("date", "desc"), limit(20))
+    //     const documentSnapshots = await getDocs(first);
 
-        prevdoc = documentSnapshots.docs[0];
+    //     prevdoc = documentSnapshots.docs[0];
 
-        if (prevdoc) {
-            prev = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(prevdoc), limit(20));
-        } else {
-            //
-        }
+    //     if (prevdoc) {
+    //         prev = query(this.todosCollectionRef, orderBy("date", "desc"), startAfter(prevdoc), limit(20));
+    //     } else {
+    //         //
+    //     }
         
-        onSnapshot(prev, (querySnapshot) => {
-            const fbTasks = [] 
-            querySnapshot.forEach((doc) => {
-                const date = new Date(doc.data().duedate.seconds * 1000);
-                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const task = {
-                        id: doc.id,
-                        title: doc.data().title,
-                        duedate: formattedDate,
-                        priority: doc.data().priority,
-                        status: doc.data().status,
-                        desc: doc.data().desc
-                    }
-                    fbTasks.push(task)
-            })
-                this.tasks = fbTasks
-                this.spinnerShow = false
-        })
-    }
+    //     onSnapshot(prev, (querySnapshot) => {
+    //         const fbTasks = [] 
+    //         querySnapshot.forEach((doc) => {
+    //             const date = new Date(doc.data().duedate.seconds * 1000);
+    //             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    //                 const task = {
+    //                     id: doc.id,
+    //                     title: doc.data().title,
+    //                     duedate: formattedDate,
+    //                     priority: doc.data().priority,
+    //                     status: doc.data().status,
+    //                     desc: doc.data().desc
+    //                 }
+    //                 fbTasks.push(task)
+    //         })
+    //             this.tasks = fbTasks
+    //             this.spinnerShow = false
+    //     })
+    // }
 
     viewAll(){
         onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
-            const fbTasks = []
+            const fbTasks: { id: string; title: any; duedate: string; priority: any; status: any; desc: any; }[] = []
             querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -455,10 +456,10 @@ export default class todos extends Vue {
     //             this.tasks = fbTasks
     //     })
     // }
-    filterStatus(status){
+    filterStatus(status: string){
         // const q = query(this.todosCollectionRef, where("status", "==", status));
         onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
-            const fbTasks = []
+            const fbTasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string; }[] = []
             querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -478,9 +479,9 @@ export default class todos extends Vue {
         })
     }
 
-    filterPriority(priority){
+    filterPriority(priority: string){
         onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
-            const fbTasks = []
+            const fbTasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string; }[] = []
             querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -500,8 +501,8 @@ export default class todos extends Vue {
         })
     }
 
-    editTask(id){
-        const taskToUpdate = this.tasks.find((task) => task.id === id)
+    editTask(id: string){
+        const taskToUpdate = this.tasks.find((task: { id: string; }) => task.id === id)
         this.editTitle = taskToUpdate.title,
         this.editPriority = taskToUpdate.priority,
         this.editDesc = taskToUpdate.desc,
@@ -510,7 +511,7 @@ export default class todos extends Vue {
         this.currentTask = taskToUpdate
     }
 
-    updateStatus(id, status){
+    updateStatus(id: string, status: string){
         updateDoc(doc(db, `tasks`, id), {
             status: status,
         });
@@ -538,7 +539,7 @@ export default class todos extends Vue {
         const duedate = new Date(this.editDuedate);
         const startdate = new Date(this.editStartdate);
 
-        await updateDoc(doc(db, `tasks`, this.currentTask.id), {
+        await updateDoc(doc(db, `tasks`, this.currentTask!.id), {
             title: this.editTitle,
             priority: this.editPriority,
             desc: this.editDesc,
@@ -551,7 +552,7 @@ export default class todos extends Vue {
         this.displayToast()
     }
 
-    async viewTask(id){
+    async viewTask(id: string){
         const docRef = doc(db, `tasks`, id );
         const docSnap = await getDoc(docRef);
 
@@ -567,7 +568,7 @@ export default class todos extends Vue {
         }
     }
 
-    deleteTask(id){
+    deleteTask(id: string){
         deleteDoc(doc(db, `tasks`, id));
         this.toastIcon = 'success'
         this.toastTitle = 'Task deleted successfully'

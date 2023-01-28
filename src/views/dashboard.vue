@@ -73,7 +73,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import {Options, Vue} from "vue-class-component"
     import navBar from "@/components/UI/navbar.vue"
     import VueApexCharts from "vue3-apexcharts"
@@ -91,19 +91,19 @@
 export default class dashboard extends Vue {
         name = ""
         navTitle = "My Dashboard"
-        tasks = []
-        notStartedTasks = []
-        inProgressTasks = []
-        completedTasks = []
-        overdueTasks = []
-        highTasks = []
-        mediumTasks = []
-        lowTasks = []
+        tasks: { title: string }[] = []
+        notStartedTasks: { status: string }[] = []
+        inProgressTasks: { status: string }[] = []
+        completedTasks: { status: string }[] = []
+        overdueTasks: { status: string }[] = []
+        highTasks: { priority: string }[] = []
+        mediumTasks: { priority: string }[] = []
+        lowTasks: { priority: string }[] = []
         auth = getAuth()
         user = this.auth.currentUser
-        id = this.user.uid
-        statusCount= []
-        priorityCount= []
+        id = this.user!.uid
+        statusCount: number[] = []
+        priorityCount: number[] = []
         todosCollectionRef = collection( db, `tasks` )
         todosCollectionQuery = query(this.todosCollectionRef, where("assignedTo", "==", this.id))
 
@@ -116,7 +116,7 @@ export default class dashboard extends Vue {
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fbTasks = []
+                    const fbTasks: { title: string }[] = []
                     querySnapshot.forEach((doc) => {
                         const task = {
                             title: doc.data().title
@@ -126,7 +126,7 @@ export default class dashboard extends Vue {
                         this.tasks = fbTasks
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fbnotStartedTasks = []
+                    const fbnotStartedTasks: { status: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'Not started'){
                           const task = {
@@ -140,7 +140,7 @@ export default class dashboard extends Vue {
                         // console.log(fbnotStartedTasks, 'not started', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fbinProgressTasks = []
+                    const fbinProgressTasks: { status: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'In progress'){
                           const task = {
@@ -154,7 +154,7 @@ export default class dashboard extends Vue {
                         // console.log(fbinProgressTasks, 'In Progress', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fbcompletedTasks = []
+                    const fbcompletedTasks: { status: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'Completed'){
                           const task = {
@@ -168,7 +168,7 @@ export default class dashboard extends Vue {
                         // console.log(fbcompletedTasks, 'Completed', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fboverdueTasks = []
+                    const fboverdueTasks: { status: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().status == 'Overdue'){
                           const task = {
@@ -182,7 +182,7 @@ export default class dashboard extends Vue {
                         // console.log(fboverdueTasks, 'overdue', this.statusCount);
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fbHighTasks = []
+                    const fbHighTasks: { priority: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().priority == 'High'){
                           const task = {
@@ -195,7 +195,7 @@ export default class dashboard extends Vue {
                         this.priorityCount.push(fbHighTasks.length)
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fbmediumTasks = []
+                    const fbmediumTasks: { priority: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().priority == 'Medium'){
                           const task = {
@@ -208,7 +208,7 @@ export default class dashboard extends Vue {
                         this.priorityCount.push(fbmediumTasks.length)
                     })
                     onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                    const fblowTasks = []
+                    const fblowTasks: { priority: string }[] = []
                     querySnapshot.forEach((doc) => {
                         if(doc.data().priority == 'Low'){
                           const task = {
@@ -226,7 +226,7 @@ export default class dashboard extends Vue {
                         // this.navTitle = `Welcome back, ${user.displayName}`
                     }else {
                         onSnapshot(doc(db, "users", user.uid), (doc) => {
-                            this.name = doc.data().name
+                            this.name = doc.data()?.name
                             // this.navTitle = `Welcome back, ${doc.data().name}`
                         })
                     }

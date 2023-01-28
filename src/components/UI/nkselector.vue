@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import VueMultiselect from 'vue-multiselect'
 import { db } from "@/firebase"
@@ -27,14 +27,14 @@ import { collection, query, getDocs } from "firebase/firestore";
 })
 export default class nkselector extends Vue {
     selected = ''
-    options = []
+    options: object = []
     async mounted(){
       const citiesRef = collection(db, "users");
       const q = query(citiesRef);
 
       const querySnapshot = await getDocs(q);
 
-      const fbUsers = []
+      const fbUsers: { id: string; email: string; name: string; }[] = []
       querySnapshot.forEach((doc) => {
         const user = {
             id: doc.id,
@@ -42,12 +42,14 @@ export default class nkselector extends Vue {
             name: doc.data().name,
         }
         fbUsers.push(user)
-        // console.log(doc.id, " => ", doc.data());
       });
       this.options = fbUsers
     }
-    email ({ email }) {
-      return `${email}`
+    // email ({ email }) {
+    //   return `${email}`
+    // }
+    email (option: { email: string; }) {
+      return `${option.email}`
     }
 }
 </script>

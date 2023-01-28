@@ -63,7 +63,7 @@
   
 </template>
 
-<script>
+<script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import toast from '@/components/UI/toast.vue'
 import { getAuth, signOut } from "firebase/auth";
@@ -76,7 +76,7 @@ import { getAuth, signOut } from "firebase/auth";
 export default class sidebar extends Vue {
     auth = getAuth();
     user = this.auth.currentUser
-    id = this.user.uid
+    id = this.user!.uid
     sidebarVisible = true
     minitodos = false
     name = ""
@@ -85,6 +85,7 @@ export default class sidebar extends Vue {
     toastIcon = ''
     toastTitle = ''
     toastShow = false
+     $store: any;
 
     // handleResize() {
     //     if (window.innerWidth <= 1000) {
