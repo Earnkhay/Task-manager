@@ -146,7 +146,7 @@ export default class profile extends Vue {
 
     // Delete the file
     deleteObject(imageRef).then(() => {
-      (<HTMLInputElement>document.getElementById('imageInput')).value = '';
+      (document.getElementById('imageInput')as HTMLInputElement).value = ''
       this.toastShow = true
       this.toastIcon = 'success'
       this.toastTitle = 'Image deleted successfully'
@@ -185,7 +185,7 @@ export default class profile extends Vue {
     updateDoc(doc(db, `users/${this.id}`), {
         photoURL: this.photoURL,
     });
-    (<HTMLInputElement>document.getElementById('imageInput')).value = '';
+    (document.getElementById('imageInput')as HTMLInputElement).value = '';
     this.toastIcon = 'success'
     this.toastTitle = 'Avatar uploaded successfully'
     this.toastShow = true

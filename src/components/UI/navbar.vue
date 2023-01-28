@@ -79,15 +79,21 @@ export default class navBar extends Vue {
   mounted(){
     onAuthStateChanged(this.auth, (user) => {
       if (user){
-        if(user.displayName != null && user.photoURL != null){
-            this.name = user.displayName,
+        if(user.displayName != null){
+          this.name = user.displayName
+          if(user.photoURL != null && this.photoURL == ""){
             this.photoURL = user.photoURL
+          }else{
+            onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
+              this.photoURL = doc.data()?.photoURL
+            })
+          }
         }else{
           onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
               this.name = doc.data()?.name
-              this.photoURL = doc.data()?.photoURL
+                this.photoURL = doc.data()?.photoURL
           })
-      }
+         }
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
           const fbTasks: { id: string; title: string; priority: string; status: string; desc: string; date: string; createdByName: string; }[] = []
           querySnapshot.forEach((doc) => {
