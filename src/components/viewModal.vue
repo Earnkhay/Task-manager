@@ -42,7 +42,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase.js"
 import { doc, getDoc} from "firebase/firestore"
@@ -56,8 +56,9 @@ export default class viewModal extends Vue {
     viewPriority = ""
     viewStatus = ""
     viewDesc = ""
+    id: any;
 
-    async viewTask(id){
+    async viewTask(id: string){
         const docRef = doc(db, `users/${this.id}/tasks`, id );
         const docSnap = await getDoc(docRef);
 

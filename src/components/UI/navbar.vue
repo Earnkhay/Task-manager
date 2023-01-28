@@ -68,7 +68,7 @@ export default class navBar extends Vue {
     todosCollectionRef = collection(db, `tasks`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
     $store: any;
-    navTitle: any;
+    navTitle!: string;
     // mounted(){
     //   setTimeout(
     //     () => {
@@ -89,7 +89,7 @@ export default class navBar extends Vue {
           })
       }
         onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-          const fbTasks: { id: string; title: any; priority: any; status: any; desc: any; date: string; createdByName: any; }[] = []
+          const fbTasks: { id: string; title: string; priority: string; status: string; desc: string; date: string; createdByName: string; }[] = []
           querySnapshot.forEach((doc) => {
                 const date = new Date(doc.data().date);
                 // const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'short' });

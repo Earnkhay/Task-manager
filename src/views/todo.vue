@@ -16,7 +16,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Options, Vue} from "vue-class-component"
 import navBar from "@/components/UI/navbar.vue"
 import todos from '@/components/todos.vue'
@@ -38,16 +38,16 @@ export default class todo extends Vue {
     name = ""
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user.uid
+    id = this.user!.uid
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
     mounted(){ 
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
-                if(this.user.displayName != null){
-                    this.name = this.user.displayName
+                if(user.displayName != null){
+                    this.name = user.displayName
                 }else {
                     onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.name = doc.data().name
+                        this.name = doc.data()!.name
                     })
                 }
             }
