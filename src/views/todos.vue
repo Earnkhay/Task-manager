@@ -110,10 +110,10 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <h6 class="fw-bold">Assigned By</h6>
+                    <h6 class="fw-bold">Assigned To</h6>
                 </div>
                 <div class="col-md-9">
-                    <p> {{createdBy}}  </p>
+                    <p> {{assignedTo}}  </p>
                 </div>
             </div>
             <div class="row">
@@ -165,6 +165,16 @@
                 </select>
             </div>
             <div class="mb-3">
+                <label for="selector" class="form-label">Assign Task</label>
+                <VueMultiselect
+                    v-model="selected"
+                    :options="options"
+                    :custom-label="email"
+                    track-by="email"
+                    label="email"
+                />
+            </div>
+            <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="editDesc"></textarea>
             </div>
@@ -185,17 +195,18 @@ import spinner from '@/components/UI/spinner.vue'
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import EasyDataTable from 'vue3-easy-data-table';
-import nkselector from '@/components/UI/nkselector.vue'
+// import nkselector from '@/components/UI/nkselector.vue'
+import VueMultiselect from 'vue-multiselect'
 import addModal from '@/components/addModal.vue'
 import navBar from '@/components/UI/navbar.vue'
 import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, getDocs, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
         spinner,
-        nkselector,
+        VueMultiselect,
         Datepicker,
         EasyDataTable,
         addModal,
@@ -218,7 +229,9 @@ export default class todos extends Vue {
     viewStatus = ""
     viewDesc = ""
     viewDuedate = ""
-    createdBy = ""
+    selected: any = []
+    options: object = []
+    assignedTo = ""
     date = ""
     editTitle = ""
     editPriority = ""
@@ -282,6 +295,24 @@ export default class todos extends Vue {
                 })
             }
         })
+    }
+
+    async created(){
+        const usersRef = collection(db, "users");
+        const q = query(usersRef);
+
+        const querySnapshot = await getDocs(q);
+
+        const fbUsers: { id: string; email: string; name: string; }[] = []
+        querySnapshot.forEach((doc) => {
+            const user = {
+                id: doc.id,
+                email: doc.data().email,
+                name: doc.data().name,
+            }
+            fbUsers.push(user)
+        });
+        this.options = fbUsers
     }
 
     viewAll(){
@@ -362,6 +393,9 @@ export default class todos extends Vue {
             status: status,
         });
     }
+    email (option: { email: string; }) {
+      return `${option.email}`
+    }
 
     displayToast() {
         this.$swal.mixin({
@@ -386,6 +420,9 @@ export default class todos extends Vue {
             desc: this.editDesc,
             duedate: duedate,
             startdate: startdate,
+            assignedTo: this.selected.id,
+            assignedToEmail: this.selected.email,
+            assignedToName: this.selected.name,
         });
         this.toastIcon = 'success'
         this.toastTitle = 'Task updated successfully'
@@ -400,15 +437,15 @@ export default class todos extends Vue {
         if (docSnap.exists()) {
             const date = new Date(docSnap.data().duedate.seconds * 1000);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            // onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
-            //     this.createdBy = doc.data().name
+            // onSnapshot(doc(db, "users", docSnap.data().assignedTo), (doc) => {
+            //     this.assignedTo = doc.data()?.name
             // })
             this.viewTitle = docSnap.data().title
             this.viewPriority = docSnap.data().priority
             this.viewStatus = docSnap.data().status
             this.viewDesc = docSnap.data().desc
             this.viewDuedate = formattedDate
-            this.createdBy = docSnap.data().createdByName
+            this.assignedTo = docSnap.data().assignedToName
         }
     }
 
