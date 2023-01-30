@@ -1,6 +1,6 @@
 <template>
-    <nav-bar :navTitle="navTitle"/>
     <div id="app">
+        <nav-bar :navTitle="navTitle"/>
        <div class="d-flex justify-content-end mb-3 container mt-5">
             <i class="fa-solid text-primary fs-2 mt-3 fa-circle-plus add-icon"  data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
         </div>
@@ -207,9 +207,9 @@ export default class todos extends Vue {
     spinnerShow = false
     spinnerSize = "spinner-border-lg"
     tasks: any = []
-    task: any
+    // task: any
     currentTask: { id: string; }|undefined
-    lastdoc: any 
+    // lastdoc: any 
     toastIcon = ''
     navTitle = "Task Created"
     toastTitle = ''
@@ -228,7 +228,7 @@ export default class todos extends Vue {
     editStatus = ""
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user!.uid
+    id = this.user?.uid
     todosCollectionRef = collection(db, `tasks`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(25));
     todosCollectionQueries = query(this.todosCollectionRef, where("createdBy", "==", this.id));

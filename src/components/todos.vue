@@ -215,7 +215,7 @@ import EasyDataTable from 'vue3-easy-data-table';
 import nkselector from '@/components/UI/nkselector.vue'
 import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, startAfter, getDocs, limit, query, orderBy, } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query, orderBy, } from "firebase/firestore";
 
 @Options({
     components: {
@@ -260,7 +260,7 @@ export default class todos extends Vue {
         {sText: 'Completed'},
         // {sText: 'Overdue'}
     ]
-  $swal: any;
+    $swal: any;
     // headers = [
     //       { text: "Recent Task", value: "title" },
     //       { text: "Priority", value: "priority"},

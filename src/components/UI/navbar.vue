@@ -5,10 +5,6 @@
             <i class="fa-solid fa-bars text-secondary fs-4"></i>   
         </button>
         <router-link class="navbar-brand fw-bold navtitle ms-3" :to="{name: 'dashboard'}">{{navTitle}}</router-link>
-        <!-- <button class="navbar-toggler p-0 border-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button> -->
-        <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0 mt-2">
             <!-- <li class="nav-item mt-1">
               <div class="p-2">
@@ -16,19 +12,7 @@
               </div>
             </li> -->
             <li class="nav-item mt-1 ms-1 dropdown">
-                <div class="py-2" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                  <i class="fa-regular fa-bell" @click="notificationSeen = false"></i>
-                  <span  v-if="notificationSeen" class="position-absolute top-2 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    <span class="visually-hidden">New alerts</span>
-                  </span>
-                </div>
-              
-                <ul class="dropdown-menu dropdown-menu-end" >
-                  <li><h6 class="dropdown-header">Notification</h6></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li v-if="tasks.length == 0"><p class="dropdown-item text-center" href="#">No notifications.</p></li>
-                  <li v-else v-for="(task, id) in tasks" :key="id"><p class="dropdown-item" href="#">New task was assigned to you by <br>{{ task.createdByName }} on {{ task.date }}</p></li>
-                </ul>
+                <notification/>
             </li>
             <li class="nav-item px-2 avatar">
               <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'profile'}">
@@ -38,7 +22,6 @@
               </router-link>
             </li>
           </ul>
-        <!-- </div> -->
       </div>
     </nav>
 </template>
@@ -47,34 +30,31 @@
 import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged  } from '@firebase/auth';
 import { db } from "@/firebase"
-import { collection, onSnapshot, doc, limit, query, orderBy } from "firebase/firestore";
+import notification from '@/components/UI/notification.vue'
+import { collection, onSnapshot, doc, limit, query, orderBy, updateDoc } from "firebase/firestore";
 
 @Options({
   props: {
     navTitle: String,
+  },
+  components: {
+    notification
   }
 })
 export default class navBar extends Vue {
-    // navText = "emitted parameter"
-    photoURL = ""
-    name = ""
-    auth = getAuth()
-    user = this.auth.currentUser
-    // ? means a property is optional. a property can either have a value based on the type defined or its value can be undefined 
-    id = this.user?.uid
-    notificationSeen = true
-    tasks: any = []
-    createdBy = ""
-    todosCollectionRef = collection(db, `tasks`)
-    todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
-    $store: any;
-    navTitle!: string;
-    // mounted(){
-    //   setTimeout(
-    //     () => {
-    //     this.$emit('actionText', this.navText);
-    //   },5000)
-    // }
+  photoURL = ""
+  name = ""
+  auth = getAuth()
+  user = this.auth.currentUser
+  // ? means a property is optional. a property can either have a value based on the type defined or its value can be undefined 
+  id = this.user?.uid
+  tasks: { id: string; title: string; priority: string; status: string; desc: string; date: string; createdByName: string; viewed: boolean;}[] = []
+  createdBy = ""
+  todosCollectionRef = collection(db, `tasks`)
+  todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
+  $store: any;
+  navTitle!: string;
+  task: any;
 
   mounted(){
     onAuthStateChanged(this.auth, (user) => {
@@ -94,39 +74,10 @@ export default class navBar extends Vue {
                 this.photoURL = doc.data()?.photoURL
           })
          }
-        onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-          const fbTasks: { id: string; title: string; priority: string; status: string; desc: string; date: string; createdByName: string; }[] = []
-          querySnapshot.forEach((doc) => {
-                const date = new Date(doc.data().date);
-                // const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', weekday: 'short' });
-                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'});
-              if (doc.data().assignedTo == this.id) {
-                  const task = {
-                      id: doc.id,
-                      title: doc.data().title,
-                      priority: doc.data().priority,
-                      status: doc.data().status,
-                      desc: doc.data().desc,
-                      date: formattedDate,
-                      createdByName: doc.data().createdByName,
-                  }
-                  fbTasks.push(task)
-              }
-          })
-              this.tasks = fbTasks
-        })
       }
     })
   }
-  
-  // logOutAction(){
-  //   signOut(this.auth).then(() => {
-  //     this.$router.push("/login")
-  //   })
-  //   .catch(() => {
-  //     // console.error(error, 'what is the error')
-  //   });
-  // }
+
 }
 </script>
 
@@ -134,7 +85,7 @@ export default class navBar extends Vue {
 .avatar a:hover{
   color: red !important;
 }
-.avatar{
+.avatar, p:hover{
   cursor: pointer;
 }
 .menubar{
@@ -175,5 +126,4 @@ export default class navBar extends Vue {
       font-size: 10px;
     }
 }
-
 </style>

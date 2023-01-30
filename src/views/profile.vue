@@ -62,7 +62,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "fire
 export default class profile extends Vue {
   auth = getAuth();
   user = this.auth.currentUser
-  id = this.user!.uid
+  id = this.user?.uid
   navTitle = "My Profile"
   name = ""
   role = ""
@@ -84,16 +84,16 @@ export default class profile extends Vue {
         //     this.role = doc.data().role
         // });
         this.email = user.email;
-        if(user.displayName != null && user.photoURL != null){
+        if(user.displayName != null && user.photoURL){
               this.photoURL = user.photoURL;
               this.name = user.displayName
-              onSnapshot(doc(db, `users/${this.id}`), (doc) => {
-                this.role = doc.data()!.role
-              })
+              // onSnapshot(doc(db, `users/${this.id}`), (doc) => {
+              //   this.role = doc.data()?.role
+              // })
           }else {
               onSnapshot(doc(db, "users", user.uid), (doc) => {
-                  this.name = doc.data()!.name
-                  this.role = doc.data()!.role
+                  this.name = doc.data()?.name
+                  this.role = doc.data()?.role
               })
           }
       }
@@ -103,10 +103,11 @@ export default class profile extends Vue {
   async uploadImage() {
     // const file = document.getElementById('imageInput').files[0];
     const file = (document.getElementById('imageInput') as HTMLInputElement).files![0];
+    
     const storageRef = ref(this.storage, 'avatar/' + file.name);
 
     // 'file' comes from the Blob or File API
-    await uploadBytes(storageRef, file).then((snapshot) => {
+    await uploadBytes(storageRef, file).then(() => {
         // this.images.push(snapshot);
         // this.fileName = snapshot.metadata.name
         this.toastIcon = 'success'

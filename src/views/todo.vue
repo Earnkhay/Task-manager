@@ -38,7 +38,7 @@ export default class todo extends Vue {
     name = ""
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user!.uid
+    id = this.user?.uid
     todosCollectionRef = collection(db, `users/${this.id}/tasks`)
     mounted(){ 
         onAuthStateChanged(this.auth, (user) => {
@@ -47,7 +47,7 @@ export default class todo extends Vue {
                     this.name = user.displayName
                 }else {
                     onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.name = doc.data()!.name
+                        this.name = doc.data()?.name
                     })
                 }
             }

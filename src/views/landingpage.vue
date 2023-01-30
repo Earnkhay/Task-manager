@@ -147,7 +147,7 @@ export default class landingpage extends Vue {
     tasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string }[] = []
     auth = getAuth()
     user = this.auth.currentUser
-    id = this.user!.uid
+    id = this.user?.uid
     d = new Date()
     hour = this.d.getHours()
     todosCollectionRef = collection(db, `tasks`)
@@ -199,7 +199,7 @@ export default class landingpage extends Vue {
                     this.name = user.displayName
                 }else {
                     onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.name = doc.data()!.name
+                        this.name = doc.data()?.name
                     })
                 }
             }
@@ -213,7 +213,7 @@ export default class landingpage extends Vue {
             const date = new Date(docSnap.data().duedate.seconds * 1000);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             onSnapshot(doc(db, "users", docSnap.data().createdBy), (doc) => {
-                this.createdBy = doc.data()!.email
+                this.createdBy = doc.data()?.email
             })
             this.viewDuedate = formattedDate
             this.viewTitle = docSnap.data().title
