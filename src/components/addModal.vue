@@ -99,12 +99,11 @@ export default class addModal extends Vue {
     auth = getAuth()
     user = this.auth.currentUser
     id = this.user?.uid
-    todosCollectionRef = collection(db, `tasks`)
-    
+    todosCollectionRef = collection(db, `tasks`) 
 
     async mounted(){
-      const citiesRef = collection(db, "users");
-      const q = query(citiesRef);
+      const usersRef = collection(db, "users");
+      const q = query(usersRef);
 
       const querySnapshot = await getDocs(q);
 
@@ -147,6 +146,7 @@ export default class addModal extends Vue {
                 createdByName: this.createdName,
                 assignedTo: this.selected.id,
                 assignedToEmail: this.selected.email,
+                viewed: false,
                 date: Date.now(),
                 day: this.day,
                 month: this.month
