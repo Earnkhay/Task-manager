@@ -38,7 +38,7 @@ export default class chart extends Vue {
             this.statusCount = this.$store.state.statusCount
             this.priorityCount = this.$store.state.priorityCount
 
-            console.log(this.statusCount, this.$store.state.priorityCount, 'from chart.vue', this.$store.state.tasks)
+            // console.log(this.statusCount, this.$store.state.priorityCount, 'from chart.vue', this.$store.state.tasks)
         })
         .catch((error: any) => {
             console.error(error)
