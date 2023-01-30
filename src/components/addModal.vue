@@ -42,7 +42,6 @@
                     track-by="email"
                     label="email"
                 />
-                <!-- {{ selected.id }} -->
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
@@ -146,6 +145,7 @@ export default class addModal extends Vue {
                 createdByName: this.createdName,
                 assignedTo: this.selected.id,
                 assignedToEmail: this.selected.email,
+                assignedToname: this.selected.name,
                 viewed: false,
                 date: Date.now(),
                 day: this.day,
