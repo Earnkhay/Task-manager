@@ -41,7 +41,7 @@
                                         <button class="btn bg-transparent text-dark googleBtn" @click.prevent="signUpWithGoogle">
                                             <spinner v-if="spinnerShows" :spinnerSize="spinnerSize"/>
                                             <div v-else>
-                                                {{pageType == "signUp" ? "Sign Up with Google" : "Sign In with Google"}}
+                                                Sign In with Google
                                             </div>
                                         </button>
                                     </div>
@@ -96,9 +96,9 @@ import alert from '@/components/UI/alert.vue'
 import axios from 'axios'
 import spinner from '@/components/UI/spinner.vue'
 import toast from '@/components/UI/toast.vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged} from "firebase/auth";
 import { db } from "@/firebase"
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot, getDoc } from "firebase/firestore";
 
 @Options({
     components: {
@@ -118,6 +118,7 @@ export default class login extends Vue{
     toastTitle = ''
     toastShow = false
     name = ""
+    role = ""
     newUser = ""
     email = ""
     password = ""
@@ -257,7 +258,7 @@ export default class login extends Vue{
             .then(() => {
                 this.spinnerShow = true
                 this.toastIcon = 'success'
-                this.toastTitle = 'Welcome to your Task manager app'
+                this.toastTitle = 'Welcome to your Tictask'
                 this.toastShow = true
                 this.$router.push('/')  
             })
@@ -303,22 +304,30 @@ export default class login extends Vue{
         }
     }
 
-    signUpWithGoogle(){
+    async signUpWithGoogle(){
         const provider = new GoogleAuthProvider();
         signInWithPopup(getAuth(), provider)
-            .then(() => {
+            .then(async () => {
                 const auth = getAuth();
                 const user = auth.currentUser;
                 if (user) {
-                    setDoc(doc(db, "users", user.uid), {
-                        name: user.displayName,
-                        email: user.email,
-                        uid: user.uid
-                    });
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                    //   console.log("Document data:", docSnap.data());
+                    } else {
+                        setDoc(doc(db, "users", user.uid), {
+                            name: user.displayName,
+                            email: user.email,
+                            uid: user.uid,
+                        });
+                    }
+                    
                 }
                 this.spinnerShows = true
                 this.toastIcon = 'success'
-                this.toastTitle = 'Welcome to your Task manager app'
+                this.toastTitle = 'Welcome to your Tictask'
                 this.toastShow = true
                 this.$router.push('/') 
             })

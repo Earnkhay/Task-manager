@@ -22,7 +22,8 @@
         </div>
         
         <form action="" v-if="profileDisplay">
-          <input class="form-control mb-3" type="text" v-model="name" placeholder="Name" aria-label="default input example">
+          <input class="form-control mb-3" type="text" v-model="name" placeholder="Name" aria-label="default input example" v-if="user?.displayName" readonly>
+          <input class="form-control mb-3" type="text" v-model="name" placeholder="Name" aria-label="default input example" v-else>
           <input class="form-control mb-3" type="text" v-model="role" placeholder="Your role in your team" aria-label="default input example">
           <!-- <input class="form-control mb-3" type="number" v-model="number" placeholder="Phone Number" aria-label="default input example"> -->
           <button type="button" class="btn btn-primary" @click="updateProfile">Save changes</button>
@@ -79,21 +80,18 @@ export default class profile extends Vue {
   created(){
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
-        // onSnapshot(doc(db, `users/${this.id}`), (doc) => {
-        //     this.name = doc.data().name
-        //     this.role = doc.data().role
-        // });
         this.email = user.email;
         if(user.displayName != null && user.photoURL){
               this.photoURL = user.photoURL;
               this.name = user.displayName
-              // onSnapshot(doc(db, `users/${this.id}`), (doc) => {
-              //   this.role = doc.data()?.role
-              // })
+              onSnapshot(doc(db, `users/${this.id}`), (doc) => {
+                  this.role = doc.data()?.role
+              })
           }else {
               onSnapshot(doc(db, "users", user.uid), (doc) => {
                   this.name = doc.data()?.name
                   this.role = doc.data()?.role
+                  this.photoURL = doc.data()?.photoURL
               })
           }
       }
