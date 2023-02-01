@@ -293,7 +293,6 @@ export default class todos extends Vue {
                             assignedTo: doc.data().assignedTo,
                         }
                         fbTasks.push(task)
-                        console.log(doc.data())                        
                     }
                 })
                     this.tasks = fbTasks

@@ -58,26 +58,14 @@ export default class navBar extends Vue {
 
   mounted(){
     onAuthStateChanged(this.auth, (user) => {
-      if (user){
-        if(user.displayName != null){
-          this.name = user.displayName
-          if(user.photoURL != null && this.photoURL == ""){
-            this.photoURL = user.photoURL
-          }else{
-            onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
-              this.photoURL = doc.data()?.photoURL
-            })
-          }
-        }else{
+      if (user) {
           onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
               this.name = doc.data()?.name
-                this.photoURL = doc.data()?.photoURL
+              this.photoURL = doc.data()?.photoURL
           })
-         }
       }
     })
   }
-
 }
 </script>
 

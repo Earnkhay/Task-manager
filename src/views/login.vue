@@ -225,6 +225,9 @@ export default class login extends Vue{
                 this.toastTitle = 'Signed up successfully'
                 this.toastShow = true
                 this.$router.push(`/`)
+                this.email = ''
+                this.name = ''
+                this.password = ''
             })
             .catch((err) => {
                 // this.alertTitle = err.code
@@ -321,6 +324,7 @@ export default class login extends Vue{
                             name: user.displayName,
                             email: user.email,
                             uid: user.uid,
+                            photoURL: user.photoURL
                         });
                     }
                     

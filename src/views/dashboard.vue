@@ -103,13 +103,9 @@ export default class dashboard extends Vue {
                     this.completedTasks = fbCompletedTasks
                     this.overdueTasks = fbOverdueTasks
                 })
-                if(user.displayName != null){
-                    this.name = user.displayName
-                }else {
-                    onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.name = doc.data()?.name
-                    })
-                }
+                onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
+                    this.name = doc.data()?.name
+                })
             }
         })
     }
