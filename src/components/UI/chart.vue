@@ -29,19 +29,15 @@ export default class chart extends Vue {
     tasks: { title: string }[] = []
     statusCount: number[] = []
     priorityCount: number[] = []
+    // eslint-disable-next-line
     $store: any
 
     created() {
-    this.$store.dispatch('getTasks')
+        this.$store.dispatch('getTasks')
         .then(() => {
             this.tasks = this.$store.state.tasks
             this.statusCount = this.$store.state.statusCount
             this.priorityCount = this.$store.state.priorityCount
-
-            // console.log(this.statusCount, this.$store.state.priorityCount, 'from chart.vue', this.$store.state.tasks)
-        })
-        .catch((error: any) => {
-            console.error(error)
         })
     }
 

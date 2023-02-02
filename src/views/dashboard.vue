@@ -9,7 +9,7 @@
                     <div class="card border-primary shadow">
                     <div class="card-body text-center">
                         <h4 class="card-title fw-bold">Not started</h4>
-                        <h1 class="card-text fw-bold data text-primary">{{ notStartedTasks.length }}</h1>
+                        <h1 class="card-text fw-bold data text-primary">{{ notStartedTasks }}</h1>
                     </div>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                     <div class="card border-warning shadow">
                     <div class="card-body text-center">
                         <h4 class="card-title fw-bold">In Progress</h4>
-                        <h1 class="card-text fw-bold data text-warning">{{ inProgressTasks.length }}</h1>
+                        <h1 class="card-text fw-bold data text-warning">{{ inProgressTasks }}</h1>
                     </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                     <div class="card border-success shadow">
                     <div class="card-body text-center">
                         <h4 class="card-title fw-bold">Completed</h4>
-                        <h1 class="card-text fw-bold data text-success">{{ completedTasks.length }}</h1>
+                        <h1 class="card-text fw-bold data text-success">{{ completedTasks }}</h1>
                     </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                     <div class="card border-danger shadow">
                     <div class="card-body text-center">
                         <h4 class="card-title fw-bold">Overdue</h4>
-                        <h1 class="card-text fw-bold data text-danger">{{ overdueTasks.length }}</h1>
+                        <h1 class="card-text fw-bold data text-danger">{{ overdueTasks }}</h1>
                     </div>
                     </div>
                 </div>
@@ -63,46 +63,29 @@ import { collection, doc, onSnapshot, query, where} from "firebase/firestore"
 export default class dashboard extends Vue {
     name = ""
     navTitle = "My Dashboard"
-    notStartedTasks: { status: string }[] = []
-    inProgressTasks: { status: string }[] = []
-    completedTasks: { status: string }[] = []
-    overdueTasks: { status: string }[] = []
+    notStartedTasks: number[] = []
+    inProgressTasks: number[] = []
+    completedTasks: number[] = []
+    overdueTasks: number[] = []
     auth = getAuth()
     user = this.auth.currentUser
     id = this.user?.uid
     todosCollectionRef = collection( db, `tasks` )
     todosCollectionQuery = query(this.todosCollectionRef, where("assignedTo", "==", this.id))
+    // eslint-disable-next-line
+    $store: any
 
-    created(){
+    created() {
+        this.$store.dispatch('getTasks')
+        .then(() => {
+            this.notStartedTasks = this.$store.state.statusCount[0]
+            this.inProgressTasks = this.$store.state.statusCount[1]
+            this.completedTasks = this.$store.state.statusCount[2]
+            this.overdueTasks = this.$store.state.statusCount[3]
+            // console.log(this.notStartedTasks, 'from chart.vue')
+        })
         onAuthStateChanged(this.auth, (user) => {
             if (user) {
-                onSnapshot(this.todosCollectionQuery, (querySnapshot) => {
-                const fbTasks: { title: string }[] = []
-                const fbNotStartedTasks: { status: string }[] = [];
-                const fbInProgressTasks: { status: string }[] = [];
-                const fbCompletedTasks: { status: string }[] = [];
-                const fbOverdueTasks: { status: string }[] = [];
-                querySnapshot.forEach((doc) => {
-                    switch (doc.data().status) {
-                        case "Not started":
-                            fbNotStartedTasks.push({ status: doc.data().status });
-                        break;
-                        case "In progress":
-                            fbInProgressTasks.push({ status: doc.data().status });
-                        break;
-                        case "Completed":
-                            fbCompletedTasks.push({ status: doc.data().status });
-                        break;
-                        case "Overdue":
-                            fbOverdueTasks.push({ status: doc.data().status });
-                        break;
-                    }
-                })
-                    this.notStartedTasks = fbNotStartedTasks
-                    this.inProgressTasks = fbInProgressTasks
-                    this.completedTasks = fbCompletedTasks
-                    this.overdueTasks = fbOverdueTasks
-                })
                 onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
                     this.name = doc.data()?.name
                 })

@@ -76,7 +76,7 @@ import { getAuth, signOut } from "firebase/auth";
 export default class sidebar extends Vue {
     auth = getAuth();
     user = this.auth.currentUser
-    id = this.user!.uid
+    id = this.user?.uid
     sidebarVisible = true
     minitodos = false
     name = ""
@@ -85,7 +85,8 @@ export default class sidebar extends Vue {
     toastIcon = ''
     toastTitle = ''
     toastShow = false
-     $store: any;
+    // eslint-disable-next-line
+    $store: any;
 
     // handleResize() {
     //     if (window.innerWidth <= 1000) {

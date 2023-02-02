@@ -37,7 +37,6 @@ export default class notifiction extends Vue {
   createdBy = ""
   todosCollectionRef = collection(db, `tasks`)
   todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
-  task: any;
 
   mounted(){
     onAuthStateChanged(this.auth, (user) => {
@@ -67,7 +66,7 @@ export default class notifiction extends Vue {
     })
   }
 
-  removeNotification(task: any) {
+  removeNotification(task: { id: string; }) {
     updateDoc(doc(db, `tasks`, task.id), {
        viewed: true
     });
