@@ -96,9 +96,9 @@ import alert from '@/components/UI/alert.vue'
 import axios from 'axios'
 import spinner from '@/components/UI/spinner.vue'
 import toast from '@/components/UI/toast.vue'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 import { db } from "@/firebase"
-import { doc, setDoc, onSnapshot, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 @Options({
     components: {

@@ -31,7 +31,7 @@ import {Options, Vue} from "vue-class-component"
 import { getAuth, onAuthStateChanged  } from '@firebase/auth';
 import { db } from "@/firebase"
 import notification from '@/components/UI/notification.vue'
-import { collection, onSnapshot, doc, limit, query, orderBy, updateDoc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
 
 @Options({
   props: {
@@ -47,14 +47,9 @@ export default class navBar extends Vue {
   auth = getAuth()
   user = this.auth.currentUser
   // ? means a property is optional. a property can either have a value based on the type defined or its value can be undefined 
-  id = this.user?.uid
-  tasks: { id: string; title: string; priority: string; status: string; desc: string; date: string; createdByName: string; viewed: boolean;}[] = []
-  createdBy = ""
-  todosCollectionRef = collection(db, `tasks`)
-  todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), limit(6));
+  // eslint-disable-next-line
   $store: any;
   navTitle!: string;
-  task: any;
 
   mounted(){
     onAuthStateChanged(this.auth, (user) => {

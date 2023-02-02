@@ -15,9 +15,10 @@ import {Options, Vue} from "vue-class-component"
 })
 
 export default class toast extends Vue {
+  // eslint-disable-next-line
   $swal: any;
-  icon: any;
-  title: any;
+  icon: string|undefined;
+  title: string|undefined;
   displayToast() {
     this.$swal.mixin({
       toast: true,

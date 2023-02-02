@@ -84,8 +84,9 @@ export default class addModal extends Vue {
     createdName = ""
     priority = ""
     tasks = []
+    // eslint-disable-next-line
     selected: any = []
-    options: object = []
+    options: { id: string; email: string; name: string; }[] = []
     status = "Not started"
     toastIcon = ''
     toastTitle = ''
@@ -120,13 +121,9 @@ export default class addModal extends Vue {
       onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 this.createdEmail = user.email;
-                if(user.displayName != null){
-                    this.createdName = user.displayName
-                }else {
-                    onSnapshot(doc(db, "users", user.uid), (doc) => {
-                        this.createdName = doc.data()?.name
-                    })
-                }
+                onSnapshot(doc(db, "users", user.uid), (doc) => {
+                    this.createdName = doc.data()?.name
+                })
             }
         });
     }

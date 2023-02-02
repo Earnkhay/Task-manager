@@ -32,13 +32,13 @@
                                 </div>
                                 <div class="dropstart">
                                     <li class="submenu"><a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown">Priority</a>
-                                        <ul class="dropdown-menu tablemenu">
-                                            <li><a class="dropdown-item text-danger fw-bold" @click="filterPriority('High')" href="#">High</a></li>
-                                            <li><a class="dropdown-item text-warning fw-bold" @click="filterPriority('Medium')" href="#">Medium</a></li>
-                                            <li><a class="dropdown-item text-secondary fw-bold" @click="filterPriority('Low')" href="#">Low</a></li>
-                                            <li><a class="dropdown-item fw-bold" @click="viewAll" href="#">All</a></li>
-                                        </ul>
-                                    </li>
+                                    <ul class="dropdown-menu tablemenu">
+                                        <li><a class="dropdown-item text-danger fw-bold" @click="filterPriority('High')" href="#">High</a></li>
+                                        <li><a class="dropdown-item text-warning fw-bold" @click="filterPriority('Medium')" href="#">Medium</a></li>
+                                        <li><a class="dropdown-item text-secondary fw-bold" @click="filterPriority('Low')" href="#">Low</a></li>
+                                        <li><a class="dropdown-item fw-bold" @click="viewAll" href="#">All</a></li>
+                                    </ul>
+                                </li>
                         </div>
                     </ul>
                         </div>
@@ -217,10 +217,8 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, getDo
 export default class todos extends Vue {
     spinnerShow = false
     spinnerSize = "spinner-border-lg"
-    tasks: any = []
-    // task: any
+    tasks: { id: string; title: string; duedate: string; startdate: string; priority: string; status: string; desc: string; createdBy: string; }[] = []
     currentTask: { id: string; }|undefined
-    // lastdoc: any 
     toastIcon = ''
     navTitle = "Task Created"
     toastTitle = ''
@@ -229,6 +227,7 @@ export default class todos extends Vue {
     viewStatus = ""
     viewDesc = ""
     viewDuedate = ""
+    // eslint-disable-next-line
     selected: any = []
     options: object = []
     assignedTo = ""
@@ -250,7 +249,8 @@ export default class todos extends Vue {
         {sText: 'In progress'},
         {sText: 'Completed'},
     ]
-  $swal: any;
+    // eslint-disable-next-line
+    $swal: any;
 
     mounted(){ 
         this.spinnerShow = true
@@ -317,17 +317,21 @@ export default class todos extends Vue {
 
     viewAll(){
         onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
-            const fbTasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string; }[] = []
+            const fbTasks: { id: string; title: string; duedate: string; startdate: string; priority: string; status: string; desc: string; createdBy: string; }[] = []
             querySnapshot.forEach((doc) => {
+                const startdate = new Date(doc.data().startdate.seconds * 1000);
+                const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
                         id: doc.id,
                         title: doc.data().title,
                         duedate: formattedDate,
+                        startdate: formattedStartDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
-                        desc: doc.data().desc
+                        desc: doc.data().desc,
+                        createdBy: doc.data().createdBy,
                     }
                 fbTasks.push(task)
             })
@@ -336,8 +340,10 @@ export default class todos extends Vue {
     }
     filterStatus(status: string){
         onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
-            const fbTasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string; }[] = []
+            const fbTasks: { id: string; title: string; duedate: string; startdate: string; priority: string; status: string; desc: string; createdBy: string; }[] = []
             querySnapshot.forEach((doc) => {
+                const startdate = new Date(doc.data().startdate.seconds * 1000);
+                const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 if (doc.data().status == status) {
@@ -345,9 +351,11 @@ export default class todos extends Vue {
                         id: doc.id,
                         title: doc.data().title,
                         duedate: formattedDate,
+                        startdate: formattedStartDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
-                        desc: doc.data().desc
+                        desc: doc.data().desc,
+                        createdBy: doc.data().createdBy,
                     }
                     fbTasks.push(task)
                 }
@@ -358,8 +366,10 @@ export default class todos extends Vue {
 
     filterPriority(priority: string){
         onSnapshot(this.todosCollectionQueries, (querySnapshot) => {
-            const fbTasks: { id: string; title: string; duedate: string; priority: string; status: string; desc: string; }[] = []
+            const fbTasks: { id: string; title: string; duedate: string; startdate: string; priority: string; status: string; desc: string; createdBy: string; }[] = []
             querySnapshot.forEach((doc) => {
+                const startdate = new Date(doc.data().startdate.seconds * 1000);
+                const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 if (doc.data().priority == priority) {
@@ -367,9 +377,11 @@ export default class todos extends Vue {
                         id: doc.id,
                         title: doc.data().title,
                         duedate: formattedDate,
+                        startdate: formattedStartDate,
                         priority: doc.data().priority,
                         status: doc.data().status,
-                        desc: doc.data().desc
+                        desc: doc.data().desc,
+                        createdBy: doc.data().createdBy,
                     }
                     fbTasks.push(task)
                 }
@@ -380,12 +392,14 @@ export default class todos extends Vue {
 
     editTask(id: string){
         const taskToUpdate = this.tasks.find((task: { id: string; }) => task.id === id)
-        this.editTitle = taskToUpdate.title,
-        this.editPriority = taskToUpdate.priority,
-        this.editDesc = taskToUpdate.desc,
-        this.editDuedate = taskToUpdate.duedate,
-        this.editStartdate = taskToUpdate.startdate,
-        this.currentTask = taskToUpdate
+        if(taskToUpdate != undefined){
+            this.editTitle = taskToUpdate.title,
+            this.editPriority = taskToUpdate.priority,
+            this.editDesc = taskToUpdate.desc,
+            this.editDuedate = taskToUpdate.duedate,
+            this.editStartdate = taskToUpdate.startdate,
+            this.currentTask = taskToUpdate
+        }
     }
 
     updateStatus(id: string, status: string){
