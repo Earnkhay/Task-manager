@@ -23,6 +23,7 @@
         
         <form action="" v-if="profileDisplay">
           <input class="form-control mb-3" type="text" v-model="name" placeholder="Name" aria-label="default input example">
+          <input class="form-control mb-3" type="text" v-model="team" placeholder="Name of your team" aria-label="default input example">
           <input class="form-control mb-3" type="text" v-model="role" placeholder="Your role in your team" aria-label="default input example">
           <!-- <input class="form-control mb-3" type="number" v-model="number" placeholder="Phone Number" aria-label="default input example"> -->
           <button type="button" class="btn btn-primary" @click="updateProfile">Save changes</button>
@@ -66,6 +67,7 @@ export default class profile extends Vue {
   navTitle = "My Profile"
   name = ""
   role = ""
+  team = ""
   email: string|null = ""
   images = []
   toastIcon = ''
@@ -83,6 +85,7 @@ export default class profile extends Vue {
         onSnapshot(doc(db, "users", user.uid), (doc) => {
             this.name = doc.data()?.name
             this.role = doc.data()?.role
+            this.team = doc.data()?.team
             this.photoURL = doc.data()?.photoURL
         })
       }
@@ -165,7 +168,8 @@ export default class profile extends Vue {
   updateProfile(){
     updateDoc(doc(db, `users/${this.id}`), {
         name: this.name,
-        role: this.role
+        role: this.role,
+        team: this.team.toLowerCase()
     })
     this.toastShow = true
     this.toastIcon = 'success'
@@ -188,11 +192,6 @@ export default class profile extends Vue {
   #app{
     min-height: 100vh;
   }
-  /* .active{
-    background-color: #C366FC;
-    color: white;
-    border-color: #C366FC;
-  } */
   @media screen and (max-width: 405px){
       p{
         font-size: 13px;

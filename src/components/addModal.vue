@@ -66,7 +66,7 @@ import { db } from "@/firebase"
 // import nkselector from '@/components/UI/nkselector.vue'
 import VueMultiselect from 'vue-multiselect'
 import toast from '@/components/UI/toast.vue'
-import { collection, addDoc, query, getDocs, onSnapshot, doc } from "firebase/firestore";
+import { collection, addDoc, query, getDocs, onSnapshot, doc, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -87,6 +87,7 @@ export default class addModal extends Vue {
     createdName = ""
     priority = ""
     tasks = []
+    team = ""
     // eslint-disable-next-line
     selected: any = []
     options: { id: string; email: string; name: string; }[] = []
@@ -103,32 +104,33 @@ export default class addModal extends Vue {
     user = this.auth.currentUser
     id = this.user?.uid
     todosCollectionRef = collection(db, `tasks`) 
-
-    async mounted(){
-      const usersRef = collection(db, "users");
-      const q = query(usersRef);
-
-      const querySnapshot = await getDocs(q);
-
-      const fbUsers: { id: string; email: string; name: string; }[] = []
-      querySnapshot.forEach((doc) => {
-        const user = {
-            id: doc.id,
-            email: doc.data().email,
-            name: doc.data().name,
-        }
-        fbUsers.push(user)
-      });
-      this.options = fbUsers
-
-      onAuthStateChanged(this.auth, (user) => {
+    
+    mounted(){
+        onAuthStateChanged(this.auth, (user) => {
             if (user) {
                 this.createdEmail = user.email;
                 onSnapshot(doc(db, "users", user.uid), (doc) => {
                     this.createdName = doc.data()?.name
+                    this.team = doc.data()?.team
+                })
+                const usersRef = collection(db, "users");
+                const q = query(usersRef);
+                onSnapshot(q, (querySnapshot) => {
+                    const fbUsers: { id: string; email: string; name: string; }[] = []
+                    querySnapshot.forEach((doc) => {
+                        if (doc.data().team == this.team) {
+                            const user = {
+                                id: doc.id,
+                                email: doc.data().email,
+                                name: doc.data().name,
+                            }
+                            fbUsers.push(user)
+                        }
+                    })
+                    this.options = fbUsers
                 })
             }
-        });
+        });        
     }
 
     addTask(){
@@ -185,4 +187,4 @@ export default class addModal extends Vue {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.css" scoped></style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -234,6 +234,7 @@ export default class todos extends Vue {
     editStartdate = ""
     editDesc = ""
     editStatus = ""
+    team = ""
     auth = getAuth()
     user = this.auth.currentUser
     id = this.user?.uid
@@ -293,22 +294,30 @@ export default class todos extends Vue {
         })
     }
 
-    async created(){
-        const usersRef = collection(db, "users");
-        const q = query(usersRef);
-
-        const querySnapshot = await getDocs(q);
-
-        const fbUsers: { id: string; email: string; name: string; }[] = []
-        querySnapshot.forEach((doc) => {
-            const user = {
-                id: doc.id,
-                email: doc.data().email,
-                name: doc.data().name,
+    created(){
+        onAuthStateChanged(this.auth, (user) => {
+            if (user) {
+                onSnapshot(doc(db, "users", user.uid), (doc) => {
+                    this.team = doc.data()?.team
+                })
+                const usersRef = collection(db, "users");
+                const q = query(usersRef);
+                onSnapshot(q, (querySnapshot) => {
+                    const fbUsers: { id: string; email: string; name: string; }[] = []
+                    querySnapshot.forEach((doc) => {
+                        if (doc.data().team == this.team) {
+                            const user = {
+                                id: doc.id,
+                                email: doc.data().email,
+                                name: doc.data().name,
+                            }
+                            fbUsers.push(user)
+                        }
+                    })
+                    this.options = fbUsers
+                })
             }
-            fbUsers.push(user)
-        });
-        this.options = fbUsers
+        });        
     }
 
     viewAll(){
