@@ -1,18 +1,11 @@
 <template>
     <div id="app">    
         <nav-bar :navTitle="navTitle"/>
-    <!-- <h1 class="text-center p-3 fw-bold text-success mt-2">Tasks</h1> -->
-
-    <!-- <h5 class="mb-3 fs-4 fw-bold container text-center mt-5">Hello <span class="text-success">{{ name }}</span>, Welcome to your Task Manager app</h5> -->
-
-        <div class="d-flex justify-content-end mb-3 container mt-5">
-            <i class="fa-solid text-primary fs-2 mt-3 fa-circle-plus add-icon"  data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
-        </div>
 
         <add-modal/>
         <div class="mb-4">
             <todos/>
-    </div>
+         </div>
     </div>
 </template>
 
@@ -59,9 +52,6 @@ export default class todo extends Vue {
 <style scoped>
 #app{
     min-height: 100vh;
-}
-.add-icon:hover{
-    cursor: pointer;
 }
 
 @media screen and (max-width: 294px) {

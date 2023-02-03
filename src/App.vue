@@ -3,25 +3,6 @@
 </template>
 
 <script lang="ts">
-// import loginPage from './components/login.vue'
-// import areaComp from './components/area.vue'
-// import navBar from './components/navbar.vue'
-// import myFooter from './components/footer.vue'
-import {Options, Vue} from "vue-class-component"
-
-// export default {
-//   name: 'App',
-//   components: {
-//     // loginPage,
-//     // navBar,
-//     // myFooter
-//   }
-// }
-@Options({
-  components: {}
-})
-
-export default class App extends Vue {}
 </script>
 
 <style>
@@ -31,5 +12,11 @@ export default class App extends Vue {}
   }
   i{
     cursor: pointer;
+  }
+  .color{
+    color: #C366FC;
+  }
+  .bg-color{
+      background-color: #C366FC;
   }
 </style>

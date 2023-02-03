@@ -188,6 +188,11 @@ export default class profile extends Vue {
   #app{
     min-height: 100vh;
   }
+  /* .active{
+    background-color: #C366FC;
+    color: white;
+    border-color: #C366FC;
+  } */
   @media screen and (max-width: 405px){
       p{
         font-size: 13px;

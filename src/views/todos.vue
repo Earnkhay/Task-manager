@@ -1,10 +1,6 @@
 <template>
     <div id="app">
-        <nav-bar :navTitle="navTitle"/>
-       <div class="d-flex justify-content-end mb-3 container mt-5">
-            <i class="fa-solid text-primary fs-2 mt-3 fa-circle-plus add-icon"  data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
-        </div>
-
+    <nav-bar :navTitle="navTitle"/>
     <add-modal/>
     <div class="container bg-light pb-4 rounded-2 cover">
         <table class="table table-sm table-hover" id="table_id" style="z-index: 1;">
@@ -497,9 +493,6 @@ export default class todos extends Vue {
         z-index: 1;
     }
 
-    i{
-        cursor: pointer;
-    }
     .flexbtn{
         display: block !important;
     }

@@ -1,5 +1,8 @@
 <template>
     <toast v-if="toastShow" :icon="toastIcon" :title="toastTitle"/>
+    <div class="d-flex justify-content-end mb-3 container mt-5">
+        <i class="fa-solid text-primary fs-2 mt-3 fa-circle-plus"  data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -50,7 +53,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearAll">Close</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click.prevent="addTask">Add</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click.prevent="addTask">Add Task</button>
         </div>
         </div>
     </div>
@@ -182,4 +185,4 @@ export default class addModal extends Vue {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css" scoped></style>
