@@ -28,12 +28,12 @@
                     <ul class="minitodos" v-if="minitodos">
                         <li>
                             <router-link :to="{name: 'todos'}" active-class="active" class="nav-link text-dark fw-bold">
-                                Tasks Created 
+                                Task Created 
                             </router-link>
                         </li>
                         <li>
                             <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold">
-                                Your Tasks
+                                My Task
                             </router-link>
                         </li>
                     </ul>
@@ -106,13 +106,9 @@ export default class sidebar extends Vue {
         window.addEventListener('resize', this.handleResize);
     }
 
-    // toggleSidebar() {
-    //     this.sidebarVisible = !this.sidebarVisible;
-    // }
-
     async logout(){
-        const auth = getAuth();
-        await signOut(auth).then(() => {
+        // const auth = getAuth();
+        await signOut(this.auth).then(() => {
             this.toastShow = true
             this.toastIcon = 'success'
             this.toastTitle = 'Logged out successfully'

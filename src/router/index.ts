@@ -1,50 +1,25 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import login from '@/views/login.vue'
 import notFoundPage from '@/views/notFoundPage.vue'
+import homepage from '@/views/homepage.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/main',
-    name: 'main',
-    component: () => import( '@/components/not-in-use/main.vue'),
-    // children: [
-    //   {
-    //     path: '/main',
-    //     name: 'exlandingpage',
-    //     component: () => import( '@/components/not-in-use/exlandingpage.vue'),
-    //   }
-    // ]
-  },
+  // {
+  //   path: '/main',
+  //   name: 'main',
+  //   component: () => import( '@/components/not-in-use/main.vue'),
+  // },
   {
     path: '/login',
     name: 'login',
     component: login,
   },
-  // {
-  //   path: '/dashboard',
-  //   name: 'dashboard',
-  //   component: () => import( '@/views/dashboard.vue'),
-  //   meta: {
-  //     requiresAuth: true,
-  //   }
-  // },
-  // {
-  //   path: '/',
-  //   name: 'landingpage',
-  //   component: () => import( '@/views/landingpage.vue'),
-  //   meta: {
-  //     requiresAuth: true,
-  //   }
-  // },
-  // {
-  //   path: '/todo',
-  //   name: 'todo',
-  //   component: () => import( '@/views/todo.vue'),
-  //   meta: {
-  //     requiresAuth: true,
-  //   },
-  // },
+  {
+    path: '/home',
+    name: 'homepage',
+    component: homepage,
+  },
   {
     path: '/',
     name: 'sidebar',
@@ -116,7 +91,7 @@ router.beforeEach(async (to, from, next) => {
     if (await getCurrentUser()) {
       next();
     }else{
-      next("/login")
+      next("/home")
     }
   } else {
     next();

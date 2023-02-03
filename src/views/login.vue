@@ -41,7 +41,7 @@
                                         <button class="btn bg-transparent text-dark googleBtn" @click.prevent="signUpWithGoogle">
                                             <spinner v-if="spinnerShows" :spinnerSize="spinnerSize"/>
                                             <div v-else>
-                                                Sign In with Google
+                                               <img src="../assets/icons8-google-48.png" class="bg-transparent" width="25" height="25" alt=""><span> Sign In with Google</span>
                                             </div>
                                         </button>
                                     </div>
