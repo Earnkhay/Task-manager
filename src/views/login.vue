@@ -221,13 +221,13 @@ export default class login extends Vue{
                     formData: formData
                 })
                 this.spinnerShow = true
+                this.email = ''
+                this.name = ''
+                this.password = ''
                 this.toastIcon = 'success'
                 this.toastTitle = 'Signed up successfully'
                 this.toastShow = true
                 this.$router.push(`/`)
-                this.email = ''
-                this.name = ''
-                this.password = ''
             })
             .catch((err) => {
                 // this.alertTitle = err.code
