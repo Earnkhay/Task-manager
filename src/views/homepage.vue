@@ -124,12 +124,19 @@ export default class homepage extends Vue {
     }
     
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
+    .tictask{
+        padding: 10px !important;
+        text-align: center;
+    }
     .nav-image {
         display: none;
     }
     .ticktask-img{
         margin-right: 0 !important;
+    }
+    .navbar-img{
+        max-width: 60%;
     }
 }
 @media (min-width: 413px) and (max-width: 554px) {
@@ -144,21 +151,14 @@ export default class homepage extends Vue {
     }
 }
 @media screen and (max-width: 412px) {
-    .tictask{
-        padding: 10px !important;
-        text-align: center;
-    }
     .tictask h1{
         font-size: 20px !important;
     }
     .tictask p{
         font-size: 16px !important;
     }
-    .navbar-img{
-        max-width: 70%;
-    }
 }
-@media screen and (max-width: 360px) {
+@media screen and (max-width: 351px) {
     .iv{
         margin-top: 10px !important;
         margin-right: 8px !important;
@@ -170,7 +170,6 @@ export default class homepage extends Vue {
     }
     .todo-app{
         padding: 0px !important;
-        /* margin-left: 0px !important; */
     }
 
     .tictask h1{

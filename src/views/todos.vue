@@ -197,7 +197,7 @@ import addModal from '@/components/addModal.vue'
 import navBar from '@/components/UI/navbar.vue'
 import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, getDocs, limit, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query, orderBy } from "firebase/firestore";
 
 @Options({
     components: {
