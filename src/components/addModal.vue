@@ -66,7 +66,7 @@ import { db } from "@/firebase"
 // import nkselector from '@/components/UI/nkselector.vue'
 import VueMultiselect from 'vue-multiselect'
 import toast from '@/components/UI/toast.vue'
-import { collection, addDoc, query, getDocs, onSnapshot, doc, where } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, doc, } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
