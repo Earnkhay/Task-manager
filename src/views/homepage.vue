@@ -1,6 +1,6 @@
 <template>
 <div id="home">
-  <nav class="navbar navbar-expand-lg bg-transparent border-bottom border-dark">
+  <nav class="navbar navbar-expand-lg bg-transparent border-bottom border-secondary shadow-sm">
     <div class="container">
         <router-link :to="{name: 'homepage'}" class="navbar-img"><img src="../assets/Tictask-01.png" class="img-fluid" alt=""></router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@
         <h2 class="mb-4 fw-bold text-primary">Why you need the Task Management Application</h2>
         <p class="mb-4 fw-bolder">Recent survey has indicated that individuals, small businesses
         and large companies recognise the need to increase productivity
-        and collaborate with mordern automated applications.</p>
+        and collaborate with modern automated applications.</p>
         <ul class="listed-styled text-primary fw-bold">
             <li class="mb-3">Task Management</li>
             <li class="mb-3">Time Tracking</li>
@@ -74,7 +74,7 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component"
-import myFooter from '@/components/UI/footer.vue'
+import myFooter from '@/components/UI/myFooter.vue'
 
 @Options({
   components: {
@@ -158,7 +158,7 @@ export default class homepage extends Vue {
         font-size: 16px !important;
     }
 }
-@media screen and (max-width: 351px) {
+@media screen and (max-width: 341px) {
     .iv{
         margin-top: 10px !important;
         margin-right: 8px !important;
