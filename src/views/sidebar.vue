@@ -11,7 +11,7 @@
             </div>
             <ul class="nav flex-column mb-auto py-3">
                 <li class="nav-item mb-1">
-                    <router-link :to="{name: 'dashboard'}" class="nav-link link-dark fw-bold" aria-current="page">
+                    <router-link :to="{name: 'dashboard'}" class="nav-link link-dark fw-bold" aria-current="page" @click="resizeSidebar">
                         <!-- <i class="fa-solid fa-chart-line p-1"></i> -->
                         <i class="fa-solid fa-border-all p-1 me-1"></i>
                        <span class="me-5">Dashboard</span> 
@@ -27,19 +27,19 @@
                     </a>
                     <ul class="minitodos" v-if="minitodos">
                         <li>
-                            <router-link :to="{name: 'todos'}" active-class="active" class="nav-link text-dark fw-bold">
+                            <router-link :to="{name: 'todos'}" active-class="active" class="nav-link text-dark fw-bold" @click="resizeSidebar">
                                 Task Created 
                             </router-link>
                         </li>
                         <li>
-                            <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold">
+                            <router-link :to="{name: 'todo'}" active-class="active" class="nav-link text-dark fw-bold" @click="resizeSidebar">
                                 My Task
                             </router-link>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item mb-1">
-                    <router-link :to="{name: 'profile'}" active-class="active" class="nav-link text-dark fw-bold">
+                    <router-link :to="{name: 'profile'}" active-class="active" class="nav-link text-dark fw-bold" @click="resizeSidebar">
                         <i class="fa-solid fa-user p-1 me-1"></i>
                         <span class="me-5">Profile</span>
                         <span class="ms-5"><i class="fa-solid fa-angle-right ms-5"></i></span>
@@ -100,6 +100,11 @@ export default class sidebar extends Vue {
             this.$store.commit('setSidebarVisibility', false);
         } else {
             this.$store.commit('setSidebarVisibility', true);
+        }
+    }
+    resizeSidebar() {
+        if (window.innerWidth <= 1000) {
+            this.$store.commit('toggleSidebar')
         }
     }
     mounted() {

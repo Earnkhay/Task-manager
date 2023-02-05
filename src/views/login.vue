@@ -227,7 +227,7 @@ export default class login extends Vue{
                 this.toastIcon = 'success'
                 this.toastTitle = 'Signed up successfully'
                 this.toastShow = true
-                this.$router.push(`/`)
+                this.$router.push(`/profile`)
             })
             .catch((err) => {
                 // this.alertTitle = err.code
