@@ -313,12 +313,15 @@ export default class login extends Vue{
             .then(async () => {
                 const auth = getAuth();
                 const user = auth.currentUser;
+                this.spinnerShows = true
+                
                 if (user) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
                     //   console.log("Document data:", docSnap.data());
+                    this.$router.push('/') 
                     } else {
                         setDoc(doc(db, "users", user.uid), {
                             name: user.displayName,
@@ -326,14 +329,12 @@ export default class login extends Vue{
                             uid: user.uid,
                             photoURL: user.photoURL
                         });
+                        this.$router.push('/profile') 
                     }
-                    
                 }
-                this.spinnerShows = true
                 this.toastIcon = 'success'
                 this.toastTitle = 'Welcome to your Tictask'
                 this.toastShow = true
-                this.$router.push('/') 
             })
             .catch((err) => {
                 this.alertType = "danger"
