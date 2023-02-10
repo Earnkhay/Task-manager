@@ -1,5 +1,5 @@
 <template>
-<div id="home">
+<div id="homepage">
   <nav class="navbar navbar-expand-lg bg-transparent border-bottom border-secondary shadow-sm">
     <div class="container">
         <router-link :to="{name: 'homepage'}" class="navbar-img"><img src="../assets/Tictask-01.png" class="img-fluid" alt=""></router-link>
@@ -86,7 +86,7 @@ export default class homepage extends Vue {
 </script>
 
 <style scoped>
-#home{
+#homepage{
     overflow: hidden;
 }
 .nav-link:hover{
