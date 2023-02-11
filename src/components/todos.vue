@@ -253,7 +253,7 @@ export default class todos extends Vue {
     id = this.user?.uid
     todosCollectionRef = collection(db, `tasks`)
     todosCollectionQuery = query(this.todosCollectionRef, orderBy("date", "desc"), );
-    todosCollectionQueries = query(this.todosCollectionRef, where("assignedTo", "==", this.id), );
+    todosCollectionQueries = query(this.todosCollectionRef, where("assignedTo", "==", this.id));
     statusList = [ 
         {sText: 'Not started'},
         {sText: 'In progress'},
@@ -294,7 +294,7 @@ export default class todos extends Vue {
                     const formattedDate = duedate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const startdate = new Date(doc.data().startdate.seconds * 1000);
                     const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    if (doc.data().createdBy == this.id) {
+                    if (doc.data().assignedTo == this.id) {
                         const task = {
                             id: doc.id,
                             title: doc.data().title,
@@ -334,7 +334,7 @@ export default class todos extends Vue {
             const fbTasks: { id: string; title: string; duedate: string; startdate: string; priority: string; status: string; desc: string; createdBy: string; assignedTo: string; }[] = []
             querySnapshot.forEach((doc) => {
                 const startdate = new Date(doc.data().startdate.seconds * 1000);
-                    const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const formattedStartDate = startdate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const date = new Date(doc.data().duedate.seconds * 1000);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const task = {
