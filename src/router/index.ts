@@ -14,11 +14,17 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'login',
     component: login,
+    meta: {
+      title: 'Login',
+    },
   },
   {
     path: '/home',
     name: 'homepage',
     component: homepage,
+    meta: {
+      title: 'Tictask',
+    },
   },
   {
     path: '/',
@@ -32,33 +38,48 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         name: 'dashboard',
         component: () => import( '@/views/dashboard.vue'),
+        meta: {
+          title: 'Dashboard',
+        },
       },
       {
         path: 'tasks',
         name: 'todo',
         component: () => import( '@/views/todo.vue'),
+        meta: {
+          title: 'Task',
+        },
       },
-      {
-        path: 'landingpage',
-        name: 'landingpage',
-        component: () => import( '@/views/landingpage.vue'),
-      },
+      // {
+      //   path: 'landingpage',
+      //   name: 'landingpage',
+      //   component: () => import( '@/views/landingpage.vue'),
+      // },
       {
         path: 'profile',
         name: 'profile',
         component: () => import( '@/views/profile.vue'),
+        meta: {
+          title: 'Profile',
+        },
       },
       {
         path: 'taskcreated',
         name: 'todos',
         component: () => import( '@/views/todos.vue'),
+        meta: {
+          title: 'Task',
+        },
       },
     ],
   },
   {
     path: "/404",
     name: "notFound",
-    component: notFoundPage
+    component: notFoundPage,
+    meta: {
+      title: '404',
+    },
   },
   {
     path: "/:catchAll(.*)",
@@ -87,6 +108,8 @@ const getCurrentUser = () => {
 
 //navigation guard
 router.beforeEach(async (to, from, next) => {
+  document.title = `${to.meta.title}`;
+  // next();
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (await getCurrentUser()) {
       next();
