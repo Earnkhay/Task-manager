@@ -39,7 +39,7 @@
                     </ul>
                 </li>
                 <li class="nav-item mb-1">
-                    <router-link :to="{name: 'profile'}" active-class="active" class="nav-link text-dark fw-bold" @click="resizeSidebar">
+                    <router-link :to="{name: 'profile', params: { name: name } }" active-class="active" class="nav-link text-dark fw-bold" @click="resizeSidebar">
                         <i class="fa-solid fa-user p-1 me-1"></i>
                         <span class="me-5">Profile</span>
                         <span class="ms-5"><i class="fa-solid fa-angle-right ms-5"></i></span>
@@ -66,7 +66,9 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import toast from '@/components/UI/toast.vue'
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { db } from "@/firebase"
+import { onSnapshot, doc } from "firebase/firestore";
 
 @Options({
   components: {
@@ -80,8 +82,6 @@ export default class sidebar extends Vue {
     sidebarVisible = true
     minitodos = false
     name = ""
-    email = ""
-    photoURL = ""
     toastIcon = ''
     toastTitle = ''
     toastShow = false
@@ -109,6 +109,13 @@ export default class sidebar extends Vue {
     }
     mounted() {
         window.addEventListener('resize', this.handleResize);
+        onAuthStateChanged(this.auth, (user) => {
+        if (user) {
+            onSnapshot(doc(db, `users/${user.uid}`, ), (doc) => {
+                this.name = doc.data()?.name
+            })
+        }
+        })
     }
 
     async logout(){
