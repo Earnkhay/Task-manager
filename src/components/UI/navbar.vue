@@ -15,7 +15,7 @@
                 <notification/>
             </li>
             <li class="nav-item px-2 avatar">
-              <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{name: 'profile'}">
+              <router-link class="nav-link link-dark fw-bold" active-class="text-success" :to="{ name: 'profile', params: { name: name } }">
                 <img :src="photoURL" alt="avatar" v-if="photoURL"  width="35" height="35" class="rounded-circle bg-transparent">
                 <img src="@/assets/undraw_Pic_profile_re_7g2h.png" v-else alt="avatar" width="35" height="35" class="rounded-circle bg-transparent">
                 <span class="ms-2 name">{{ name }}</span>

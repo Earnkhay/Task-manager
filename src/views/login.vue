@@ -221,13 +221,13 @@ export default class login extends Vue{
                     formData: formData
                 })
                 this.spinnerShow = true
-                this.email = ''
-                this.name = ''
-                this.password = ''
                 this.toastIcon = 'success'
                 this.toastTitle = 'Signed up successfully'
                 this.toastShow = true
-                this.$router.push(`/profile`)
+                this.$router.push({ name: 'profile', params: { name: this.name } })
+                this.email = ''
+                this.name = ''
+                this.password = ''
             })
             .catch((err) => {
                 // this.alertTitle = err.code
@@ -320,8 +320,7 @@ export default class login extends Vue{
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
-                    //   console.log("Document data:", docSnap.data());
-                    this.$router.push('/') 
+                        this.$router.push('/') 
                     } else {
                         setDoc(doc(db, "users", user.uid), {
                             name: user.displayName,
@@ -329,7 +328,7 @@ export default class login extends Vue{
                             uid: user.uid,
                             photoURL: user.photoURL
                         });
-                        this.$router.push('/profile') 
+                        this.$router.push({ name: 'profile', params: { name: user.displayName } }) 
                     }
                 }
                 this.toastIcon = 'success'
