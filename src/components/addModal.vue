@@ -24,7 +24,6 @@
                 <div>
                     <label class="form-label">End date </label>
                     <Datepicker v-model="dueDate" :enable-time-picker="false" auto-apply/>
-                    <!-- <input type="date" v-model="dueDate"> -->
                 </div>
             </div>
             <div class="mb-3">
@@ -63,7 +62,6 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { db } from "@/firebase"
-// import nkselector from '@/components/UI/nkselector.vue'
 import VueMultiselect from 'vue-multiselect'
 import toast from '@/components/UI/toast.vue'
 import { collection, addDoc, query, onSnapshot, doc, } from "firebase/firestore";
