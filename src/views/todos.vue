@@ -71,72 +71,53 @@
     </div>
 
     <!-- View Modal -->
-    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">Info</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <h2 class="fw-bold mb-4"> {{ viewTitle }} </h2>
-            <div class="row justify-content-center">
-                <div class="col-md-3">
-                    <h6 class="fw-bold">Description </h6>
-                </div>
-                <div class="col-md-9">
-                    <p> {{viewDesc}} </p>
-                </div>
+    <view-modal>
+        <h2 class="fw-bold mb-4"> {{ viewTitle }} </h2>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <h6 class="fw-bold">Description </h6>
             </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <h6 class="fw-bold">Due on</h6>
-                </div>
-                <div class="col-md-9">
-                    <p> {{viewDuedate}} </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <h6 class="fw-bold">Priority </h6>
-                </div>
-                <div class="col-md-9">
-                    <p> {{viewPriority}}  </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <h6 class="fw-bold">Assigned To</h6>
-                </div>
-                <div class="col-md-9">
-                    <p> {{assignedTo}}  </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <h6 class="fw-bold">Status </h6>
-                </div>
-                <div class="col-md-9">
-                    <p class="badge rounded-pill p-2" :class="[viewStatus == 'Not started' ? 'bg-primary' : viewStatus == 'In progress' ? 'bg-warning' : viewStatus == 'Completed' ? 'bg-success' : viewStatus == 'Overdue' ? 'bg-danger' : 'bg-transparent' ]"> {{viewStatus}} </p>
-                </div>
+            <div class="col-md-9">
+                <p> {{viewDesc}} </p>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="row">
+            <div class="col-md-3">
+                <h6 class="fw-bold">Due on</h6>
+            </div>
+            <div class="col-md-9">
+                <p> {{viewDuedate}} </p>
+            </div>
         </div>
+        <div class="row">
+            <div class="col-md-3">
+                <h6 class="fw-bold">Priority </h6>
+            </div>
+            <div class="col-md-9">
+                <p> {{viewPriority}}  </p>
+            </div>
         </div>
-    </div>
-    </div>
+        <div class="row">
+            <div class="col-md-3">
+                <h6 class="fw-bold">Assigned To</h6>
+            </div>
+            <div class="col-md-9">
+                <p> {{assignedTo}}  </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <h6 class="fw-bold">Status </h6>
+            </div>
+            <div class="col-md-9">
+                <p class="badge rounded-pill p-2" :class="[viewStatus == 'Not started' ? 'bg-primary' : viewStatus == 'In progress' ? 'bg-warning' : viewStatus == 'Completed' ? 'bg-success' : viewStatus == 'Overdue' ? 'bg-danger' : 'bg-transparent' ]"> {{viewStatus}} </p>
+            </div>
+        </div>
+    </view-modal>
 
     <!-- Edit Modal -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Task</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+    <edit-modal>
+        <template #default>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Title</label>
                 <input class="form-control" v-model="editTitle" type="text" aria-label="default input example">
@@ -174,14 +155,12 @@
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="editDesc"></textarea>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </template>
+
+        <template #footer>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateTask">Update Task</button>
-        </div>
-        </div>
-    </div>
-    </div>
+        </template>
+    </edit-modal>
 </template>
 
 <script lang="ts">
@@ -198,6 +177,8 @@ import navBar from '@/components/UI/navbar.vue'
 import Swal from "sweetalert2";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit, query, orderBy } from "firebase/firestore";
+import viewModal from "@/components/viewModal.vue";
+import editModal from "@/components/editModal.vue";
 
 @Options({
     components: {
@@ -206,7 +187,9 @@ import { collection, onSnapshot, doc, updateDoc, deleteDoc, where, getDoc, limit
         Datepicker,
         EasyDataTable,
         addModal,
-        navBar
+        navBar,
+        viewModal,
+        editModal
     }
 })
 
