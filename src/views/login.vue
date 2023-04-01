@@ -128,6 +128,7 @@ export default class login extends Vue{
     mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
     //To check a password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter
     regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
+$router: any
     
     setLoginPage(){     
         if(this.pageType == "signUp"){

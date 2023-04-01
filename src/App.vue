@@ -11,7 +11,7 @@
     min-height: 100vh;
   }
   i{
-    cursor: pointer;
+    cursor: pointer; 
   }
   .color{
     color: #C366FC;
